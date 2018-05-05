@@ -23,7 +23,9 @@
         <activity android:name=".View.Profile" />
         <activity android:name=".View.Achievements" />
         <activity android:name=".View.Help" />
-        <activity android:name=".View.Rating"></activity>
+        <activity android:name=".View.Rating" />
+        <activity android:name=".View.EditAccInf" />
+        <activity android:name=".View.EditIcon"></activity>
     </application>
 
 </manifest>

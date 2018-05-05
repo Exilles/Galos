@@ -6,51 +6,54 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import dc.galos.Controller.Sound;
 import dc.galos.R;
 
 public class Authorization extends AppCompatActivity {
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
-        Button loginAsGuestButton = findViewById(R.id.loginAsGuestButton);
-        Button registrationButton = findViewById(R.id.registrationButton);
-        Button restorePasswordButton = findViewById(R.id.restorePasswordButton);
-        Button loginButton = findViewById(R.id.loginButton);
+        final Button loginAsGuestButton = findViewById(R.id.loginAsGuestButton);
+        final Button registrationButton = findViewById(R.id.registrationButton);
+        final Button restorePasswordButton = findViewById(R.id.restorePasswordButton);
+        final Button loginButton = findViewById(R.id.loginButton);
+        final Sound sound = new Sound();
 
-        loginAsGuestButton.setOnClickListener(new View.OnClickListener(){
+        sound.initialization(this, R.raw.background_music);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Authorization.this, Menu.class);
-                startActivity(intent);
+                switch (v.getId()) {
+                    case R.id.loginAsGuestButton:
+                        intent = new Intent(Authorization.this, Menu.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.registrationButton:
+                        intent = new Intent(Authorization.this, Registration.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.restorePasswordButton:
+                        intent = new Intent(Authorization.this, RestorePassword.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.loginButton:
+                        intent = new Intent(Authorization.this, Menu.class);
+                        startActivity(intent);
+                        break;
+                }
             }
-        });
+        };
 
-        registrationButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Authorization.this, Registration.class);
-                startActivity(intent);
-            }
-        });
-
-        restorePasswordButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Authorization.this, RestorePassword.class);
-                startActivity(intent);
-            }
-        });
-
-        loginButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Authorization.this, Menu.class);
-                startActivity(intent);
-            }
-        });
+        loginAsGuestButton.setOnClickListener(onClickListener);
+        registrationButton.setOnClickListener(onClickListener);
+        restorePasswordButton.setOnClickListener(onClickListener);
+        loginButton.setOnClickListener(onClickListener);
 
     }
 }

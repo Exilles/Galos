@@ -3,7 +3,6 @@ package dc.galos.View;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +30,7 @@ public class Menu extends AppCompatActivity {
         final ImageButton helpImageButton = findViewById(R.id.helpImageButton);
         final Sound sound = new Sound();
 
-        sound.mediaPlay(this, R.raw.background_music);
+        sound.mediaStart();
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -54,6 +53,7 @@ public class Menu extends AppCompatActivity {
                         }
                         break;
                     case R.id.exitImageButton:
+                        sound.mediaStop();
                         Intent intent = new Intent(Menu.this, Authorization.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
