@@ -21,10 +21,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper databaseHelper;
     private static SQLiteDatabase db;
     private static Cursor cursor;
-
-    private static int session;
     private Context myContext;
 
+    // данные о авторизированном пользователе
+    private static int id;
+    private static String login;
+    private static String password;
+    private static String email;
+    private static int money;
+    private static int record;
+
+    // данные о БД
     private static String DB_PATH; // полный путь к базе данных
     private static String DB_NAME = "galos.db";
     private static final int SCHEMA = 1; // версия базы данных
@@ -82,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.d("DatabaseHelper", ex.getMessage());
         }
     }
-    public SQLiteDatabase open()throws SQLException {
+    private SQLiteDatabase open()throws SQLException {
 
         return SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
@@ -119,16 +126,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(DatabaseHelper.TABLE, null, contentValues);
     }
 
-    public static int getSession() {
-        return session;
-    }
-
-    public static void setSession(int id) {
-        session = id;
-    }
-
     // поиск введенных данных на наличие в БД
-    public static int searchRow(Context context, String login, String password, String email, int index) {
+    public static int searchRow(Context context, String _login, String _password, String _email, int index) {
         databaseHelper = new DatabaseHelper(context);
         String query;
 
@@ -140,26 +139,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         switch (index) {
             case 1: // поиск по логину и паролю
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_LOGIN, login, COLUMN_PASSWORD, password);
+                query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" from \"%s\" WHERE " +
+                        "\"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL,
+                        COLUMN_MONEY, COLUMN_RECORD, TABLE, COLUMN_LOGIN, _login, COLUMN_PASSWORD, _password);
                 cursor = db.rawQuery(query, null);
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
-                    int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                    id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                    login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
+                    password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+                    email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
+                    money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
+                    record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
                     cursor.close();
-                    return id;
+                    return 1;
                 }
                 else return 0;
             case 2: //  поиск по логину
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_LOGIN, login);
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_LOGIN, _login);
                 cursor = db.rawQuery(query, null);
                 return cursor.getCount();
             case 3: // поиск по майлу
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_EMAIL, email);
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_EMAIL, _email);
                 cursor = db.rawQuery(query, null);
                 return cursor.getCount();
             default:
                 return 0;
         }
+    }
 
+
+    public static int getSession() {
+        return id;
+    }
+
+    public static String getLogin() {
+        return login;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static String getEmail() {
+        return email;
+    }
+
+    public static int getMoney() {
+        return money;
+    }
+
+    public static int getRecord() {
+        return record;
     }
 }
