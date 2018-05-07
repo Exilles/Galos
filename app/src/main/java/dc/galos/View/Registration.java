@@ -1,28 +1,19 @@
 package dc.galos.View;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
-import dc.galos.Controller.CanvasView;
 import dc.galos.Controller.DatabaseHelper;
-import dc.galos.Controller.Sound;
 import dc.galos.R;
 
 public class Registration extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
-    private SQLiteDatabase db;
     private Intent intent;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,26 +36,23 @@ public class Registration extends AppCompatActivity {
                         if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("") &&
                                 !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                             if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-                                databaseHelper = new DatabaseHelper(getApplicationContext());
-                                // создаем базу данных
-                                databaseHelper.create_db();
 
-                                // Gets the database in write mode
-                                db = databaseHelper.open();
-                                // Создаем объект ContentValues, где имена столбцов ключи,
-                                // а информация о госте является значениями ключей
-                                ContentValues contentValues = new ContentValues();
+                                count = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(), null,
+                                        null, 2);
+                                if (count == 0){
+                                    count = DatabaseHelper.searchRow(getApplicationContext(), null, null,
+                                            emailEditText.getText().toString(), 3);
+                                    if (count == 0) {
+                                        DatabaseHelper.insertRow(getApplicationContext(), loginEditText.getText().toString(),
+                                                passwordEditText.getText().toString(), emailEditText.getText().toString());
 
-                                contentValues.put(DatabaseHelper.COLUMN_LOGIN, "'" + loginEditText.getText().toString() + "'");
-                                contentValues.put(DatabaseHelper.COLUMN_PASSWORD, "'" + passwordEditText.getText().toString() + "'");
-                                contentValues.put(DatabaseHelper.COLUMN_EMAIL, "'" + emailEditText.getText().toString() + "'");
-                                contentValues.put(DatabaseHelper.COLUMN_MONEY, 0);
-                                contentValues.put(DatabaseHelper.COLUMN_RECORD, 0);
-
-                                db.insert(DatabaseHelper.TABLE, null, contentValues);
-
-                                intent = new Intent(Registration.this, Menu.class);
-                                startActivity(intent);
+                                        intent = new Intent(Registration.this, Authorization.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                    else DatabaseHelper.showInformation(getApplicationContext(),"This e-mail already exists");
+                                }
+                                else DatabaseHelper.showInformation(getApplicationContext(),"This login already exists");
                             }
                             else  DatabaseHelper.showInformation(getApplicationContext(),"Passwords do not match");
                         }

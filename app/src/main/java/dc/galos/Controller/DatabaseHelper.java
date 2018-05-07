@@ -1,5 +1,7 @@
 package dc.galos.Controller;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +30,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RECORD = "record";
     private static Toast toast;
     private Context myContext;
+    private static DatabaseHelper databaseHelper;
+    private static SQLiteDatabase db;
+    private static Cursor cursor;
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
@@ -85,5 +90,58 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    // вставка новой записи при регистрации
+    public static void insertRow (Context context, String login, String password, String email) {
+        databaseHelper = new DatabaseHelper(context);
+
+        // создаем базу данных
+        databaseHelper.create_db();
+
+        // открываем подключение
+        db = databaseHelper.open();
+
+        // Создаем объект ContentValues, где имена столбцов ключи,
+        // а информация о пользователе является значениями ключей
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DatabaseHelper.COLUMN_LOGIN, login);
+        contentValues.put(DatabaseHelper.COLUMN_PASSWORD, password);
+        contentValues.put(DatabaseHelper.COLUMN_EMAIL, email);
+        contentValues.put(DatabaseHelper.COLUMN_MONEY, 0);
+        contentValues.put(DatabaseHelper.COLUMN_RECORD, 0);
+
+        db.insert(DatabaseHelper.TABLE, null, contentValues);
+    }
+
+    // поиск введенных данных на наличие в БД
+    public static int searchRow(Context context, String login, String password, String email, int index) {
+        databaseHelper = new DatabaseHelper(context);
+        String query;
+
+        // создаем базу данных
+        databaseHelper.create_db();
+
+        // открываем подключение
+        db = databaseHelper.open();
+
+        switch (index) {
+            case 1: // поиск по логину и паролю
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_LOGIN, login, DatabaseHelper.COLUMN_PASSWORD, password);
+                cursor = db.rawQuery(query, null);
+                return cursor.getCount();
+            case 2: //  поиск по логину
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_LOGIN, login);
+                cursor = db.rawQuery(query, null);
+                return cursor.getCount();
+            case 3: // поиск по майлу
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_EMAIL, email);
+                cursor = db.rawQuery(query, null);
+                return cursor.getCount();
+            default:
+                return 0;
+        }
+
     }
 }

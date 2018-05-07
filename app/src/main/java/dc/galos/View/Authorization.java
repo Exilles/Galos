@@ -57,18 +57,11 @@ public class Authorization extends AppCompatActivity {
                         break;
                     case R.id.loginButton:
                         if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
-                            databaseHelper = new DatabaseHelper(getApplicationContext());
-                            // создаем базу данных
-                            databaseHelper.create_db();
 
-                            // открываем подключение
-                            db = databaseHelper.open();
+                            int count = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(),
+                                    passwordEditText.getText().toString(), null, 1);
 
-                            String query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_LOGIN, loginEditText.getText().toString(), DatabaseHelper.COLUMN_PASSWORD, passwordEditText.getText().toString());
-
-                            cursor = db.rawQuery(query, null);
-
-                            if (cursor.getCount() > 0) {
+                            if (count > 0) {
                                 intent = new Intent(Authorization.this, Menu.class);
                                 startActivity(intent);
                             }
