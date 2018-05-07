@@ -104,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // вставка новой записи при регистрации
-    public static void insertRow (Context context, String login, String password, String email) {
+    public static void insertRow (Context context, String _login, String _password, String _email) {
         databaseHelper = new DatabaseHelper(context);
 
         // создаем базу данных
@@ -117,9 +117,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COLUMN_LOGIN, login);
-        contentValues.put(COLUMN_PASSWORD, password);
-        contentValues.put(COLUMN_EMAIL, email);
+        contentValues.put(COLUMN_LOGIN, _login);
+        contentValues.put(COLUMN_PASSWORD, _password);
+        contentValues.put(COLUMN_EMAIL, _email);
         contentValues.put(COLUMN_MONEY, 0);
         contentValues.put(COLUMN_RECORD, 0);
 
@@ -168,6 +168,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // изменение информации об аккаунте
+    public static void updateRow(Context context, String _password, String _email) {
+        databaseHelper = new DatabaseHelper(context);
+
+        // создаем базу данных
+        databaseHelper.create_db();
+
+        // открываем подключение
+        db = databaseHelper.open();
+
+        // Создаем объект ContentValues, где имена столбцов ключи,
+        // а информация о пользователе является значениями ключей
+
+        password = _password;
+        email = _email;
+
+        ContentValues contentValues = new ContentValues();
+
+        if (!_password.equals("")) contentValues.put(COLUMN_PASSWORD, _password);
+        if (!_email.equals("")) contentValues.put(COLUMN_EMAIL, _email);
+
+        db.update(TABLE, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+    }
 
     public static int getSession() {
         return id;
