@@ -58,10 +58,12 @@ public class Authorization extends AppCompatActivity {
                     case R.id.loginButton:
                         if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
 
-                            int count = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(),
+                            // в id находится id пользователя, который авторизируется, или 0, если такой пользователь не будет найден
+                            int id = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(),
                                     passwordEditText.getText().toString(), null, 1);
 
-                            if (count > 0) {
+                            if (id != 0) {
+                                DatabaseHelper.setSession(id); // устанавливаем id пользователя в сессию
                                 intent = new Intent(Authorization.this, Menu.class);
                                 startActivity(intent);
                             }

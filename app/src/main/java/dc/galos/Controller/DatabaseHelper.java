@@ -17,24 +17,28 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static String DB_PATH; // полный путь к базе данных
-    private static String DB_NAME = "galos.db";
-    private static final int SCHEMA = 1; // версия базы данных
-    public static final String TABLE = "users"; // название таблицы в бд
-    // названия столбцов
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_LOGIN = "login";
-    public static final String COLUMN_PASSWORD = "password";
-    public static final String COLUMN_EMAIL = "email";
-    public static final String COLUMN_MONEY = "money";
-    public static final String COLUMN_RECORD = "record";
     private static Toast toast;
-    private Context myContext;
     private static DatabaseHelper databaseHelper;
     private static SQLiteDatabase db;
     private static Cursor cursor;
 
-    public DatabaseHelper(Context context) {
+    private static int session;
+    private Context myContext;
+
+    private static String DB_PATH; // полный путь к базе данных
+    private static String DB_NAME = "galos.db";
+    private static final int SCHEMA = 1; // версия базы данных
+
+    // названия столбцов таблицы users
+    private static final String TABLE = "users"; // название таблицы в бд
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_LOGIN = "login";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_MONEY = "money";
+    private static final String COLUMN_RECORD = "record";
+
+    private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
         this.myContext=context;
         DB_PATH =context.getFilesDir().getPath() + DB_NAME;
@@ -106,13 +110,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(DatabaseHelper.COLUMN_LOGIN, login);
-        contentValues.put(DatabaseHelper.COLUMN_PASSWORD, password);
-        contentValues.put(DatabaseHelper.COLUMN_EMAIL, email);
-        contentValues.put(DatabaseHelper.COLUMN_MONEY, 0);
-        contentValues.put(DatabaseHelper.COLUMN_RECORD, 0);
+        contentValues.put(COLUMN_LOGIN, login);
+        contentValues.put(COLUMN_PASSWORD, password);
+        contentValues.put(COLUMN_EMAIL, email);
+        contentValues.put(COLUMN_MONEY, 0);
+        contentValues.put(COLUMN_RECORD, 0);
 
         db.insert(DatabaseHelper.TABLE, null, contentValues);
+    }
+
+    public static int getSession() {
+        return session;
+    }
+
+    public static void setSession(int id) {
+        session = id;
     }
 
     // поиск введенных данных на наличие в БД
@@ -128,15 +140,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         switch (index) {
             case 1: // поиск по логину и паролю
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_LOGIN, login, DatabaseHelper.COLUMN_PASSWORD, password);
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_LOGIN, login, COLUMN_PASSWORD, password);
                 cursor = db.rawQuery(query, null);
-                return cursor.getCount();
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                    cursor.close();
+                    return id;
+                }
+                else return 0;
             case 2: //  поиск по логину
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_LOGIN, login);
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_LOGIN, login);
                 cursor = db.rawQuery(query, null);
                 return cursor.getCount();
             case 3: // поиск по майлу
-                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE, DatabaseHelper.COLUMN_EMAIL, email);
+                query = String.format("SELECT \"%s\" from \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE, COLUMN_EMAIL, email);
                 cursor = db.rawQuery(query, null);
                 return cursor.getCount();
             default:
