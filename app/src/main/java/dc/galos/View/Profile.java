@@ -14,8 +14,14 @@ import dc.galos.R;
 
 public class Profile extends AppCompatActivity {
 
+    private Button editAccInfButton;
+    private Button backButton;
+    private ImageButton editIconImageButton;
+    private TextView loginTextView;
+    private TextView countRecordTextView;
+    private TextView countMoneyTextView;
+
     private Intent intent;
-    private int id = DatabaseHelper.getSession();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -23,40 +29,41 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        final Button editAccInfButton = findViewById(R.id.editAccInfButton);
-        final Button backButton = findViewById(R.id.backButton);
-        final ImageButton editIconImageButton = findViewById(R.id.editIconImageButton);
-        final TextView loginTextView = findViewById(R.id.loginTextView);
-        final TextView countRecordTextView = findViewById(R.id.countRecordTextView);
-        final TextView countMoneyTextView = findViewById(R.id.countMoneyTextView);
+        editAccInfButton = findViewById(R.id.editAccInfButton);
+        backButton = findViewById(R.id.backButton);
+        editIconImageButton = findViewById(R.id.editIconImageButton);
+        loginTextView = findViewById(R.id.loginTextView);
+        countRecordTextView = findViewById(R.id.countRecordTextView);
+        countMoneyTextView = findViewById(R.id.countMoneyTextView);
 
         loginTextView.setText(DatabaseHelper.getLogin());
         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()));
         countRecordTextView.setText(Integer.toString(DatabaseHelper.getRecord()));
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.backButton:
-                        intent = new Intent(Profile.this, Menu.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        break;
-                    case R.id.editAccInfButton:
-                        intent = new Intent(Profile.this, EditAccInf.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.editIconImageButton:
-                        intent = new Intent(Profile.this, EditIcon.class);
-                        startActivity(intent);
-                        break;
-                }
-            }
-        };
-
         editAccInfButton.setOnClickListener(onClickListener);
         backButton.setOnClickListener(onClickListener);
         editIconImageButton.setOnClickListener(onClickListener);
     }
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.backButton:
+                    intent = new Intent(Profile.this, Menu.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    break;
+                case R.id.editAccInfButton:
+                    intent = new Intent(Profile.this, EditAccInf.class);
+                    startActivity(intent);
+                    break;
+                case R.id.editIconImageButton:
+                    intent = new Intent(Profile.this, EditIcon.class);
+                    startActivity(intent);
+                    break;
+            }
+        }
+    };
 }
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F5F5F5"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tittleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/a_futurica_extrabold"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            tools:text="This is Title" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/a_futurica_extrabold"
+            android:textColor="@android:color/darker_gray"
+            tools:text="This is Description" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/rewardButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:focusable="false"
+        android:fontFamily="@font/a_futurica_extrabold"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:textSize="18sp" />
+
+</LinearLayout>

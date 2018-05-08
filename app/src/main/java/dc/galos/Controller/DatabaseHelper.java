@@ -181,13 +181,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Создаем объект ContentValues, где имена столбцов ключи,
         // а информация о пользователе является значениями ключей
 
-        password = _password;
-        email = _email;
 
         ContentValues contentValues = new ContentValues();
 
-        if (!_password.equals("")) contentValues.put(COLUMN_PASSWORD, _password);
-        if (!_email.equals("")) contentValues.put(COLUMN_EMAIL, _email);
+        if (!_password.equals("")) {
+            password = _password;
+            contentValues.put(COLUMN_PASSWORD, _password);
+        }
+        if (!_email.equals("")) {
+            email = _email;
+            contentValues.put(COLUMN_EMAIL, _email);
+        }
 
         db.update(TABLE, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
