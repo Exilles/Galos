@@ -16,8 +16,8 @@ public class Menu extends AppCompatActivity {
     private AudioManager audioManager;
     private ImageButton volumeImageButton;
     private ImageButton playImageButton;
-    private ImageButton exitImageButton;
-    private ImageButton profileImageButton;
+    private ImageButton logoutImageButton;
+    private ImageButton settingsImageButton;
     private ImageButton ratingImageButton;
     private ImageButton achievementsImageButton;
     private ImageButton helpImageButton;
@@ -33,19 +33,19 @@ public class Menu extends AppCompatActivity {
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         volumeImageButton = findViewById(R.id.volumeImageButton);
         playImageButton = findViewById(R.id.playImageButton);
-        exitImageButton = findViewById(R.id.exitImageButton);
-        profileImageButton = findViewById(R.id.profileImageButton);
+        logoutImageButton = findViewById(R.id.logoutImageButton);
+        settingsImageButton = findViewById(R.id.settingsImageButton);
         ratingImageButton = findViewById(R.id.ratingImageButton);
         achievementsImageButton = findViewById(R.id.achievementsImageButton);
         helpImageButton = findViewById(R.id.helpImageButton);
-        sound = new Sound();
 
+        sound = new Sound();
         sound.mediaStart();
 
         volumeImageButton.setOnClickListener(onClickListener);
         playImageButton.setOnClickListener(onClickListener);
-        exitImageButton.setOnClickListener(onClickListener);
-        profileImageButton.setOnClickListener(onClickListener);
+        logoutImageButton.setOnClickListener(onClickListener);
+        settingsImageButton.setOnClickListener(onClickListener);
         ratingImageButton.setOnClickListener(onClickListener);
         achievementsImageButton.setOnClickListener(onClickListener);
         helpImageButton.setOnClickListener(onClickListener);
@@ -62,23 +62,23 @@ public class Menu extends AppCompatActivity {
                 case R.id.volumeImageButton:
                     if (Sound.isVolume())  {
                         Sound.setVolume(false);
-                        volumeImageButton.setImageResource(R.drawable.ic_volume_off_white_36dp);
+                        volumeImageButton.setImageResource(R.drawable.ic_volume_off_white_48dp);
                         audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
                     }
                     else {
                         Sound.setVolume(true);
-                        volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_36dp);
+                        volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_48dp);
                         audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
                     }
                     break;
-                case R.id.exitImageButton:
+                case R.id.logoutImageButton:
                     sound.mediaStop();
                     Intent intent = new Intent(Menu.this, Authorization.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     break;
-                case R.id.profileImageButton:
-                    intent = new Intent(Menu.this, Profile.class);
+                case R.id.settingsImageButton:
+                    intent = new Intent(Menu.this, EditAccInf.class);
                     startActivity(intent);
                     break;
                 case R.id.ratingImageButton:

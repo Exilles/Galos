@@ -237,8 +237,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         databaseHelper.create_db();
         db = databaseHelper.open();
 
-        String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_TITTLE,
-                COLUMN_DESCRIPTION, COLUMN_REWARD, TABLE_ACHIEVEMENTS, COLUMN_ID_USER, id);
+        String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\"", COLUMN_TITTLE,
+                COLUMN_DESCRIPTION, COLUMN_REWARD, TABLE_ACHIEVEMENTS);
         cursor = db.rawQuery(query, null);
 
         while (cursor.moveToNext()) {

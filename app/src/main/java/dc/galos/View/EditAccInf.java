@@ -41,7 +41,7 @@ public class EditAccInf extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.backButton:
-                    intent = new Intent(EditAccInf.this, Profile.class);
+                    intent = new Intent(EditAccInf.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     break;
