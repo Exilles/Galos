@@ -1,5 +1,6 @@
 package dc.galos.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -7,17 +8,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import dc.galos.Controller.DatabaseHelper;
 import dc.galos.R;
 
 public class Game extends AppCompatActivity {
 
     public static boolean PAUSE = false;
-    private Button exitButton;
-    private ImageButton pauseImageButton;
     private ConstraintLayout pauseMenuConstraintLayout;
     private Intent intent;
 
+    private Button exitButton;
+    private ImageButton pauseImageButton;
+    private TextView countMoneyTextView;
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +32,9 @@ public class Game extends AppCompatActivity {
         exitButton = findViewById(R.id.exitButton);
         pauseImageButton = findViewById(R.id.pauseImageButton);
         pauseMenuConstraintLayout = findViewById(R.id.pauseMenuConstraintLayout);
+        countMoneyTextView = findViewById(R.id.countMoneyTextView);
+
+        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
 
         exitButton.setOnClickListener(onClickListener);
         pauseImageButton.setOnClickListener(onClickListener);
