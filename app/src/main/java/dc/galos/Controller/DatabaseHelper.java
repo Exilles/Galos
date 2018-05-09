@@ -240,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_TITTLE,
                 COLUMN_DESCRIPTION, COLUMN_REWARD, TABLE_ACHIEVEMENTS, COLUMN_ID_USER, id);
         cursor = db.rawQuery(query, null);
-        DatabaseHelper.showInformation(context, Integer.toString(cursor.getCount()));
+
         while (cursor.moveToNext()) {
             hashMap = new HashMap<>();
             hashMap.put(TITTLE, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TITTLE))); // Название
@@ -290,15 +290,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Создаем объект ContentValues, где имена столбцов ключи,
         // а информация о пользователе является значениями ключей
-        ContentValues contentValues = new ContentValues();
+        /*ContentValues contentValues = new ContentValues();
 
         contentValues.put(COLUMN_TITTLE, "Новичёк"); // 1
         contentValues.put(COLUMN_DESCRIPTION, "Пройдите 5 уровней подряд");
         contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, false);
+        contentValues.put(COLUMN_STATUS, "false");
+        contentValues.put(COLUMN_COUNT_LEVELS, 0);
+        contentValues.put(COLUMN_COUNT_MONEY, 0);
+        contentValues.put(COLUMN_COUNT_EATING, 0);
+        contentValues.put(COLUMN_COUNT_WINS, 0);
         contentValues.put(COLUMN_ID_USER, id);
         db.insert(TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
+        contentValues.clear();*/
+
+        String query = String.format("INSERT INTO \"%s\" VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", " +
+                "\"%s\", \"%s\", \"%s\")", TABLE_ACHIEVEMENTS, null, "Новичёк", "Пройдите 5 уровней подряд", 5, "false", null, null, null, null, id);
+        cursor = db.rawQuery(query, null);
 
         /*contentValues.put(COLUMN_TITTLE, "Знаток"); // 2
         contentValues.put(COLUMN_DESCRIPTION, "Пройдите 15 уровней подряд");
