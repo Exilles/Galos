@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="600dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
         android:orientation="vertical">
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
             android:textColor="@android:color/black"
-            android:textSize="25sp"
+            android:textSize="23sp"
             tools:text="This is Title" />
 
         <TextView
@@ -27,18 +27,19 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
             android:textColor="@android:color/darker_gray"
+            android:textSize="12.5sp"
             tools:text="This is Description" />
     </LinearLayout>
 
     <Button
         android:id="@+id/rewardButton"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+        android:layout_width="460dp"
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:focusable="false"
         android:fontFamily="@font/a_futurica_extrabold"
-        android:gravity="center_vertical|center_horizontal|center"
+        android:gravity="left|center_vertical"
         android:textSize="18sp" />
 
 </LinearLayout>

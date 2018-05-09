@@ -10,8 +10,8 @@ public class Sound {
 
     private static boolean volume = true;
 
-    public void initialization(Context context, int resid) {
-        mediaPlayer = MediaPlayer.create(context, resid);
+    public void initialization(Context context, int res_id) {
+        mediaPlayer = MediaPlayer.create(context, res_id);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setLooping(true);
     }

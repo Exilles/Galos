@@ -47,13 +47,13 @@ public class Registration extends AppCompatActivity {
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
 
-                            count = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(), null,
+                            count = DatabaseHelper.searchRowUsers(getApplicationContext(), loginEditText.getText().toString(), null,
                                     null, 2);
                             if (count == 0){
-                                count = DatabaseHelper.searchRow(getApplicationContext(), null, null,
+                                count = DatabaseHelper.searchRowUsers(getApplicationContext(), null, null,
                                         emailEditText.getText().toString(), 3);
                                 if (count == 0) {
-                                    DatabaseHelper.insertRow(getApplicationContext(), loginEditText.getText().toString(),
+                                    DatabaseHelper.insertRowUsers(getApplicationContext(), loginEditText.getText().toString(),
                                             passwordEditText.getText().toString(), emailEditText.getText().toString());
 
                                     intent = new Intent(Registration.this, Authorization.class);

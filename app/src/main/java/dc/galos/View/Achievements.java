@@ -15,15 +15,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import dc.galos.Controller.DatabaseHelper;
 import dc.galos.R;
 
 public class Achievements extends AppCompatActivity {
 
     private Intent intent;
 
-    private static final String TITLE = "catname"; // Верхний текст
-    private static final String DESCRIPTION = "description"; // ниже главного
-    private static final String REWARD = "reward";  // вознаграждение
+    private String TITLE = "achievement"; // Верхний текст
+    private String DESCRIPTION = "description"; // ниже главного
+    private String REWARD = "reward";  // вознаграждение
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,20 +37,10 @@ public class Achievements extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
 
         // создаем массив списков
-        ArrayList<HashMap<String, Object>> catList = new ArrayList<>();
-
-        HashMap<String, Object> hashMap;
-
-        for (int i = 0; i < 20; i ++){
-            hashMap = new HashMap<>();
-            hashMap.put(TITLE, "Рыжик"); // Название
-            hashMap.put(DESCRIPTION, "Рыжий и хитрый"); // Описание
-            hashMap.put(REWARD, "Get 100"); // Вознаграждение
-            catList.add(hashMap);
-        }
+        ArrayList<HashMap<String, Object>> achievementsList = DatabaseHelper.getAchievements(this);
 
         // используем адаптер данных
-        SimpleAdapter adapter = new SimpleAdapter(this, catList,
+        SimpleAdapter adapter = new SimpleAdapter(this, achievementsList,
                 R.layout.list_item, new String[]{TITLE, DESCRIPTION, REWARD},
                 new int[]{R.id.tittleTextView, R.id.descriptionTextView, R.id.rewardButton});
 

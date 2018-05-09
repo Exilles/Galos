@@ -63,7 +63,7 @@ public class Authorization extends AppCompatActivity {
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
 
                         // в id вернется 1, если пользователь найден или 0, если такой пользователь не найден
-                        int id = DatabaseHelper.searchRow(getApplicationContext(), loginEditText.getText().toString(),
+                        int id = DatabaseHelper.searchRowUsers(getApplicationContext(), loginEditText.getText().toString(),
                                 passwordEditText.getText().toString(), null, 1);
 
                         if (id == 1) {
