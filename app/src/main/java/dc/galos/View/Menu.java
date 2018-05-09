@@ -1,5 +1,6 @@
 package dc.galos.View;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -7,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.Sound;
 import dc.galos.R;
 
@@ -21,10 +24,14 @@ public class Menu extends AppCompatActivity {
     private ImageButton ratingImageButton;
     private ImageButton achievementsImageButton;
     private ImageButton helpImageButton;
+    private TextView loginTextView;
+    private TextView countMoneyTextView;
+    private TextView countRecordTextView;
 
     private Sound sound = new Sound();
     private Intent intent;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,13 @@ public class Menu extends AppCompatActivity {
         ratingImageButton = findViewById(R.id.ratingImageButton);
         achievementsImageButton = findViewById(R.id.achievementsImageButton);
         helpImageButton = findViewById(R.id.helpImageButton);
+        loginTextView = findViewById(R.id.loginTextView);
+        countMoneyTextView = findViewById(R.id.countMoneyTextView);
+        countRecordTextView = findViewById(R.id.countRecordTextView);
+
+        loginTextView.setText(DatabaseHelper.getLogin());
+        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+        countRecordTextView.setText(Integer.toString(DatabaseHelper.getRecord()));
 
         sound = new Sound();
         sound.mediaStart();
