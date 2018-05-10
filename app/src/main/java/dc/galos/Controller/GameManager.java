@@ -9,9 +9,11 @@ public class GameManager {
     private static final int FROM_CIRCLES = 7;
     private static final int TO_CIRCLES = 12;
     private static final int MAX_IMMORTAL_CIRCLES = 3;
-    private static MainCircle mainCircle;
-    private static ArrayList<EnemyCircle> enemy_circles;
-    private static ArrayList<ImmortalCircle> immortal_circles;
+    private static final int MAX_VANISHING_CIRCLES = 3;
+    private static MainCircle mainCircle; // круг игрока
+    private static ArrayList<EnemyCircle> enemy_circles; // массив вражеских кругов
+    private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
+    //private static ArrayList<VanishingCircle> vanishing_circles; // массив исчезающих кругов
     private static CanvasView canvasView;
     private static int width;
     private static int height;
@@ -27,6 +29,7 @@ public class GameManager {
         width = w;
         height = h;
         initMainCircle();
+        //initVanishingCircles();
         initEnemyCircles();
         initImmortalCircles();
     }
@@ -60,10 +63,28 @@ public class GameManager {
         }
     }
 
+    /*private static void initVanishingCircles() {
+        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
+        Random random = new Random();
+        vanishing_circles = new ArrayList<VanishingCircle>();
+        int count_circles = random.nextInt(MAX_VANISHING_CIRCLES);
+        for (int i = 0; i < count_circles; i++) {
+            VanishingCircle circle;
+            do {
+                circle = VanishingCircle.getRandomCircle();
+            } while (circle.isIntersect(mainCircleArea));
+            vanishing_circles.add(circle);
+        }
+        calculateAndSetCirclesColor();
+    }*/
+
     private static void calculateAndSetCirclesColor() {
         for (EnemyCircle circle : enemy_circles) {
             circle.setEnemyOrFoodColorDependsOn(mainCircle);
         }
+        /*for (VanishingCircle circle : vanishing_circles) {
+            circle.setEnemyOrFoodColorDependsOn(mainCircle);
+        }*/
     }
 
     public static int getWidth() {
@@ -86,6 +107,9 @@ public class GameManager {
         for (ImmortalCircle circle : immortal_circles) {
             canvasView.drawCircle(circle);
         }
+        /*for (VanishingCircle circle : vanishing_circles) {
+            canvasView.drawCircle(circle);
+        }*/
     }
 
     public void onTouchEvent(int x, int y) {
@@ -93,6 +117,7 @@ public class GameManager {
         checkEmptyCircles();
         checkEnemyCirclesCollision();
         checkImmortalCirclesCollision();
+        //checkVanishingCirclesCollision();
         moveCircles();
     }
 
@@ -122,7 +147,25 @@ public class GameManager {
         }
     }
 
+    // проверка коллизии с исчезающим кругом
+    /*private void checkVanishingCirclesCollision() {
+        SimpleCircle circleForDel = null;
+        for (VanishingCircle circle : vanishing_circles) {
+            if (mainCircle.isIntersect(circle)) {
+                if (circle.isSmallerThan(mainCircle)) {
+                    mainCircle.growRadius(circle);
+                    circleForDel = circle;
+                    calculateAndSetCirclesColor();
+                    break;
+                }
+                else lifeLoser();// вызывает диалог в соответствии с life
+            }
+        }
+        if (circleForDel != null) vanishing_circles.remove(circleForDel);
+    }*/
+
     private void checkEmptyCircles(){
+        //if (enemy_circles.isEmpty() && vanishing_circles.isEmpty()) {
         if (enemy_circles.isEmpty()) {
             life = false;
             deceleration = false;
@@ -149,6 +192,7 @@ public class GameManager {
         mainCircle.initRadius();
         initEnemyCircles();
         initImmortalCircles();
+        //initVanishingCircles();
         canvasView.redraw();
     }
 
@@ -159,6 +203,9 @@ public class GameManager {
         for (ImmortalCircle circle : immortal_circles) {
             circle.moveOneStep();
         }
+        /*for (VanishingCircle circle : vanishing_circles) {
+            circle.moveOneStep();
+        }*/
     }
 
     private void setReward() {
@@ -213,6 +260,9 @@ public class GameManager {
         for (ImmortalCircle circle : immortal_circles) {
             circle.decelerationSpeed();
         }
+        /*for (VanishingCircle circle : vanishing_circles) {
+            circle.decelerationSpeed();
+        }*/
     }
 
     public static void useGrowthBonus() {
