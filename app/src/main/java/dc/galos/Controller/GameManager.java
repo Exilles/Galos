@@ -6,14 +6,15 @@ public class GameManager {
     private static final int MAX_CIRCLES = 10;
     private static MainCircle mainCircle;
     private static ArrayList<EnemyCircle> circles;
-    private CanvasView canvasView;
+    private static CanvasView canvasView;
     private static int width;
     private static int height;
     private int winning = 0; // выигрыш за победу в уровнях
     private int score = 0; // количество пройденных подряд уровней в этот раз
     private float rate; // коэффициент, на который умножается награда
     private int sum = 0; // сумма всех вознаграждений за победы
-    private static boolean life = false;
+    public static boolean life = false;
+    public static boolean deceleration = false;
 
     public GameManager(CanvasView canvasView, int w, int h) {
         this.canvasView = canvasView;
@@ -84,6 +85,8 @@ public class GameManager {
                         return;
                     }
                     else {
+                        life = false;
+                        deceleration = false;
                         gameEnd("Score: " + Integer.toString(score) + ". Sum: " + Integer.toString(sum) + "$");
                         zeroReward(); // обнуляем счет и вознаграждение
                         return;
@@ -95,6 +98,8 @@ public class GameManager {
             circles.remove(circleForDel);
         }
         if (circles.isEmpty()) {
+            life = false;
+            deceleration = false;
             setReward(); // прибавляем к деньгам вознаграждение и обновляем рекорд (если нужно)
             gameEnd("Reward: " + Integer.toString(winning) + "$");
         }
@@ -158,12 +163,15 @@ public class GameManager {
     }
 
     public static void useDecelerationBonus() {
-        EnemyCircle.setRandom_speed(EnemyCircle.getRandom_speed());
+        deceleration = true;
+        for (EnemyCircle circle : circles) {
+            circle.decelerationSpeed();
+        }
     }
 
     public static void useGrowthBonus() {
         mainCircle.growRadius();
         calculateAndSetCirclesColor();
+        canvasView.redraw();
     }
-
 }

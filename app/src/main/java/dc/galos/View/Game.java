@@ -86,22 +86,28 @@ public class Game extends AppCompatActivity {
                     }
                     break;
                 case R.id.lifeBonusImageButton:
-                    if (DatabaseHelper.getMoney() >= PRICE_LIFE){
-                        DatabaseHelper.buyBonus(PRICE_LIFE);
-                        GameManager.useLifeBonus();
-                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        DatabaseHelper.showInformation("Bonus activated");
+                    if (!GameManager.life){
+                        if (DatabaseHelper.getMoney() >= PRICE_LIFE){
+                            DatabaseHelper.buyBonus(PRICE_LIFE);
+                            GameManager.useLifeBonus();
+                            countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                            DatabaseHelper.showInformation("Bonus activated");
+                        }
+                        else DatabaseHelper.showInformation("Not enough money");
                     }
-                    else DatabaseHelper.showInformation("Not enough money");
+                    else DatabaseHelper.showInformation("Bonus is already in use");
                     break;
                 case R.id.decelerationBonusImageButton:
-                    if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
-                        DatabaseHelper.buyBonus(PRICE_DECELERATION);
-                        GameManager.useDecelerationBonus();
-                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        DatabaseHelper.showInformation("Bonus activated");
+                    if (!GameManager.deceleration){
+                        if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
+                            DatabaseHelper.buyBonus(PRICE_DECELERATION);
+                            GameManager.useDecelerationBonus();
+                            countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                            DatabaseHelper.showInformation("Bonus activated");
+                        }
+                        else DatabaseHelper.showInformation("Not enough money");
                     }
-                    else DatabaseHelper.showInformation("Not enough money");
+                    else DatabaseHelper.showInformation("Bonus is already in use");
                     break;
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){

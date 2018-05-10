@@ -10,9 +10,9 @@ public class EnemyCircle extends SimpleCircle {
     private static final int TO_RADIUS = 110;
     private static final int ENEMY_COLOR = Color.BLACK;
     private static final int FOOD_COLOR = Color.LTGRAY;
-    private static int random_speed = 10;
-    private int dx;
-    private int dy;
+    private static final int RANDOM_SPEED = 10;
+    private float dx;
+    private float dy;
 
     private EnemyCircle(int x, int y, int radius, int dx, int dy) {
         super(x, y, radius);
@@ -24,8 +24,8 @@ public class EnemyCircle extends SimpleCircle {
         Random random = new Random();
         int x = random.nextInt(GameManager.getWidth());
         int y = random.nextInt(GameManager.getHeight());
-        int dx = 1 + random.nextInt(random_speed);
-        int dy = 1 + random.nextInt(random_speed);
+        int dx = 1 + random.nextInt(RANDOM_SPEED);
+        int dy = 1 + random.nextInt(RANDOM_SPEED);
         int radius = FROM_RADIUS + random.nextInt(TO_RADIUS - FROM_RADIUS);
         return new EnemyCircle(x, y, radius, dx, dy);
     }
@@ -57,11 +57,8 @@ public class EnemyCircle extends SimpleCircle {
         }
     }
 
-    public static int getRandom_speed() {
-        return random_speed;
-    }
-
-    public static void setRandom_speed(int random_speed) {
-        EnemyCircle.random_speed = (int)(random_speed / 2);
+    public void decelerationSpeed() {
+        dx = dx / 2;
+        dy = dy / 2;
     }
 }

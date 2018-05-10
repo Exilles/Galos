@@ -30,6 +30,6 @@ public class MainCircle extends SimpleCircle{
     }
 
     public void growRadius() {
-        radius = (int) Math.sqrt(Math.pow(radius, 2) + Math.pow(50, 2));
+        radius = (int) Math.sqrt(Math.pow(radius, 2) + Math.pow(55, 2));
     }
 }
