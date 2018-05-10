@@ -105,11 +105,11 @@ public class GameManager {
     }
 
     private void setReward() {
+        score += 1;
         switchRate(score);
         winning = Math.round((score * rate) + rate); // вознаграждение за победу
         sum += winning;
         DatabaseHelper.updateReward(winning, score);
-        score += 1;
     }
 
     private void zeroReward() {
@@ -119,25 +119,25 @@ public class GameManager {
 
     private void switchRate(int _score) {
         switch (_score) {
-            case 0:
+            case 1:
                 rate = 1.0f;
                 break;
-            case 5:
+            case 11:
                 rate = 1.5f;
                 break;
-            case 10:
+            case 21:
                 rate = 2.0f;
                 break;
-            case 15:
+            case 36:
                 rate = 2.5f;
                 break;
-            case 20:
+            case 51:
                 rate = 3.0f;
                 break;
-            case 25:
+            case 76:
                 rate = 3.5f;
                 break;
-            case 30:
+            case 101:
                 rate = 4.0f;
                 break;
         }
