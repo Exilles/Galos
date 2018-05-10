@@ -19,9 +19,19 @@ public class Game extends AppCompatActivity {
     private ConstraintLayout pauseMenuConstraintLayout;
     private Intent intent;
 
+    private final int PRICE_LIFE = 100;
+    private final int PRICE_DECELERATION = 200;
+    private final int PRICE_GROWTH = 300;
+
     private Button exitButton;
     private ImageButton pauseImageButton;
     private TextView countMoneyTextView;
+    private ImageButton lifeBonusImageButton;
+    private ImageButton decelerationBonusImageButton;
+    private ImageButton growthBonusImageButton;
+    private TextView priceLifeBonusTextView;
+    private TextView priceDecelerationBonusTextView;
+    private TextView priceGrowthBonusTextView;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -33,12 +43,26 @@ public class Game extends AppCompatActivity {
         pauseImageButton = findViewById(R.id.pauseImageButton);
         pauseMenuConstraintLayout = findViewById(R.id.pauseMenuConstraintLayout);
         countMoneyTextView = findViewById(R.id.countMoneyTextView);
+        lifeBonusImageButton = findViewById(R.id.lifeBonusImageButton);
+        decelerationBonusImageButton = findViewById(R.id.decelerationBonusImageButton);
+        growthBonusImageButton = findViewById(R.id.growthBonusImageButton);
+        priceLifeBonusTextView = findViewById(R.id.priceLifeBonusTextView);
+        priceDecelerationBonusTextView = findViewById(R.id.priceDecelerationBonusTextView);
+        priceGrowthBonusTextView = findViewById(R.id.priceGrowthBonusTextView);
+
+        priceLifeBonusTextView.setText(PRICE_LIFE + "$");
+        priceDecelerationBonusTextView.setText(PRICE_DECELERATION + "$");
+        priceGrowthBonusTextView.setText(PRICE_GROWTH + "$");
 
         exitButton.setOnClickListener(onClickListener);
         pauseImageButton.setOnClickListener(onClickListener);
+        lifeBonusImageButton.setOnClickListener(onClickListener);
+        decelerationBonusImageButton.setOnClickListener(onClickListener);
+        growthBonusImageButton.setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -59,6 +83,30 @@ public class Game extends AppCompatActivity {
                         pauseImageButton.setImageResource(R.drawable.ic_pause_circle_filled_black_36dp);
                         pauseMenuConstraintLayout.setVisibility(View.INVISIBLE);
                     }
+                    break;
+                case R.id.lifeBonusImageButton:
+                    if (DatabaseHelper.getMoney() >= PRICE_LIFE){
+                        DatabaseHelper.buyBonus(PRICE_LIFE);
+                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                        DatabaseHelper.showInformation("Bonus activated");
+                    }
+                    else DatabaseHelper.showInformation("Not enough money");
+                    break;
+                case R.id.decelerationBonusImageButton:
+                    if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
+                        DatabaseHelper.buyBonus(PRICE_DECELERATION);
+                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                        DatabaseHelper.showInformation("Bonus activated");
+                    }
+                    else DatabaseHelper.showInformation("Not enough money");
+                    break;
+                case R.id.growthBonusImageButton:
+                    if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
+                        DatabaseHelper.buyBonus(PRICE_GROWTH);
+                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                        DatabaseHelper.showInformation("Bonus activated");
+                    }
+                    else DatabaseHelper.showInformation("Not enough money");
                     break;
             }
         }

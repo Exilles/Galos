@@ -131,8 +131,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // вставка новой записи при регистрации
     public static void insertRowUsers (String _login, String _password, String _email) {
-        // Создаем объект ContentValues, где имена столбцов ключи,
-        // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(COLUMN_LOGIN, _login);
@@ -188,8 +186,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // изменение информации об аккаунте
     public static void updateRowUsers(String _password, String _email) {
-        // Создаем объект ContentValues, где имена столбцов ключи,
-        // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
 
         if (!_password.equals("")) {
@@ -224,10 +220,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return achievementsList;
     }
 
-    // изменение информации об аккаунте
+    // изменение количества денег и рекорда пользователя
     public static void updateReward(int _money, int _record) {
-        // Создаем объект ContentValues, где имена столбцов ключи,
-        // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
 
         money += _money;
@@ -237,6 +231,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             record = _record;
             contentValues.put(COLUMN_RECORD, _record);
         }
+
+        db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    // изменение количества денег из-за покупки бонуса
+    public static void buyBonus(int _money) {
+        ContentValues contentValues = new ContentValues();
+
+        money -= _money;
+        contentValues.put(COLUMN_MONEY, money);
 
         db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
     }
@@ -266,8 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static void insertRowAchievements() {
-        // Создаем объект ContentValues, где имена столбцов ключи,
-        // а информация о пользователе является значениями ключей
+
         /*ContentValues contentValues = new ContentValues();
 
         contentValues.put(COLUMN_TITTLE, "Новичёк"); // 1

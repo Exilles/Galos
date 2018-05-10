@@ -12,7 +12,7 @@ public class GameManager {
     private int winning = 0; // выигрыш за победу в уровнях
     private int score = 0; // количество пройденных подряд уровней в этот раз
     private float rate; // коэффициент, на который умножается награда
-    private int sum = 0;
+    private int sum = 0; // сумма всех вознаграждений за победы
 
     public GameManager(CanvasView canvasView, int w, int h) {
         this.canvasView = canvasView;
@@ -108,13 +108,14 @@ public class GameManager {
         score += 1;
         switchRate(score);
         winning = Math.round((score * rate) + rate); // вознаграждение за победу
-        sum += winning;
+        sum += winning; // подсчёт суммы всех вознаграждений за победу
         DatabaseHelper.updateReward(winning, score);
     }
 
     private void zeroReward() {
         score = 0;
         winning = 0;
+        sum = 0;
     }
 
     private void switchRate(int _score) {
