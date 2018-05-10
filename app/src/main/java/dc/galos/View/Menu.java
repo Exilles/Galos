@@ -87,7 +87,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 case R.id.logoutImageButton:
                     sound.mediaStop();
-                    Intent intent = new Intent(Menu.this, Authorization.class);
+                    intent = new Intent(Menu.this, Authorization.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     break;

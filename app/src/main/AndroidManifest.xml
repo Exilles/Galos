@@ -9,23 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.Authorization">
+        <activity android:name=".View.Authorization" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.Menu" />
-        <activity android:name=".View.Game" />
-        <activity android:name=".View.Registration" />
-        <activity android:name=".View.RestorePassword" />
-        <activity android:name=".View.Profile" />
-        <activity android:name=".View.Achievements" />
-        <activity android:name=".View.Help" />
-        <activity android:name=".View.Rating" />
-        <activity android:name=".View.EditAccInf" />
-        <activity android:name=".View.EditIcon"></activity>
+        <activity android:name=".View.Menu" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Game" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Registration" android:screenOrientation="portrait"/>
+        <activity android:name=".View.RestorePassword" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Profile" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Achievements" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Help" android:screenOrientation="portrait"/>
+        <activity android:name=".View.Rating" android:screenOrientation="portrait"/>
+        <activity android:name=".View.EditAccInf" android:screenOrientation="portrait"/>
+        <activity android:name=".View.EditIcon" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

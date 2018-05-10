@@ -17,13 +17,21 @@ import dc.galos.R;
 public class Game extends AppCompatActivity {
 
     public static boolean PAUSE = false;
-    private ConstraintLayout pauseMenuConstraintLayout;
     private Intent intent;
+    private static boolean dialog = false;
 
     private final int PRICE_LIFE = 100;
     private final int PRICE_DECELERATION = 200;
     private final int PRICE_GROWTH = 300;
 
+    private static ConstraintLayout dialogConstraintLayout;
+    private static Button continueButton;
+    private Button menuButton;
+    private static TextView countScoreTextView;
+    private static TextView titleTextView;
+    private static TextView countRewardTextView;
+    private static TextView rewardTextView;
+    private ConstraintLayout pauseMenuConstraintLayout;
     private Button exitButton;
     private ImageButton pauseImageButton;
     private TextView countMoneyTextView;
@@ -34,15 +42,22 @@ public class Game extends AppCompatActivity {
     private TextView priceDecelerationBonusTextView;
     private TextView priceGrowthBonusTextView;
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        dialogConstraintLayout = findViewById(R.id.dialogConstraintLayout);
+        titleTextView = findViewById(R.id.titleTextView);
+        continueButton = findViewById(R.id.continueButton);
+        menuButton = findViewById(R.id.menuButton);
+        countScoreTextView = findViewById(R.id.countScoreTextView);
+        countRewardTextView = findViewById(R.id.countRewardTextView);
+        rewardTextView = findViewById(R.id.rewardTextView);
+        pauseMenuConstraintLayout = findViewById(R.id.pauseMenuConstraintLayout);
         exitButton = findViewById(R.id.exitButton);
         pauseImageButton = findViewById(R.id.pauseImageButton);
-        pauseMenuConstraintLayout = findViewById(R.id.pauseMenuConstraintLayout);
         countMoneyTextView = findViewById(R.id.countMoneyTextView);
         lifeBonusImageButton = findViewById(R.id.lifeBonusImageButton);
         decelerationBonusImageButton = findViewById(R.id.decelerationBonusImageButton);
@@ -60,10 +75,13 @@ public class Game extends AppCompatActivity {
         lifeBonusImageButton.setOnClickListener(onClickListener);
         decelerationBonusImageButton.setOnClickListener(onClickListener);
         growthBonusImageButton.setOnClickListener(onClickListener);
+        continueButton.setOnClickListener(onClickListener);
+        menuButton.setOnClickListener(onClickListener);
+
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n"})
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -73,16 +91,18 @@ public class Game extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.pauseImageButton:
-                    if (PAUSE == false) {
-                        PAUSE = true;
-                        pauseImageButton.setImageResource(R.drawable.ic_play_circle_filled_black_36dp);
-                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        pauseMenuConstraintLayout.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        PAUSE = false;
-                        pauseImageButton.setImageResource(R.drawable.ic_pause_circle_filled_black_36dp);
-                        pauseMenuConstraintLayout.setVisibility(View.INVISIBLE);
+                    if (!dialog) {
+                        if (PAUSE == false) {
+                            PAUSE = true;
+                            pauseImageButton.setImageResource(R.drawable.ic_play_circle_filled_black_36dp);
+                            countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
+                            pauseMenuConstraintLayout.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            PAUSE = false;
+                            pauseImageButton.setImageResource(R.drawable.ic_pause_circle_filled_black_36dp);
+                            pauseMenuConstraintLayout.setVisibility(View.INVISIBLE);
+                        }
                     }
                     break;
                 case R.id.lifeBonusImageButton:
@@ -118,7 +138,50 @@ public class Game extends AppCompatActivity {
                     }
                     else DatabaseHelper.showInformation("Not enough money");
                     break;
+                case R.id.continueButton:
+                    dialog = false;
+                    PAUSE = false;
+                    dialogConstraintLayout.setVisibility(View.INVISIBLE);
+                    GameManager.gameEnd();
+                    break;
+                case R.id.menuButton:
+                    dialog = false;
+                    PAUSE = false;
+                    intent = new Intent(Game.this, Menu.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
             }
         }
     };
+
+    @SuppressLint("SetTextI18n")
+    public static void showDialog(int _score, int _reward, int _sum, int _flag) {
+        dialog = true;
+        PAUSE = true;
+        dialogConstraintLayout.setVisibility(View.VISIBLE);
+        countScoreTextView.setText(Integer.toString(_score));
+        switch (_flag) {
+            case 1:
+                continueButton.setText("NEXT LEVEL");
+                titleTextView.setText("Winner");
+                rewardTextView.setText("Reward:");
+                countRewardTextView.setText(Integer.toString(_reward) + "$");
+                break;
+            case 2:
+                continueButton.setText("NEW GAME");
+                titleTextView.setText("Loser");
+                rewardTextView.setText("All rewards:");
+                countRewardTextView.setText(Integer.toString(_sum) + "$");
+                break;
+            case 3:
+                continueButton.setText("TRY AGAIN");
+                titleTextView.setText("Neither victory nor defeat");
+                rewardTextView.setText("Reward:");
+                countRewardTextView.setText("0$");
+                break;
+        }
+    }
 }

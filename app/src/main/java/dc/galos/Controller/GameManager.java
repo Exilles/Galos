@@ -2,6 +2,8 @@ package dc.galos.Controller;
 
 import java.util.ArrayList;
 
+import dc.galos.View.Game;
+
 public class GameManager {
     private static final int MAX_CIRCLES = 10;
     private static MainCircle mainCircle;
@@ -11,8 +13,8 @@ public class GameManager {
     private static int height;
     private int winning = 0; // выигрыш за победу в уровнях
     private int score = 0; // количество пройденных подряд уровней в этот раз
-    private float rate; // коэффициент, на который умножается награда
     private int sum = 0; // сумма всех вознаграждений за победы
+    private float rate; // коэффициент, на который умножается награда
     public static boolean life = false;
     public static boolean deceleration = false;
 
@@ -24,7 +26,7 @@ public class GameManager {
         initEnemyCircles();
     }
 
-    private void initEnemyCircles() {
+    private static void initEnemyCircles() {
         SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         circles = new ArrayList<EnemyCircle>();
         for (int i = 0; i < MAX_CIRCLES; i++) {
@@ -80,14 +82,14 @@ public class GameManager {
                 }
                 else {
                     if (life) {
-                        gameEnd("Extra life bonus ended");
+                        Game.showDialog(score, winning, sum, 3); // вызывает диалог
                         life = false;
                         return;
                     }
                     else {
                         life = false;
                         deceleration = false;
-                        gameEnd("Score: " + Integer.toString(score) + ". Sum: " + Integer.toString(sum) + "$");
+                        Game.showDialog(score, winning, sum, 2); // вызывает диалог
                         zeroReward(); // обнуляем счет и вознаграждение
                         return;
                     }
@@ -101,12 +103,11 @@ public class GameManager {
             life = false;
             deceleration = false;
             setReward(); // прибавляем к деньгам вознаграждение и обновляем рекорд (если нужно)
-            gameEnd("Reward: " + Integer.toString(winning) + "$");
+            Game.showDialog(score, winning, sum, 1); // вызывает диалог
         }
     }
 
-    private void gameEnd(String text) {
-        canvasView.showMessage(text);
+    public static void gameEnd() {
         mainCircle.initRadius();
         initEnemyCircles();
         canvasView.redraw();
