@@ -28,4 +28,8 @@ public class MainCircle extends SimpleCircle{
         // newr = sqrt(r ^ 2 + reat ^ 2);
         radius = (int) Math.sqrt(Math.pow(radius, 2) + Math.pow(circle.radius, 2));
     }
+
+    public void growRadius() {
+        radius = (int) Math.sqrt(Math.pow(radius, 2) + Math.pow(50, 2));
+    }
 }

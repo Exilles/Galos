@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import dc.galos.Controller.DatabaseHelper;
+import dc.galos.Controller.GameManager;
 import dc.galos.R;
 
 public class Game extends AppCompatActivity {
@@ -87,6 +88,7 @@ public class Game extends AppCompatActivity {
                 case R.id.lifeBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_LIFE){
                         DatabaseHelper.buyBonus(PRICE_LIFE);
+                        GameManager.useLifeBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         DatabaseHelper.showInformation("Bonus activated");
                     }
@@ -95,6 +97,7 @@ public class Game extends AppCompatActivity {
                 case R.id.decelerationBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
                         DatabaseHelper.buyBonus(PRICE_DECELERATION);
+                        GameManager.useDecelerationBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         DatabaseHelper.showInformation("Bonus activated");
                     }
@@ -103,6 +106,7 @@ public class Game extends AppCompatActivity {
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
                         DatabaseHelper.buyBonus(PRICE_GROWTH);
+                        GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         DatabaseHelper.showInformation("Bonus activated");
                     }

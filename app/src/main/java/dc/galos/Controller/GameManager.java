@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class GameManager {
     private static final int MAX_CIRCLES = 10;
-    private MainCircle mainCircle;
-    private ArrayList<EnemyCircle> circles;
+    private static MainCircle mainCircle;
+    private static ArrayList<EnemyCircle> circles;
     private CanvasView canvasView;
     private static int width;
     private static int height;
@@ -13,6 +13,7 @@ public class GameManager {
     private int score = 0; // количество пройденных подряд уровней в этот раз
     private float rate; // коэффициент, на который умножается награда
     private int sum = 0; // сумма всех вознаграждений за победы
+    private static boolean life = false;
 
     public GameManager(CanvasView canvasView, int w, int h) {
         this.canvasView = canvasView;
@@ -35,7 +36,7 @@ public class GameManager {
         calculateAndSetCirclesColor();
     }
 
-    private void calculateAndSetCirclesColor() {
+    private static void calculateAndSetCirclesColor() {
         for (EnemyCircle circle : circles) {
             circle.setEnemyOrFoodColorDependsOn(mainCircle);
         }
@@ -75,10 +76,18 @@ public class GameManager {
                     circleForDel = circle;
                     calculateAndSetCirclesColor();
                     break;
-                } else {
-                    gameEnd("Score: " + Integer.toString(score) + ". Sum: " + Integer.toString(sum) + "$");
-                    zeroReward(); // обнуляем счет и вознаграждение
-                    return;
+                }
+                else {
+                    if (life) {
+                        gameEnd("Extra life bonus ended");
+                        life = false;
+                        return;
+                    }
+                    else {
+                        gameEnd("Score: " + Integer.toString(score) + ". Sum: " + Integer.toString(sum) + "$");
+                        zeroReward(); // обнуляем счет и вознаграждение
+                        return;
+                    }
                 }
             }
         }
@@ -143,4 +152,18 @@ public class GameManager {
                 break;
         }
     }
+
+    public static void useLifeBonus() {
+        life = true;
+    }
+
+    public static void useDecelerationBonus() {
+        EnemyCircle.setRandom_speed(EnemyCircle.getRandom_speed());
+    }
+
+    public static void useGrowthBonus() {
+        mainCircle.growRadius();
+        calculateAndSetCirclesColor();
+    }
+
 }
