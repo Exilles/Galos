@@ -28,6 +28,8 @@ public class Authorization extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
+        DatabaseHelper.setMyContext(getApplicationContext());
+
         loginAsGuestButton = findViewById(R.id.loginAsGuestButton);
         registrationButton = findViewById(R.id.registrationButton);
         restorePasswordButton = findViewById(R.id.restorePasswordButton);
@@ -63,16 +65,16 @@ public class Authorization extends AppCompatActivity {
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
 
                         // в id вернется 1, если пользователь найден или 0, если такой пользователь не найден
-                        int id = DatabaseHelper.searchRowUsers(getApplicationContext(), loginEditText.getText().toString(),
+                        int id = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(),
                                 passwordEditText.getText().toString(), null, 1);
 
                         if (id == 1) {
                             intent = new Intent(Authorization.this, Menu.class);
                             startActivity(intent);
                         }
-                        else DatabaseHelper.showInformation(getApplicationContext(), "Incorrect login or password");
+                        else DatabaseHelper.showInformation("Incorrect login or password");
                     }
-                    else  DatabaseHelper.showInformation(getApplicationContext(),"Wrong data");
+                    else  DatabaseHelper.showInformation("Wrong data");
                     break;
             }
         }

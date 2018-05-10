@@ -9,6 +9,10 @@ public class GameManager {
     private CanvasView canvasView;
     private static int width;
     private static int height;
+    private int winning = 0; // выигрыш за победу в уровнях
+    private int score = 0; // количество пройденных подряд уровней в этот раз
+    private float rate; // коэффициент, на который умножается награда
+    private int sum = 0;
 
     public GameManager(CanvasView canvasView, int w, int h) {
         this.canvasView = canvasView;
@@ -72,7 +76,8 @@ public class GameManager {
                     calculateAndSetCirclesColor();
                     break;
                 } else {
-                    gameEnd("YOU LOSE!");
+                    gameEnd("Score: " + Integer.toString(score) + ". Sum: " + Integer.toString(sum) + "$");
+                    zeroReward(); // обнуляем счет и вознаграждение
                     return;
                 }
             }
@@ -81,7 +86,8 @@ public class GameManager {
             circles.remove(circleForDel);
         }
         if (circles.isEmpty()) {
-            gameEnd("YOU WIN!");
+            setReward(); // прибавляем к деньгам вознаграждение и обновляем рекорд (если нужно)
+            gameEnd("Reward: " + Integer.toString(winning) + "$");
         }
     }
 
@@ -95,6 +101,45 @@ public class GameManager {
     private void moveCircles() {
         for (EnemyCircle circle : circles) {
             circle.moveOneStep();
+        }
+    }
+
+    private void setReward() {
+        switchRate(score);
+        winning = Math.round((score * rate) + rate); // вознаграждение за победу
+        sum += winning;
+        DatabaseHelper.updateReward(winning, score);
+        score += 1;
+    }
+
+    private void zeroReward() {
+        score = 0;
+        winning = 0;
+    }
+
+    private void switchRate(int _score) {
+        switch (_score) {
+            case 0:
+                rate = 1.0f;
+                break;
+            case 5:
+                rate = 1.5f;
+                break;
+            case 10:
+                rate = 2.0f;
+                break;
+            case 15:
+                rate = 2.5f;
+                break;
+            case 20:
+                rate = 3.0f;
+                break;
+            case 25:
+                rate = 3.5f;
+                break;
+            case 30:
+                rate = 4.0f;
+                break;
         }
     }
 }

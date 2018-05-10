@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper databaseHelper;
     private static SQLiteDatabase db;
     private static Cursor cursor;
-    private Context myContext;
+    private static Context myContext;
 
     // данные о авторизированном пользователе
     private static int id;
@@ -67,8 +67,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
-        this.myContext=context;
-        DB_PATH =context.getFilesDir().getPath() + DB_NAME;
+        this.myContext = context;
+        DB_PATH = context.getFilesDir().getPath() + DB_NAME;
     }
 
     @Override
@@ -114,25 +114,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public static void showInformation(Context context, String text) {
+    public static void setMyContext(Context context) {
+        databaseHelper = new DatabaseHelper(context);
+        databaseHelper.create_db();
+        db = databaseHelper.open();
+    }
+
+    public static void showInformation(String text) {
         if (toast != null) {
             toast.cancel();
         }
-        toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast = Toast.makeText(myContext, text, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
     // вставка новой записи при регистрации
-    public static void insertRowUsers (Context context, String _login, String _password, String _email) {
-        databaseHelper = new DatabaseHelper(context);
-
-        // создаем базу данных
-        databaseHelper.create_db();
-
-        // открываем подключение
-        db = databaseHelper.open();
-
+    public static void insertRowUsers (String _login, String _password, String _email) {
         // Создаем объект ContentValues, где имена столбцов ключи,
         // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
@@ -145,24 +143,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_USERS, null, contentValues); // создаем аккаунт
 
-        searchRowUsers(context, _login, _password, null, 1); // получаем информацию об аккаунте
+        searchRowUsers(_login, _password, null, 1); // получаем информацию об аккаунте
 
-        insertRowAchievements(context); // создаем новый список достижений для аккаунта
-
-        db.close();
+        insertRowAchievements(); // создаем новый список достижений для аккаунта
     }
 
     // поиск введенных данных на наличие в БД
-    public static int searchRowUsers(Context context, String _login, String _password, String _email, int index) {
-        databaseHelper = new DatabaseHelper(context);
+    public static int searchRowUsers(String _login, String _password, String _email, int index) {
         String query;
         int count;
-
-        // создаем базу данных
-        databaseHelper.create_db();
-
-        // открываем подключение
-        db = databaseHelper.open();
 
         switch (index) {
             case 1: // поиск по логину и паролю
@@ -179,7 +168,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
                     record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
                     cursor.close();
-                    db.close();
                     return 1;
                 }
                 else return 0;
@@ -187,30 +175,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_USERS_ID, TABLE_USERS, COLUMN_LOGIN, _login);
                 cursor = db.rawQuery(query, null);
                 count = cursor.getCount();
-                db.close();
                 return count;
             case 3: // поиск по майлу
                 query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_USERS_ID, TABLE_USERS, COLUMN_EMAIL, _email);
                 cursor = db.rawQuery(query, null);
                 count = cursor.getCount();
-                db.close();
                 return count;
             default:
-                db.close();
                 return 0;
         }
     }
 
     // изменение информации об аккаунте
-    public static void updateRowUsers(Context context, String _password, String _email) {
-        databaseHelper = new DatabaseHelper(context);
-
-        // создаем базу данных
-        databaseHelper.create_db();
-
-        // открываем подключение
-        db = databaseHelper.open();
-
+    public static void updateRowUsers(String _password, String _email) {
         // Создаем объект ContentValues, где имена столбцов ключи,
         // а информация о пользователе является значениями ключей
         ContentValues contentValues = new ContentValues();
@@ -225,17 +202,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
-
-        db.close();
     }
 
-    public static ArrayList<HashMap<String, Object>> getAchievements(Context context) {
+    public static ArrayList<HashMap<String, Object>> getAchievements() {
         ArrayList<HashMap<String, Object>> achievementsList = new ArrayList<>();
         HashMap<String, Object> hashMap;
-
-        databaseHelper = new DatabaseHelper(context);
-        databaseHelper.create_db();
-        db = databaseHelper.open();
 
         String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\"", COLUMN_TITTLE,
                 COLUMN_DESCRIPTION, COLUMN_REWARD, TABLE_ACHIEVEMENTS);
@@ -250,9 +221,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        db.close();
-
         return achievementsList;
+    }
+
+    // изменение информации об аккаунте
+    public static void updateReward(int _money, int _record) {
+        // Создаем объект ContentValues, где имена столбцов ключи,
+        // а информация о пользователе является значениями ключей
+        ContentValues contentValues = new ContentValues();
+
+        money += _money;
+        contentValues.put(COLUMN_MONEY, money);
+
+        if (record < _record) {
+            record = _record;
+            contentValues.put(COLUMN_RECORD, _record);
+        }
+
+        db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     public static int getSession() {
@@ -279,15 +265,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return record;
     }
 
-    public static void insertRowAchievements(Context context) {
-        databaseHelper = new DatabaseHelper(context);
-
-        // создаем базу данных
-        databaseHelper.create_db();
-
-        // открываем подключение
-        db = databaseHelper.open();
-
+    public static void insertRowAchievements() {
         // Создаем объект ContentValues, где имена столбцов ключи,
         // а информация о пользователе является значениями ключей
         /*ContentValues contentValues = new ContentValues();

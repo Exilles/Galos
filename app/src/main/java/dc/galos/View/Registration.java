@@ -47,26 +47,26 @@ public class Registration extends AppCompatActivity {
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
 
-                            count = DatabaseHelper.searchRowUsers(getApplicationContext(), loginEditText.getText().toString(), null,
+                            count = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(), null,
                                     null, 2);
                             if (count == 0){
-                                count = DatabaseHelper.searchRowUsers(getApplicationContext(), null, null,
+                                count = DatabaseHelper.searchRowUsers(null, null,
                                         emailEditText.getText().toString(), 3);
                                 if (count == 0) {
-                                    DatabaseHelper.insertRowUsers(getApplicationContext(), loginEditText.getText().toString(),
+                                    DatabaseHelper.insertRowUsers(loginEditText.getText().toString(),
                                             passwordEditText.getText().toString(), emailEditText.getText().toString());
 
                                     intent = new Intent(Registration.this, Authorization.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                 }
-                                else DatabaseHelper.showInformation(getApplicationContext(),"This e-mail already exists");
+                                else DatabaseHelper.showInformation("This e-mail already exists");
                             }
-                            else DatabaseHelper.showInformation(getApplicationContext(),"This login already exists");
+                            else DatabaseHelper.showInformation("This login already exists");
                         }
-                        else  DatabaseHelper.showInformation(getApplicationContext(),"Passwords do not match");
+                        else  DatabaseHelper.showInformation("Passwords do not match");
                     }
-                    else  DatabaseHelper.showInformation(getApplicationContext(),"Wrong data");
+                    else  DatabaseHelper.showInformation("Wrong data");
                     break;
                 case R.id.backButton:
                     intent = new Intent(Registration.this, Authorization.class);

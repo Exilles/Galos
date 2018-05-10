@@ -37,7 +37,7 @@ public class Achievements extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView);
 
         // создаем массив списков
-        ArrayList<HashMap<String, Object>> achievementsList = DatabaseHelper.getAchievements(this);
+        ArrayList<HashMap<String, Object>> achievementsList = DatabaseHelper.getAchievements();
 
         // используем адаптер данных
         SimpleAdapter adapter = new SimpleAdapter(this, achievementsList,

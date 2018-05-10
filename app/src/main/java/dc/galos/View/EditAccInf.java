@@ -52,15 +52,15 @@ public class EditAccInf extends AppCompatActivity {
                                 if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
                                     if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
                                     {
-                                        DatabaseHelper.updateRowUsers(getApplicationContext(), newPasswordEditText.getText().toString(),
+                                        DatabaseHelper.updateRowUsers(newPasswordEditText.getText().toString(),
                                                 newEmailEditText.getText().toString());
-                                        DatabaseHelper.showInformation(getApplicationContext(),"Information updated successfully");
+                                        DatabaseHelper.showInformation("Information updated successfully");
                                     }
-                                    else DatabaseHelper.showInformation(getApplicationContext(),"Current password does not match");
-                                else DatabaseHelper.showInformation(getApplicationContext(),"New and current e-mail match");
-                            else DatabaseHelper.showInformation(getApplicationContext(),"New and current passwords match");
-                        else DatabaseHelper.showInformation(getApplicationContext(),"Wrong data");
-                    else DatabaseHelper.showInformation(getApplicationContext(),"Enter the current password");
+                                    else DatabaseHelper.showInformation("Current password does not match");
+                                else DatabaseHelper.showInformation("New and current e-mail match");
+                            else DatabaseHelper.showInformation("New and current passwords match");
+                        else DatabaseHelper.showInformation("Wrong data");
+                    else DatabaseHelper.showInformation("Enter the current password");
                     break;
             }
         }
