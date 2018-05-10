@@ -34,8 +34,6 @@ public class Game extends AppCompatActivity {
         pauseMenuConstraintLayout = findViewById(R.id.pauseMenuConstraintLayout);
         countMoneyTextView = findViewById(R.id.countMoneyTextView);
 
-        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-
         exitButton.setOnClickListener(onClickListener);
         pauseImageButton.setOnClickListener(onClickListener);
     }
@@ -53,6 +51,7 @@ public class Game extends AppCompatActivity {
                     if (PAUSE == false) {
                         PAUSE = true;
                         pauseImageButton.setImageResource(R.drawable.ic_play_circle_filled_black_36dp);
+                        countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         pauseMenuConstraintLayout.setVisibility(View.VISIBLE);
                     }
                     else {
