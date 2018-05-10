@@ -5,7 +5,7 @@ import android.graphics.Color;
 import java.util.Random;
 
 public class ImmortalCircle extends SimpleCircle {
-    private static final int FROM_RADIUS = 10;
+    private static final int FROM_RADIUS = 40;
     private static final int TO_RADIUS = 80;
     private static final int CIRCLE_COLOR = Color.RED;
     private static final int RANDOM_SPEED = 10;

@@ -6,8 +6,9 @@ import java.util.Random;
 import dc.galos.View.Game;
 
 public class GameManager {
-    private static final int ENEMY_CIRCLES = 10;
-    private static final int IMMORTAL_CIRCLES = 3;
+    private static final int FROM_CIRCLES = 7;
+    private static final int TO_CIRCLES = 12;
+    private static final int MAX_IMMORTAL_CIRCLES = 3;
     private static MainCircle mainCircle;
     private static ArrayList<EnemyCircle> enemy_circles;
     private static ArrayList<ImmortalCircle> immortal_circles;
@@ -34,7 +35,7 @@ public class GameManager {
         SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         Random random = new Random();
         enemy_circles = new ArrayList<EnemyCircle>();
-        int count_circles = random.nextInt(ENEMY_CIRCLES) + 10;
+        int count_circles = FROM_CIRCLES + random.nextInt(TO_CIRCLES - FROM_CIRCLES);
         for (int i = 0; i < count_circles; i++) {
             EnemyCircle circle;
             do {
@@ -49,7 +50,7 @@ public class GameManager {
         SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         Random random = new Random();
         immortal_circles = new ArrayList<ImmortalCircle>();
-        int count_circles = random.nextInt(IMMORTAL_CIRCLES);
+        int count_circles = random.nextInt(MAX_IMMORTAL_CIRCLES);
         for (int i = 0; i < count_circles; i++) {
             ImmortalCircle circle;
             do {
@@ -106,20 +107,7 @@ public class GameManager {
                     calculateAndSetCirclesColor();
                     break;
                 }
-                else {
-                    if (life) {
-                        Game.showDialog(score, winning, sum, 3); // вызывает диалог
-                        life = false;
-                        return;
-                    }
-                    else {
-                        life = false;
-                        deceleration = false;
-                        Game.showDialog(score, winning, sum, 2); // вызывает диалог
-                        zeroReward(); // обнуляем счет и вознаграждение
-                        return;
-                    }
-                }
+                else lifeLoser();// вызывает диалог в соответствии с life
             }
         }
         if (circleForDel != null) enemy_circles.remove(circleForDel);
@@ -148,14 +136,12 @@ public class GameManager {
         if (life) {
             Game.showDialog(score, winning, sum, 3); // вызывает диалог
             life = false;
-            return;
         }
         else {
             life = false;
             deceleration = false;
             Game.showDialog(score, winning, sum, 2); // вызывает диалог
             zeroReward(); // обнуляем счет и вознаграждение
-            return;
         }
     }
 
@@ -222,6 +208,9 @@ public class GameManager {
     public static void useDecelerationBonus() {
         deceleration = true;
         for (EnemyCircle circle : enemy_circles) {
+            circle.decelerationSpeed();
+        }
+        for (ImmortalCircle circle : immortal_circles) {
             circle.decelerationSpeed();
         }
     }
