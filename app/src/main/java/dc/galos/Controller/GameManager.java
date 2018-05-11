@@ -2,12 +2,14 @@ package dc.galos.Controller;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import dc.galos.View.Game;
 
 public class GameManager {
-    private static final int FROM_CIRCLES = 7;
-    private static final int TO_CIRCLES = 12;
+    private static final int FROM_CIRCLES = 1;
+    private static final int TO_CIRCLES = 2;
     private static final int MAX_IMMORTAL_CIRCLES = 3;
     private static final int MAX_VANISHING_CIRCLES = 3;
     private static MainCircle mainCircle; // круг игрока
@@ -17,6 +19,8 @@ public class GameManager {
     private static CanvasView canvasView;
     private static int width;
     private static int height;
+    private Timer timer;
+    private boolean vanish = false;
     private int winning = 0; // выигрыш за победу в уровнях
     private int score = 0; // количество пройденных подряд уровней в этот раз
     private int sum = 0; // сумма всех вознаграждений за победы
@@ -32,6 +36,7 @@ public class GameManager {
         initVanishingCircles();
         initEnemyCircles();
         initImmortalCircles();
+        startTimer();
     }
 
     private static void initEnemyCircles() {
@@ -117,11 +122,30 @@ public class GameManager {
 
     public void onTouchEvent(int x, int y) {
         mainCircle.moveMainCircleWhenTouchAt(x, y);
-        checkEmptyCircles();
-        checkEnemyCirclesCollision();
-        checkImmortalCirclesCollision();
-        checkVanishingCirclesCollision();
+        checkEmptyCircles(); // проверка условия победы
+        checkEnemyCirclesCollision(); // проверка коллизии вражеских кругов
+        checkImmortalCirclesCollision(); // проверка коллизии неуязвимых кругов
+        checkVanishingCirclesCollision(); // проверка коллизии исчезающих кругов
         moveCircles();
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run(){
+                if (!vanish) {
+                    vanish = true;
+                    for (VanishingCircle circle : vanishing_circles) {
+                        circle.goVanish();
+                    }
+                }
+                else {
+                    vanish = false;
+                    setVanishingCirclesColor();
+                }
+            }
+        }, 0, 2500);
     }
 
     // проверка коллизии с вражеским кругом
@@ -133,7 +157,6 @@ public class GameManager {
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setEnemyCirclesColor();
-                    setVanishingCirclesColor();
                     break;
                 }
                 else lifeLoser();// вызывает диалог в соответствии с life
@@ -160,7 +183,6 @@ public class GameManager {
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setEnemyCirclesColor();
-                    setVanishingCirclesColor();
                     break;
                 }
                 else lifeLoser();// вызывает диалог в соответствии с life
@@ -180,6 +202,7 @@ public class GameManager {
 
     // вызывает диалог в соответствии с тем, использован бонус life или нет
     private void lifeLoser(){
+        setVanishingCirclesColor();
         if (life) {
             Game.showDialog(score, winning, sum, 3); // вызывает диалог
             life = false;

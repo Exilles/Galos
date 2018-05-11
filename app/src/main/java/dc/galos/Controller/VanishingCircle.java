@@ -6,10 +6,11 @@ import java.util.Random;
 
 public class VanishingCircle extends SimpleCircle {
 
-    private static final int FROM_RADIUS = 25;
+    private static final int FROM_RADIUS = 60;
     private static final int TO_RADIUS = 100;
-    private static final int ENEMY_COLOR = Color.BLUE;
-    private static final int FOOD_COLOR = Color.GREEN;
+    private static final int ENEMY_COLOR = Color.argb(255, 0, 0 ,100);
+    private static final int FOOD_COLOR = Color.argb(255, 10, 90 ,235);
+    private static final int VANISH_COLOR = Color.TRANSPARENT;
     private static final int RANDOM_SPEED = 10;
     private float dx;
     private float dy;
@@ -36,6 +37,10 @@ public class VanishingCircle extends SimpleCircle {
         } else {
             setColor(ENEMY_COLOR);
         }
+    }
+
+    public void goVanish(){
+        setColor(VANISH_COLOR);
     }
 
     public boolean isSmallerThan(SimpleCircle circle) {
