@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class VanishingCircle extends SimpleCircle {
 
-    private static final int FROM_RADIUS = 60;
+    private static final int FROM_RADIUS = 40;
     private static final int TO_RADIUS = 100;
     private static final int ENEMY_COLOR = Color.argb(255, 0, 0 ,100);
     private static final int FOOD_COLOR = Color.argb(255, 10, 90 ,235);

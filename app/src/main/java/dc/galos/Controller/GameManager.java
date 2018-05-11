@@ -81,7 +81,7 @@ public class GameManager {
 
     public void onTouchEvent(int x, int y) {
         mainCircle.moveMainCircleWhenTouchAt(x, y);
-        checkEmptyCircles(); // проверка условия победы
+        checkEmptyCircles();
         checkEnemyCirclesCollision(); // проверка коллизии вражеских кругов
         checkImmortalCirclesCollision(); // проверка коллизии неуязвимых кругов
         checkVanishingCirclesCollision(); // проверка коллизии исчезающих кругов

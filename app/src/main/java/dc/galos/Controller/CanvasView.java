@@ -6,18 +6,14 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.*;
-import android.widget.Toast;
-
-import dc.galos.Model.ICanvasView;
 import dc.galos.View.Game;
 
-public class CanvasView extends View implements ICanvasView {
+public class CanvasView extends View{
     private static int width;
     private static int height;
     private GameManager gameManager;
     private Paint paint;
     private Canvas canvas;
-    private Toast toast;
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,25 +46,13 @@ public class CanvasView extends View implements ICanvasView {
 
     }
 
-    @Override
     public void drawCircle(SimpleCircle circle) {
         paint.setColor(circle.getColor());
         canvas.drawCircle(circle.getX(), circle.getY(), circle.getRadius(), paint);
     }
 
-    @Override
     public void redraw() {
         invalidate();
-    }
-
-    @Override
-    public void showMessage(String text) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getContext(), text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     @Override
@@ -97,9 +81,4 @@ public class CanvasView extends View implements ICanvasView {
         super.performClick();
         return true;
     }
-
-    // todo для любых экранов
-//    public static int recalculateRadius(int radius) {
-//        return radius * 768 / width < height ? width : height;
-//    }
 }
