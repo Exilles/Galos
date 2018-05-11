@@ -10,7 +10,7 @@ public class EnemyCircle extends SimpleCircle {
     private static final int TO_RADIUS = 130;
     private static final int ENEMY_COLOR = Color.BLACK;
     private static final int FOOD_COLOR = Color.LTGRAY;
-    private static final int RANDOM_SPEED = 14;
+    private static final int RANDOM_SPEED = 10;
     private float dx;
     private float dy;
 

@@ -11,7 +11,7 @@ public class VanishingCircle extends SimpleCircle {
     private static final int ENEMY_COLOR = Color.argb(255, 0, 0 ,100);
     private static final int FOOD_COLOR = Color.argb(255, 10, 90 ,235);
     private static final int VANISH_COLOR = Color.TRANSPARENT;
-    private static final int RANDOM_SPEED = 10;
+    private static final int SPEED = 5;
     private float dx;
     private float dy;
 
@@ -25,9 +25,20 @@ public class VanishingCircle extends SimpleCircle {
         Random random = new Random();
         int x = random.nextInt(GameManager.getWidth());
         int y = random.nextInt(GameManager.getHeight());
-        int dx = 1 + random.nextInt(RANDOM_SPEED);
-        int dy = 1 + random.nextInt(RANDOM_SPEED);
+        //int dx = 1 + random.nextInt(RANDOM_SPEED);
+        //int dy = 1 + random.nextInt(RANDOM_SPEED);
+        int dx = SPEED;
+        int dy = SPEED;
         int radius = FROM_RADIUS + random.nextInt(TO_RADIUS - FROM_RADIUS);
+        return new VanishingCircle(x, y, radius, dx, dy);
+    }
+
+    public static VanishingCircle getRandomCircle(int radius) {
+        Random random = new Random();
+        int x = random.nextInt(GameManager.getWidth());
+        int y = random.nextInt(GameManager.getHeight());
+        int dx = SPEED;
+        int dy = SPEED;
         return new VanishingCircle(x, y, radius, dx, dy);
     }
 

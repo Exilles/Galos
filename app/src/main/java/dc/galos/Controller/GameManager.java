@@ -1,27 +1,22 @@
 package dc.galos.Controller;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import dc.galos.View.Game;
 
 public class GameManager {
-    private static final int FROM_CIRCLES = 5;
-    private static final int TO_CIRCLES = 10;
-    private static final int MAX_IMMORTAL_CIRCLES = 3;
-    private static final int MAX_VANISHING_CIRCLES = 3;
-    private static final int FOOD_CIRCLE_RADIUS = 40;
     private static MainCircle mainCircle; // круг игрока
     private static ArrayList<EnemyCircle> enemy_circles; // массив вражеских кругов
     private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
     private static ArrayList<VanishingCircle> vanishing_circles; // массив исчезающих кругов
     private static CanvasView canvasView;
+    private static int mode = 1;
     private static int width;
     private static int height;
     private Timer timer;
-    private boolean vanish = false;
+    private boolean vanish = true;
     private int winning = 0; // выигрыш за победу в уровнях
     private int score = 0; // количество пройденных подряд уровней в этот раз
     private int sum = 0; // сумма всех вознаграждений за победы
@@ -34,74 +29,18 @@ public class GameManager {
         width = w;
         height = h;
         initMainCircle();
-        initVanishingCircles();
-        initEnemyCircles();
-        initImmortalCircles();
+        initGameMode();
         startTimer();
     }
 
-    private static void initEnemyCircles() {
-        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
-        Random random = new Random();
-        enemy_circles = new ArrayList<EnemyCircle>();
-        int count_circles = FROM_CIRCLES + random.nextInt(TO_CIRCLES - FROM_CIRCLES);
-        int radius = 40;
-        for (int i = 0; i < count_circles; i++) {
-            EnemyCircle circle;
-            do {
-                circle = EnemyCircle.getRandomCircle(radius);
-            } while (circle.isIntersect(mainCircleArea));
-            enemy_circles.add(circle);
-            radius += 19;
-        }
-        setEnemyCirclesColor();
-
-        /*for (int i = 0; i < count_circles; i++) {
-            EnemyCircle circle;
-            if (count_circles - i > 2){
-                do {
-                    circle = EnemyCircle.getRandomCircle();
-                } while (circle.isIntersect(mainCircleArea));
-            }
-            else {
-                do {
-                    circle = EnemyCircle.getRandomCircle(FOOD_CIRCLE_RADIUS);
-                } while (circle.isIntersect(mainCircleArea));
-            }
-            enemy_circles.add(circle);
-        }
-        setEnemyCirclesColor();*/
-    }
-
-
-
-    private static void initImmortalCircles() {
-        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
-        Random random = new Random();
-        immortal_circles = new ArrayList<ImmortalCircle>();
-        int count_circles = random.nextInt(MAX_IMMORTAL_CIRCLES);
-        for (int i = 0; i < count_circles; i++) {
-            ImmortalCircle circle;
-            do {
-                circle = ImmortalCircle.getRandomCircle();
-            } while (circle.isIntersect(mainCircleArea));
-            immortal_circles.add(circle);
-        }
-    }
-
-    private static void initVanishingCircles() {
-        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
-        Random random = new Random();
-        vanishing_circles = new ArrayList<VanishingCircle>();
-        int count_circles = random.nextInt(MAX_VANISHING_CIRCLES);
-        for (int i = 0; i < count_circles; i++) {
-            VanishingCircle circle;
-            do {
-                circle = VanishingCircle.getRandomCircle();
-            } while (circle.isIntersect(mainCircleArea));
-            vanishing_circles.add(circle);
-        }
-        setVanishingCirclesColor();
+    private static void initGameMode(){
+        GameModes gameModes = new GameModes(mainCircle);
+        gameModes.generateMode(mode);
+        enemy_circles = gameModes.getEnemy_circles();
+        immortal_circles = gameModes.getImmortal_circles();
+        vanishing_circles = gameModes.getVanishing_circles();
+        if (mode != 4) mode ++;
+        else mode = 1;
     }
 
     private static void setEnemyCirclesColor() {
@@ -155,18 +94,23 @@ public class GameManager {
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
             public void run(){
-                if (!vanish) {
-                    vanish = true;
+                if (vanish) {
+                    vanish = false;
                     setVanishingCirclesColor();
                 }
                 else {
-                    vanish = false;
+                    vanish = true;
                     for (VanishingCircle circle : vanishing_circles) {
                         circle.goVanish();
                     }
                 }
             }
-        }, 0, 2500);
+        }, 0, 2000);
+    }
+
+    private void setCirclesColor(){
+        setEnemyCirclesColor();
+        if (!vanish) setVanishingCirclesColor();
     }
 
     // проверка коллизии с вражеским кругом
@@ -177,7 +121,7 @@ public class GameManager {
                 if (circle.isSmallerThan(mainCircle)) {
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
-                    setEnemyCirclesColor();
+                    setCirclesColor();
                     break;
                 }
                 else lifeLoser();// вызывает диалог в соответствии с life
@@ -203,7 +147,7 @@ public class GameManager {
                 if (circle.isSmallerThan(mainCircle)) {
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
-                    setEnemyCirclesColor();
+                    setCirclesColor();
                     break;
                 }
                 else lifeLoser();// вызывает диалог в соответствии с life
@@ -238,9 +182,7 @@ public class GameManager {
 
     public static void gameEnd() {
         mainCircle.initRadius();
-        initEnemyCircles();
-        initImmortalCircles();
-        initVanishingCircles();
+        initGameMode();
         canvasView.redraw();
     }
 
