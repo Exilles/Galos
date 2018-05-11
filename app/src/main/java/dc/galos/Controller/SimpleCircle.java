@@ -12,13 +12,6 @@ public class SimpleCircle {
         this.radius = radius;
     }
 
-    public SimpleCircle(int x, int y, int radius, int color) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.color = color;
-    }
-
     public int getX() {
         return x;
     }

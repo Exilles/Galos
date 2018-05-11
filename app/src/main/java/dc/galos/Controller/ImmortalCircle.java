@@ -13,9 +13,10 @@ public class ImmortalCircle extends SimpleCircle {
     private float dy;
 
     private ImmortalCircle(int x, int y, int radius, int dx, int dy) {
-        super(x, y, radius, CIRCLE_COLOR);
+        super(x, y, radius);
         this.dx = dx;
         this.dy = dy;
+        setColor(CIRCLE_COLOR);
     }
 
     public static ImmortalCircle getRandomCircle() {
