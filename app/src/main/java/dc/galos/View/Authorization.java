@@ -50,6 +50,7 @@ public class Authorization extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
+                    DatabaseHelper.searchRowUsers("Guest", "1111", null, 1);
                     intent = new Intent(Authorization.this, Menu.class);
                     startActivity(intent);
                     break;
@@ -63,11 +64,9 @@ public class Authorization extends AppCompatActivity {
                     break;
                 case R.id.loginButton:
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
-
                         // в id вернется 1, если пользователь найден или 0, если такой пользователь не найден
                         int id = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(),
                                 passwordEditText.getText().toString(), null, 1);
-
                         if (id == 1) {
                             intent = new Intent(Authorization.this, Menu.class);
                             startActivity(intent);

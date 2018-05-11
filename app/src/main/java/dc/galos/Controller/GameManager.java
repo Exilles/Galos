@@ -8,10 +8,11 @@ import java.util.TimerTask;
 import dc.galos.View.Game;
 
 public class GameManager {
-    private static final int FROM_CIRCLES = 1;
-    private static final int TO_CIRCLES = 2;
+    private static final int FROM_CIRCLES = 5;
+    private static final int TO_CIRCLES = 10;
     private static final int MAX_IMMORTAL_CIRCLES = 3;
     private static final int MAX_VANISHING_CIRCLES = 3;
+    private static final int FOOD_CIRCLE_RADIUS = 40;
     private static MainCircle mainCircle; // круг игрока
     private static ArrayList<EnemyCircle> enemy_circles; // массив вражеских кругов
     private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
@@ -44,15 +45,35 @@ public class GameManager {
         Random random = new Random();
         enemy_circles = new ArrayList<EnemyCircle>();
         int count_circles = FROM_CIRCLES + random.nextInt(TO_CIRCLES - FROM_CIRCLES);
+        int radius = 40;
         for (int i = 0; i < count_circles; i++) {
             EnemyCircle circle;
             do {
-                circle = EnemyCircle.getRandomCircle();
+                circle = EnemyCircle.getRandomCircle(radius);
             } while (circle.isIntersect(mainCircleArea));
             enemy_circles.add(circle);
+            radius += 19;
         }
         setEnemyCirclesColor();
+
+        /*for (int i = 0; i < count_circles; i++) {
+            EnemyCircle circle;
+            if (count_circles - i > 2){
+                do {
+                    circle = EnemyCircle.getRandomCircle();
+                } while (circle.isIntersect(mainCircleArea));
+            }
+            else {
+                do {
+                    circle = EnemyCircle.getRandomCircle(FOOD_CIRCLE_RADIUS);
+                } while (circle.isIntersect(mainCircleArea));
+            }
+            enemy_circles.add(circle);
+        }
+        setEnemyCirclesColor();*/
     }
+
+
 
     private static void initImmortalCircles() {
         SimpleCircle mainCircleArea = mainCircle.getCircleArea();
@@ -136,13 +157,13 @@ public class GameManager {
             public void run(){
                 if (!vanish) {
                     vanish = true;
-                    for (VanishingCircle circle : vanishing_circles) {
-                        circle.goVanish();
-                    }
+                    setVanishingCirclesColor();
                 }
                 else {
                     vanish = false;
-                    setVanishingCirclesColor();
+                    for (VanishingCircle circle : vanishing_circles) {
+                        circle.goVanish();
+                    }
                 }
             }
         }, 0, 2500);

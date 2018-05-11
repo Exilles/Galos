@@ -94,13 +94,13 @@ public class Game extends AppCompatActivity {
                     if (!dialog) {
                         if (PAUSE == false) {
                             PAUSE = true;
-                            pauseImageButton.setImageResource(R.drawable.ic_play_circle_filled_black_36dp);
+                            pauseImageButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             pauseMenuConstraintLayout.setVisibility(View.VISIBLE);
                         }
                         else {
                             PAUSE = false;
-                            pauseImageButton.setImageResource(R.drawable.ic_pause_circle_filled_black_36dp);
+                            pauseImageButton.setImageResource(R.drawable.ic_pause_white_24dp);
                             pauseMenuConstraintLayout.setVisibility(View.INVISIBLE);
                         }
                     }

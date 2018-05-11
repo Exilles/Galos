@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 public class MainCircle extends SimpleCircle{
     private static final int INIT_RADIUS = 50;
-    private static final int MAIN_SPEED = 40;
+    private static final int MAIN_SPEED = 35;
     private static final int OUR_COLOR = Color.GRAY;
 
     public MainCircle(int x, int y) {
@@ -13,8 +13,10 @@ public class MainCircle extends SimpleCircle{
     }
 
     public void moveMainCircleWhenTouchAt(int x1, int y1) {
-        int dx = (x1 - x) * MAIN_SPEED / GameManager.getWidth();
-        int dy = (y1 - y) * MAIN_SPEED / GameManager.getHeight();
+        //int dx = (x1 - x) * MAIN_SPEED / GameManager.getWidth();
+        //int dy = (y1 - y) * MAIN_SPEED / GameManager.getHeight();
+        int dx = (x1 - x) / MAIN_SPEED;
+        int dy = (y1 - y) / MAIN_SPEED;
         x += dx;
         y += dy;
     }

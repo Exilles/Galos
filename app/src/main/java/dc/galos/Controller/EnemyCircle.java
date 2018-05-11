@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class EnemyCircle extends SimpleCircle {
 
-    private static final int FROM_RADIUS = 25;
+    private static final int FROM_RADIUS = 60;
     private static final int TO_RADIUS = 130;
     private static final int ENEMY_COLOR = Color.BLACK;
     private static final int FOOD_COLOR = Color.LTGRAY;
@@ -27,6 +27,15 @@ public class EnemyCircle extends SimpleCircle {
         int dx = 1 + random.nextInt(RANDOM_SPEED);
         int dy = 1 + random.nextInt(RANDOM_SPEED);
         int radius = FROM_RADIUS + random.nextInt(TO_RADIUS - FROM_RADIUS);
+        return new EnemyCircle(x, y, radius, dx, dy);
+    }
+
+    public static EnemyCircle getRandomCircle(int radius) {
+        Random random = new Random();
+        int x = random.nextInt(GameManager.getWidth());
+        int y = random.nextInt(GameManager.getHeight());
+        int dx = 1 + random.nextInt(RANDOM_SPEED);
+        int dy = 1 + random.nextInt(RANDOM_SPEED);
         return new EnemyCircle(x, y, radius, dx, dy);
     }
 
