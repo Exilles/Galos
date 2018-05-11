@@ -61,9 +61,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID_USER = "id_user";
 
     // заголовки для списка достижений
-    private static String TITTLE = "achievement"; // Верхний текст
-    private static String DESCRIPTION = "description"; // ниже главного
-    private static String REWARD = "reward";  // вознаграждение
+    private static String TITLE = "achievement"; // Название достижения
+    private static String DESCRIPTION = "description"; // Описание достижения
+    private static String STATUS = "status"; // Статус достижения
+    private static String REWARD = "reward";  // Вознаграждение за достижение
 
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
@@ -210,9 +211,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
             hashMap = new HashMap<>();
-            hashMap.put(TITTLE, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TITTLE))); // Название
+            hashMap.put(TITLE, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TITTLE))); // Название
             hashMap.put(DESCRIPTION, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION))); // Описание
-            hashMap.put(REWARD, "Get " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REWARD)) + "$"); // Вознаграждение
+            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)).equals("true")) hashMap.put(STATUS, "Получено"); // Статус
+            else hashMap.put(STATUS, "Не получено"); // Статус
+            hashMap.put(REWARD, "Награда: " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REWARD)) + "$"); // Вознаграждение
             achievementsList.add(hashMap);
         }
         cursor.close();

@@ -13,32 +13,51 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tittleTextView"
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
+            android:gravity="center"
+            android:text="Жаль, что не реал..."
             android:textColor="@android:color/black"
-            android:textSize="23sp" />
+            android:textSize="21sp" />
 
         <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
+            android:gravity="center"
+            android:text="Заработайте 3000 баксов за всю игру"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="530dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/statusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/a_futurica_extrabold"
+            android:gravity="center"
+            android:text="Не получено"
+            android:textColor="@color/colorAccent"
+            android:textSize="21sp" />
+
+        <TextView
+            android:id="@+id/rewardTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/a_futurica_extrabold"
+            android:gravity="center"
+            android:text="Награда: 3000$"
             android:textColor="@android:color/darker_gray"
             android:textSize="12.5sp" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/rewardButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="460dp"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:focusable="false"
-        android:fontFamily="@font/a_futurica_extrabold"
-        android:gravity="left|center_vertical"
-        android:textSize="18sp"
-        tools:ignore="RtlHardcoded" />
 
 </LinearLayout>
