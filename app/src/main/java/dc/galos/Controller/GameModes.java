@@ -16,8 +16,8 @@ public class GameModes {
     private final int TO_IMMORTAL_CIRCLES = 25;
     private final int MAX_IMMORTAL_CIRCLES = 4;
 
-    private final int FROM_VANISHING_CIRCLES = 7;
-    private final int TO_VANISHING_CIRCLES = 12;
+    private final int FROM_VANISHING_CIRCLES = 5;
+    private final int TO_VANISHING_CIRCLES = 10;
     private final int MAX_VANISHING_CIRCLES = 4;
 
     private final int FOOD_CIRCLE_RADIUS_1 = 40;
@@ -37,7 +37,7 @@ public class GameModes {
             case 1: // Рандомная генерация кругов
                 initEnemyCircles(1);
                 initImmortalCircles(1);
-                initVanishingCircles(1);
+                initVanishingCircles(2);
                 break;
             case 2: // Поглощение кругов поочередно (с препятствием - неуязвимый круг)
                 initEnemyCircles(2);
@@ -49,7 +49,7 @@ public class GameModes {
                 break;
             case 4: // Все исчезающие круги (с препятствием - неуязвимый круг)
                 initImmortalCircles(1);
-                initVanishingCircles(2);
+                initVanishingCircles(1);
                 break;
         }
     }
@@ -105,8 +105,6 @@ public class GameModes {
         setEnemyCirclesColor();
     }
 
-
-
     private void initImmortalCircles(int mode) {
         SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         Random random = new Random();
@@ -143,7 +141,7 @@ public class GameModes {
         int count_circles;
         switch (mode){
             case 1:
-                count_circles = random.nextInt(MAX_VANISHING_CIRCLES);
+                count_circles = FROM_VANISHING_CIRCLES + random.nextInt(TO_VANISHING_CIRCLES - FROM_VANISHING_CIRCLES);
                 for (int i = 0; i < count_circles; i++) {
                     VanishingCircle circle;
                     if (count_circles == 2) {
@@ -167,7 +165,7 @@ public class GameModes {
                 }
                 break;
             case 2:
-                count_circles = FROM_VANISHING_CIRCLES + random.nextInt(TO_VANISHING_CIRCLES - FROM_VANISHING_CIRCLES);
+                count_circles = random.nextInt(MAX_VANISHING_CIRCLES);
                 for (int i = 0; i < count_circles; i++) {
                     VanishingCircle circle;
                     do {

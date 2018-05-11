@@ -165,12 +165,15 @@ public class Game extends AppCompatActivity {
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {
             case 1:
+                if (GameManager.mode != 4) GameManager.mode ++;
+                else GameManager.mode = 1;
                 continueButton.setText("NEXT LEVEL");
                 titleTextView.setText("Winner");
                 rewardTextView.setText("Reward:");
                 countRewardTextView.setText(Integer.toString(_reward) + "$");
                 break;
             case 2:
+                GameManager.mode = 1;
                 continueButton.setText("NEW GAME");
                 titleTextView.setText("Loser");
                 rewardTextView.setText("All rewards:");

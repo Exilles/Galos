@@ -19,12 +19,10 @@
         <activity android:name=".View.Game" android:screenOrientation="portrait"/>
         <activity android:name=".View.Registration" android:screenOrientation="portrait"/>
         <activity android:name=".View.RestorePassword" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Profile" android:screenOrientation="portrait"/>
         <activity android:name=".View.Achievements" android:screenOrientation="portrait"/>
         <activity android:name=".View.Help" android:screenOrientation="portrait"/>
         <activity android:name=".View.Rating" android:screenOrientation="portrait"/>
         <activity android:name=".View.EditAccInf" android:screenOrientation="portrait"/>
-        <activity android:name=".View.EditIcon" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

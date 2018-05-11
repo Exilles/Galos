@@ -41,6 +41,6 @@ public class SimpleCircle {
     }
 
     public boolean isIntersect2(SimpleCircle circle) {
-        return Math.pow(radius + circle.radius, 2) >= Math.sqrt(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2));
+        return (radius + circle.radius)*2 >= Math.sqrt(Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2));
     }
 }

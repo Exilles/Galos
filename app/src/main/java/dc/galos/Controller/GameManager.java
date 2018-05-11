@@ -7,12 +7,13 @@ import java.util.TimerTask;
 import dc.galos.View.Game;
 
 public class GameManager {
+    private final static int PERIOD = 1500;
     private static MainCircle mainCircle; // круг игрока
     private static ArrayList<EnemyCircle> enemy_circles; // массив вражеских кругов
     private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
     private static ArrayList<VanishingCircle> vanishing_circles; // массив исчезающих кругов
     private static CanvasView canvasView;
-    private static int mode = 1;
+    public static int mode = 1;
     private static int width;
     private static int height;
     private Timer timer;
@@ -39,8 +40,6 @@ public class GameManager {
         enemy_circles = gameModes.getEnemy_circles();
         immortal_circles = gameModes.getImmortal_circles();
         vanishing_circles = gameModes.getVanishing_circles();
-        if (mode != 4) mode ++;
-        else mode = 1;
     }
 
     private static void setEnemyCirclesColor() {
@@ -105,7 +104,7 @@ public class GameManager {
                     }
                 }
             }
-        }, 0, 2000);
+        }, 0, PERIOD);
     }
 
     private void setCirclesColor(){
