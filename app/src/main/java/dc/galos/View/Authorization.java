@@ -50,7 +50,7 @@ public class Authorization extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
-                    DatabaseHelper.searchRowUsers("Guest", "1111", null, 1);
+                    DatabaseHelper.searchRowUsers("Гость", "1111", null, 1);
                     intent = new Intent(Authorization.this, Menu.class);
                     startActivity(intent);
                     break;

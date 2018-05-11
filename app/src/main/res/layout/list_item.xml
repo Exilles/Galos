@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
             android:textColor="@android:color/black"
-            android:textSize="23sp"
-            tools:text="This is Title" />
+            android:textSize="23sp" />
 
         <TextView
             android:id="@+id/descriptionTextView"
@@ -27,8 +26,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/a_futurica_extrabold"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12.5sp"
-            tools:text="This is Description" />
+            android:textSize="12.5sp" />
     </LinearLayout>
 
     <Button
@@ -40,6 +38,7 @@
         android:focusable="false"
         android:fontFamily="@font/a_futurica_extrabold"
         android:gravity="left|center_vertical"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:ignore="RtlHardcoded" />
 
 </LinearLayout>

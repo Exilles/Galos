@@ -111,11 +111,11 @@ public class Game extends AppCompatActivity {
                             DatabaseHelper.buyBonus(PRICE_LIFE);
                             GameManager.useLifeBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation("Bonus activated");
+                            DatabaseHelper.showInformation("Бонус активирован");
                         }
-                        else DatabaseHelper.showInformation("Not enough money");
+                        else DatabaseHelper.showInformation("Недостаточно денег");
                     }
-                    else DatabaseHelper.showInformation("Bonus is already in use");
+                    else DatabaseHelper.showInformation("Бонус уже активирован");
                     break;
                 case R.id.decelerationBonusImageButton:
                     if (!GameManager.deceleration){
@@ -123,20 +123,20 @@ public class Game extends AppCompatActivity {
                             DatabaseHelper.buyBonus(PRICE_DECELERATION);
                             GameManager.useDecelerationBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation("Bonus activated");
+                            DatabaseHelper.showInformation("Бонус активирован");
                         }
-                        else DatabaseHelper.showInformation("Not enough money");
+                        else DatabaseHelper.showInformation("Недостаточно денег");
                     }
-                    else DatabaseHelper.showInformation("Bonus is already in use");
+                    else DatabaseHelper.showInformation("Бонус уже активирован");
                     break;
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
                         DatabaseHelper.buyBonus(PRICE_GROWTH);
                         GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        DatabaseHelper.showInformation("Bonus activated");
+                        DatabaseHelper.showInformation("Бонус активирован");
                     }
-                    else DatabaseHelper.showInformation("Not enough money");
+                    else DatabaseHelper.showInformation("Недостаточно денег");
                     break;
                 case R.id.continueButton:
                     dialog = false;
@@ -167,22 +167,22 @@ public class Game extends AppCompatActivity {
             case 1:
                 if (GameManager.mode != 4) GameManager.mode ++;
                 else GameManager.mode = 1;
-                continueButton.setText("NEXT LEVEL");
-                titleTextView.setText("Winner");
-                rewardTextView.setText("Reward:");
+                continueButton.setText("Следующий уровень");
+                titleTextView.setText("Победа");
+                rewardTextView.setText("Награда:");
                 countRewardTextView.setText(Integer.toString(_reward) + "$");
                 break;
             case 2:
                 GameManager.mode = 1;
-                continueButton.setText("NEW GAME");
-                titleTextView.setText("Loser");
-                rewardTextView.setText("All rewards:");
+                continueButton.setText("Начать новую игру");
+                titleTextView.setText("Поражение");
+                rewardTextView.setText("Все награды:");
                 countRewardTextView.setText(Integer.toString(_sum) + "$");
                 break;
             case 3:
-                continueButton.setText("TRY AGAIN");
-                titleTextView.setText("Neither victory nor defeat");
-                rewardTextView.setText("Reward:");
+                continueButton.setText("Переиграть уровень");
+                titleTextView.setText("Ни победа, ни поражение");
+                rewardTextView.setText("Награда:");
                 countRewardTextView.setText("0$");
                 break;
         }

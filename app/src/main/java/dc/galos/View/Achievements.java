@@ -59,7 +59,7 @@ public class Achievements extends AppCompatActivity {
             String titleItem = itemHashMap.get(TITLE).toString();
             String descriptionItem = itemHashMap.get(DESCRIPTION).toString();
             Toast.makeText(getApplicationContext(),
-                    "Вы выбрали " + titleItem + ". Он " + descriptionItem, Toast.LENGTH_SHORT)
+                    "Название: " + titleItem + ". Описание: " + descriptionItem, Toast.LENGTH_SHORT)
                     .show();
         }
     };
