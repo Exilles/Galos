@@ -161,6 +161,7 @@ public class Game extends AppCompatActivity {
     public static void showDialog(int _score, int _reward, int _sum, int _flag) {
         dialog = true;
         PAUSE = true;
+        DatabaseHelper.updateAllLevels();
         dialogConstraintLayout.setVisibility(View.VISIBLE);
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {

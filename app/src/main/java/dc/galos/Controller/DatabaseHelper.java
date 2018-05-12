@@ -27,13 +27,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static Cursor cursor;
     private static Context myContext;
 
-    // данные о авторизированном пользователе
+    // данные о аккаунте авторизированного пользователя
     private static int id;
     private static String login;
     private static String password;
     private static String email;
     private static int money;
     private static int record;
+
+    // данные о достижениях авторизированного пользователя
+    private static String status;
+    private static int all_levels;
+    private static int all_money;
+    private static int all_eating;
+    private static int all_wins;
 
     // данные о БД
     private static String DB_PATH; // полный путь к базе данных
@@ -205,33 +212,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<HashMap<String, Object>> achievementsList = new ArrayList<>();
         HashMap<String, Object> hashMap;
 
-        String query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_STATUS, TABLE_ACHIEVEMENTS,
-                COLUMN_ID_USER, id);
-        cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
+        getAchievementsData();
 
         String[] titleAchievements = myContext.getResources().getStringArray(R.array.title_achievements);
         String[] descriptionAchievements = myContext.getResources().getStringArray(R.array.description_achievements);
         String[] rewardAchievements = myContext.getResources().getStringArray(R.array.reward_achievements);
-        String statusAchievements = cursor.getString(cursor.getColumnIndex(COLUMN_STATUS));
 
         for (int i = 0; i < 26; i++) {
             hashMap = new HashMap<>();
             hashMap.put(TITLE, titleAchievements[i]); // Название
             hashMap.put(DESCRIPTION, descriptionAchievements[i]); // Описание
-            if (statusAchievements.charAt(i) == '1') hashMap.put(STATUS, myContext.getResources().getString(R.string.received)); // Статус
+            if (status.charAt(i) == '1') hashMap.put(STATUS, myContext.getResources().getString(R.string.received)); // Статус
             else hashMap.put(STATUS, myContext.getResources().getString(R.string.not_received)); // Статус
             hashMap.put(REWARD, myContext.getResources().getString(R.string.reward) + " " + rewardAchievements[i] + "$"); // Вознаграждение
             achievementsList.add(hashMap);
         }
 
-        cursor.close();
-
         return achievementsList;
     }
 
+    private static void getAchievementsData(){
+        String query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
+                COLUMN_STATUS, COLUMN_ALL_LEVELS, COLUMN_ALL_MONEY, COLUMN_ALL_EATING, COLUMN_ALL_WINS, TABLE_ACHIEVEMENTS,
+                COLUMN_ID_USER, id);
+        cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        status = cursor.getString(cursor.getColumnIndex(COLUMN_STATUS));
+        all_levels = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_LEVELS));
+        all_money = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_MONEY));
+        all_eating = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_EATING));
+        all_wins = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_WINS));
+
+        cursor.close();
+    }
+
+    // увеличиваем общее количество уровней в таблице achievements
+    public static void updateAllLevels(){
+        ContentValues contentValues = new ContentValues();
+        all_levels ++;
+        contentValues.put(COLUMN_ALL_LEVELS, all_levels);
+        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    // увеличиваем общее количество денег и побед в таблице achievements
+    public static void updateAllMoneyAndWins(int _reward){
+        ContentValues contentValues = new ContentValues();
+        all_money += _reward;
+        all_wins ++;
+        contentValues.put(COLUMN_ALL_MONEY, all_money);
+        contentValues.put(COLUMN_ALL_WINS, all_wins);
+        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    // увеличиваем общее количество съеденных в таблице achievements
+    public static void updateAllEating(){
+        ContentValues contentValues = new ContentValues();
+        all_eating ++;
+        contentValues.put(COLUMN_ALL_EATING, all_eating);
+        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+    }
+
     // изменение количества денег и рекорда пользователя
-    public static void updateReward(int _money, int _record) {
+    public static void updateMoneyAndRecord(int _money, int _record) {
         ContentValues contentValues = new ContentValues();
 
         money += _money;

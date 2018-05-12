@@ -119,6 +119,7 @@ public class GameManager {
         for (EnemyCircle circle : enemy_circles) {
             if (mainCircle.isIntersect(circle)) {
                 if (circle.isSmallerThan(mainCircle)) {
+                    DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -145,6 +146,7 @@ public class GameManager {
         for (VanishingCircle circle : vanishing_circles) {
             if (mainCircle.isIntersect(circle)) {
                 if (circle.isSmallerThan(mainCircle)) {
+                    DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -203,7 +205,8 @@ public class GameManager {
         switchRate(score);
         winning = Math.round((score * rate) + rate); // вознаграждение за победу
         sum += winning; // подсчёт суммы всех вознаграждений за победу
-        DatabaseHelper.updateReward(winning, score);
+        DatabaseHelper.updateMoneyAndRecord(winning, score);
+        DatabaseHelper.updateAllMoneyAndWins(winning);
     }
 
     private void zeroReward() {

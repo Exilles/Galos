@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 public class MainCircle extends SimpleCircle{
     private static final int INIT_RADIUS = 50;
-    private static final int MAIN_SPEED = 32; // чем меньше, тем быстрее
+    private static final int MAIN_SPEED = 31; // чем меньше, тем быстрее
     private static final int OUR_COLOR = Color.GRAY;
 
     public MainCircle(int x, int y) {
