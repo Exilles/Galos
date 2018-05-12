@@ -6,8 +6,13 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -136,17 +141,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db = databaseHelper.open();
     }
 
-    public static void showInformation(String text) {
+    public static void showInformation(String _text, int _y) {
         if (toast != null) {
             toast.cancel();
         }
-        toast = Toast.makeText(myContext, text, Toast.LENGTH_SHORT);
+        View view;
+        TextView text;
+        toast = Toast.makeText(myContext, _text, Toast.LENGTH_SHORT);
+        view = toast.getView();
+        text = view.findViewById(android.R.id.message);
+        text.setTextColor(myContext.getResources().getColor(R.color.colorAccent));
+        view.setBackground(ContextCompat.getDrawable(myContext, R.drawable.toast_border));
+        text.setTypeface(Typeface.createFromAsset(myContext.getResources().getAssets(), "a_futurica_extrabold.ttf"));
+        text.setTextSize(20);
+        text.setGravity(Gravity.CENTER);
+        toast.setGravity(Gravity.CENTER, 70, _y);
+        toast.show();
+    }
+
+    public static void showInformation(String _text) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        View view;
+        TextView text;
+        toast = Toast.makeText(myContext, _text, Toast.LENGTH_SHORT);
+        view = toast.getView();
+        text = view.findViewById(android.R.id.message);
+        text.setTextColor(myContext.getResources().getColor(R.color.colorAccent));
+        view.setBackground(ContextCompat.getDrawable(myContext, R.drawable.toast_border));
+        text.setTypeface(Typeface.createFromAsset(myContext.getResources().getAssets(), "a_futurica_extrabold.ttf"));
+        text.setTextSize(20);
+        text.setGravity(Gravity.CENTER);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
-    private static void showAchivement(String text) {
-        toast = Toast.makeText(myContext, text, Toast.LENGTH_SHORT);
+    private static void showAchievement(String _text) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        View view;
+        TextView text;
+        toast = Toast.makeText(myContext, _text, Toast.LENGTH_SHORT);
+        view = toast.getView();
+        text = view.findViewById(android.R.id.message);
+        text.setTextColor(myContext.getResources().getColor(R.color.black));
+        view.setBackground(ContextCompat.getDrawable(myContext, R.drawable.toast_border));
+        text.setWidth(700);
+        text.setTypeface(Typeface.createFromAsset(myContext.getResources().getAssets(), "a_futurica_extrabold.ttf"));
+        text.setTextSize(20);
+        text.setGravity(Gravity.CENTER);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
@@ -303,7 +348,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_STATUS, status);
             db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)}); // обновление статуса достижения
             updateMoneyAndRecord(Integer.parseInt(rewardAchievements[position]), 0); // прибавка награды
-            showAchivement("Достижение: " + titleAchievements[position]); // отображение сообщения о получении достижения
+            showAchievement("Получено достижение: " + titleAchievements[position]); // отображение сообщения о получении достижения
         }
     }
 

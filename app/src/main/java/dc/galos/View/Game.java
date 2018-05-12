@@ -3,6 +3,7 @@ package dc.galos.View;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -86,6 +87,8 @@ public class Game extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.exitButton:
+                    GameManager.life = false;
+                    GameManager.deceleration = false;
                     intent = new Intent(Game.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -108,39 +111,45 @@ public class Game extends AppCompatActivity {
                 case R.id.lifeBonusImageButton:
                     if (!GameManager.life){
                         if (DatabaseHelper.getMoney() >= PRICE_LIFE){
+                            lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
                             DatabaseHelper.buyBonus(PRICE_LIFE);
                             GameManager.useLifeBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
+                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 130);
                         }
-                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money), 130);
                     }
-                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used));
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used), 130);
                     break;
                 case R.id.decelerationBonusImageButton:
                     if (!GameManager.deceleration){
                         if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
+                            decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
                             DatabaseHelper.buyBonus(PRICE_DECELERATION);
                             GameManager.useDecelerationBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
+                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 385);
                         }
-                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money), 385);
                     }
-                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used));
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used), 385);
                     break;
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
+                        growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
                         DatabaseHelper.buyBonus(PRICE_GROWTH);
                         GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
+                        DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 635);
                     }
-                    else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money), 635);
                     break;
                 case R.id.continueButton:
                     dialog = false;
                     PAUSE = false;
+                    lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
+                    decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
+                    growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
                     dialogConstraintLayout.setVisibility(View.INVISIBLE);
                     GameManager.gameEnd();
                     break;

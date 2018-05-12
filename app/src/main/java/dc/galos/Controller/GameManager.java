@@ -173,6 +173,7 @@ public class GameManager {
         if (life) {
             Game.showDialog(score, winning, sum, 3); // вызывает диалог
             life = false;
+            deceleration = false;
         }
         else {
             life = false;

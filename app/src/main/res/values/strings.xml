@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Galos</string>
+
+    <string name="exists_login">Логин уже используется</string>
+    <string name="exists_email">Почта уже используется</string>
+    <string name="match_passwords">Пароли не совпадают</string>
+    <string name="information_update">Информация успешно изменена</string>
+    <string name="incorrect_current_password">Неверный текущий пароль</string>
+    <string name="match_mail">Новая и текущая почты не должны совпадать</string>
+    <string name="match_password">Новый и текущий пароли не должны совпадать</string>
+    <string name="incorrect_login_or_password">Неверный логин или пароль</string>
+    <string name="wrong_data">Некорректные данные</string>
     <string name="password">Пароль</string>
     <string name="restore_password">Восстановить пароль</string>
     <string name="registration">Регистрация</string>

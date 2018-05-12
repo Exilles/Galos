@@ -60,13 +60,13 @@ public class Registration extends AppCompatActivity {
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                 }
-                                else DatabaseHelper.showInformation("This e-mail already exists");
+                                else DatabaseHelper.showInformation(getResources().getString(R.string.exists_email));
                             }
-                            else DatabaseHelper.showInformation("This login already exists");
+                            else DatabaseHelper.showInformation(getResources().getString(R.string.exists_login));
                         }
-                        else  DatabaseHelper.showInformation("Passwords do not match");
+                        else  DatabaseHelper.showInformation(getResources().getString(R.string.match_passwords));
                     }
-                    else  DatabaseHelper.showInformation("Wrong data");
+                    else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
                 case R.id.backButton:
                     intent = new Intent(Registration.this, Authorization.class);

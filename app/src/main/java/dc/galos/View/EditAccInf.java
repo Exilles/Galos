@@ -46,21 +46,19 @@ public class EditAccInf extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.acceptButton:
-                    if (!currentPasswordEditText.getText().toString().equals(""))
-                        if (!newPasswordEditText.getText().toString().equals("") || !newEmailEditText.getText().toString().equals(""))
-                            if (!currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString()))
-                                if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
-                                    if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
-                                    {
-                                        DatabaseHelper.updateRowUsers(newPasswordEditText.getText().toString(),
-                                                newEmailEditText.getText().toString());
-                                        DatabaseHelper.showInformation("Information updated successfully");
-                                    }
-                                    else DatabaseHelper.showInformation("Current password does not match");
-                                else DatabaseHelper.showInformation("New and current e-mail match");
-                            else DatabaseHelper.showInformation("New and current passwords match");
-                        else DatabaseHelper.showInformation("Wrong data");
-                    else DatabaseHelper.showInformation("Enter the current password");
+                    if (!currentPasswordEditText.getText().toString().equals("") || !newPasswordEditText.getText().toString().equals("") || !newEmailEditText.getText().toString().equals(""))
+                        if (!currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString()))
+                            if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
+                                if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
+                                {
+                                    DatabaseHelper.updateRowUsers(newPasswordEditText.getText().toString(),
+                                            newEmailEditText.getText().toString());
+                                    DatabaseHelper.showInformation(getResources().getString(R.string.information_update));
+                                }
+                                else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_current_password));
+                            else DatabaseHelper.showInformation(getResources().getString(R.string.match_mail));
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.match_password));
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
             }
         }

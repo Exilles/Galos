@@ -71,9 +71,9 @@ public class Authorization extends AppCompatActivity {
                             intent = new Intent(Authorization.this, Menu.class);
                             startActivity(intent);
                         }
-                        else DatabaseHelper.showInformation("Incorrect login or password");
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_login_or_password));
                     }
-                    else  DatabaseHelper.showInformation("Wrong data");
+                    else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
             }
         }
