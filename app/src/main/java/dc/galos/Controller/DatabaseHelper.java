@@ -27,6 +27,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static Cursor cursor;
     private static Context myContext;
 
+    // данные из strings.xml о названии, описании и награде за достижения
+    private static String[] titleAchievements;
+    private static String[] descriptionAchievements;
+    private static String[] rewardAchievements;
+
     // данные о аккаунте авторизированного пользователя
     private static int id;
     private static String login;
@@ -75,8 +80,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, SCHEMA);
-        this.myContext = context;
+        myContext = context;
         DB_PATH = context.getFilesDir().getPath() + DB_NAME;
+        titleAchievements = myContext.getResources().getStringArray(R.array.title_achievements);
+        descriptionAchievements = myContext.getResources().getStringArray(R.array.description_achievements);
+        rewardAchievements = myContext.getResources().getStringArray(R.array.reward_achievements);
     }
 
     @Override
@@ -86,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion,  int newVersion) {
     }
 
-    public void create_db(){
+    private void create_db(){
         InputStream myInput = null;
         OutputStream myOutput = null;
         try {
@@ -137,6 +145,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         toast.show();
     }
 
+    private static void showAchivement(String text) {
+        toast = Toast.makeText(myContext, text, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
     // вставка новой записи при регистрации
     public static void insertRowUsers (String _login, String _password, String _email) {
         ContentValues contentValues = new ContentValues();
@@ -174,6 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
                     record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
                     cursor.close();
+                    getAchievementsData(); // получение данных о его достижениях
                     return 1;
                 }
                 else return 0;
@@ -214,10 +229,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         getAchievementsData();
 
-        String[] titleAchievements = myContext.getResources().getStringArray(R.array.title_achievements);
-        String[] descriptionAchievements = myContext.getResources().getStringArray(R.array.description_achievements);
-        String[] rewardAchievements = myContext.getResources().getStringArray(R.array.reward_achievements);
-
         for (int i = 0; i < 26; i++) {
             hashMap = new HashMap<>();
             hashMap.put(TITLE, titleAchievements[i]); // Название
@@ -253,6 +264,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_levels ++;
         contentValues.put(COLUMN_ALL_LEVELS, all_levels);
         db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        checkAllLevels();
+        checkGod();
     }
 
     // увеличиваем общее количество денег и побед в таблице achievements
@@ -263,6 +276,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ALL_MONEY, all_money);
         contentValues.put(COLUMN_ALL_WINS, all_wins);
         db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        checkRecord();
+        checkAllWins();
+        checkAllMoney();
+        checkMoney();
+        checkGod();
     }
 
     // увеличиваем общее количество съеденных в таблице achievements
@@ -271,6 +289,120 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_eating ++;
         contentValues.put(COLUMN_ALL_EATING, all_eating);
         db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        checkAllEating();
+        checkGod();
+    }
+
+    // обновляет status в таблице achievements
+    private static void updateStatus(int position){
+        if (status.charAt(position) != '1') {
+            ContentValues contentValues = new ContentValues();
+            StringBuilder newStatus = new StringBuilder(status);
+            newStatus.setCharAt(position, '1');
+            status = String.valueOf(newStatus);
+            contentValues.put(COLUMN_STATUS, status);
+            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)}); // обновление статуса достижения
+            updateMoneyAndRecord(Integer.parseInt(rewardAchievements[position]), 0); // прибавка награды
+            showAchivement("Достижение: " + titleAchievements[position]); // отображение сообщения о получении достижения
+        }
+    }
+
+    // проверка получения достижений по рекорду
+    private static void checkRecord(){
+        switch (record){
+            case 5:
+                updateStatus(0);
+                break;
+            case 15:
+                updateStatus(1);
+                break;
+            case 30:
+                updateStatus(2);
+                break;
+            case 60:
+                updateStatus(3);
+                break;
+            case 120:
+                updateStatus(4);
+                break;
+            case 250:
+                updateStatus(5);
+                break;
+        }
+    }
+
+    // проверка получения достижений по общему количеству сыгранных уровней
+    private static void checkAllLevels(){
+        switch (all_levels){
+            case 1:
+                updateStatus(6);
+                break;
+            case 50:
+                updateStatus(7);
+                break;
+            case 200:
+                updateStatus(8);
+                break;
+            case 500:
+                updateStatus(9);
+                break;
+        }
+    }
+
+    // проверка получения достижений по общему количеству поглощенных кругов
+    private static void checkAllEating(){
+        switch (all_eating){
+            case 1:
+                updateStatus(10);
+                break;
+            case 50:
+                updateStatus(11);
+                break;
+            case 300:
+                updateStatus(12);
+                break;
+            case 700:
+                updateStatus(13);
+                break;
+        }
+    }
+
+    // проверка получения достижений по общему количеству денег за всю игру
+    private static void checkAllMoney(){
+        if (money >= 20) updateStatus(14);
+        if (money >= 200) updateStatus(15);
+        if (money >= 600) updateStatus(16);
+        if (money >= 3000) updateStatus(17);
+    }
+
+    // проверка получения достижений по накопленным деньгам
+    private static void checkMoney(){
+        if (money >= 200) updateStatus(18);
+        if (money >= 1000) updateStatus(19);
+        if (money >= 3000) updateStatus(20);
+    }
+
+    // проверка получения достижений по общему количеству пройденных уровней
+    private static void checkAllWins(){
+        switch (all_wins){
+            case 1:
+                updateStatus(21);
+                break;
+            case 50:
+                updateStatus(22);
+                break;
+            case 200:
+                updateStatus(23);
+                break;
+            case 700:
+                updateStatus(24);
+                break;
+        }
+    }
+
+    // проверка на достижение БОГ
+    private static void checkGod(){
+        if (status.equals("11111111111111111111111111")) updateStatus(25);
     }
 
     // изменение количества денег и рекорда пользователя

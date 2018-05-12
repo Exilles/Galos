@@ -147,6 +147,7 @@ public class Game extends AppCompatActivity {
                 case R.id.menuButton:
                     dialog = false;
                     PAUSE = false;
+                    GameManager.mode = 1;
                     intent = new Intent(Game.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
