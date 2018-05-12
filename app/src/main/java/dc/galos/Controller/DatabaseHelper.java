@@ -40,9 +40,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "galos.db";
     private static final int SCHEMA = 1; // версия базы данных
 
+    // _id записи в БД
+    private static final String COLUMN_ID = "_id";
+
     // названия столбцов таблицы users
     private static final String TABLE_USERS = "users"; // название таблицы в бд
-    private static final String COLUMN_USERS_ID = "_id";
     private static final String COLUMN_LOGIN = "login";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_EMAIL = "email";
@@ -51,15 +53,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // названия столбцов таблицы achievements
     private static final String TABLE_ACHIEVEMENTS = "achievements"; // название таблицы в бд
-    private static final String COLUMN_ACHIEVEMENTS_ID = "_id";
-    private static final String COLUMN_TITTLE = "tittle";
-    private static final String COLUMN_DESCRIPTION = "description";
-    private static final String COLUMN_REWARD = "reward";
     private static final String COLUMN_STATUS = "status";
-    private static final String COLUMN_COUNT_LEVELS = "count_levels";
-    private static final String COLUMN_COUNT_MONEY = "count_money";
-    private static final String COLUMN_COUNT_EATING = "count_eating";
-    private static final String COLUMN_COUNT_WINS = "count_wins";
+    private static final String COLUMN_ALL_LEVELS = "all_levels";
+    private static final String COLUMN_ALL_MONEY = "all_money";
+    private static final String COLUMN_ALL_EATING = "all_eating";
+    private static final String COLUMN_ALL_WINS = "all_wins";
     private static final String COLUMN_ID_USER = "id_user";
 
     // заголовки для списка достижений
@@ -146,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         searchRowUsers(_login, _password, null, 1); // получаем информацию об аккаунте
 
-        insertRowAchievements(); // создаем новый список достижений для аккаунта
+        //insertRowAchievements(); // создаем новый список достижений для аккаунта
     }
 
     // поиск введенных данных на наличие в БД
@@ -157,12 +155,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         switch (index) {
             case 1: // поиск по логину и паролю
                 query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE " +
-                        "\"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_USERS_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL,
+                        "\"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL,
                         COLUMN_MONEY, COLUMN_RECORD, TABLE_USERS, COLUMN_LOGIN, _login, COLUMN_PASSWORD, _password);
                 cursor = db.rawQuery(query, null);
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
-                    id = cursor.getInt(cursor.getColumnIndex(COLUMN_USERS_ID));
+                    id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
                     login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
                     password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
                     email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
@@ -173,12 +171,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 else return 0;
             case 2: //  поиск по логину
-                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_USERS_ID, TABLE_USERS, COLUMN_LOGIN, _login);
+                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE_USERS, COLUMN_LOGIN, _login);
                 cursor = db.rawQuery(query, null);
                 count = cursor.getCount();
                 return count;
             case 3: // поиск по майлу
-                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_USERS_ID, TABLE_USERS, COLUMN_EMAIL, _email);
+                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE_USERS, COLUMN_EMAIL, _email);
                 cursor = db.rawQuery(query, null);
                 count = cursor.getCount();
                 return count;
@@ -200,26 +198,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_EMAIL, _email);
         }
 
-        db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
+        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     public static ArrayList<HashMap<String, Object>> getAchievements() {
         ArrayList<HashMap<String, Object>> achievementsList = new ArrayList<>();
         HashMap<String, Object> hashMap;
 
-        String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\"", COLUMN_TITTLE,
-                COLUMN_DESCRIPTION, COLUMN_REWARD, TABLE_ACHIEVEMENTS);
+        String query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_STATUS, TABLE_ACHIEVEMENTS,
+                COLUMN_ID_USER, id);
         cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
 
-        while (cursor.moveToNext()) {
+        String[] titleAchievements = myContext.getResources().getStringArray(R.array.title_achievements);
+        String[] descriptionAchievements = myContext.getResources().getStringArray(R.array.description_achievements);
+        String[] rewardAchievements = myContext.getResources().getStringArray(R.array.reward_achievements);
+        String statusAchievements = cursor.getString(cursor.getColumnIndex(COLUMN_STATUS));
+
+        for (int i = 0; i < 26; i++) {
             hashMap = new HashMap<>();
-            hashMap.put(TITLE, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TITTLE))); // Название
-            hashMap.put(DESCRIPTION, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION))); // Описание
-            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)).equals("true")) hashMap.put(STATUS, myContext.getResources().getString(R.string.received)); // Статус
+            hashMap.put(TITLE, titleAchievements[i]); // Название
+            hashMap.put(DESCRIPTION, descriptionAchievements[i]); // Описание
+            if (statusAchievements.charAt(i) == '1') hashMap.put(STATUS, myContext.getResources().getString(R.string.received)); // Статус
             else hashMap.put(STATUS, myContext.getResources().getString(R.string.not_received)); // Статус
-            hashMap.put(REWARD, myContext.getResources().getString(R.string.reward) + " " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REWARD)) + "$"); // Вознаграждение
+            hashMap.put(REWARD, myContext.getResources().getString(R.string.reward) + " " + rewardAchievements[i] + "$"); // Вознаграждение
             achievementsList.add(hashMap);
         }
+
         cursor.close();
 
         return achievementsList;
@@ -237,7 +242,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_RECORD, _record);
         }
 
-        db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
+        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     // изменение количества денег из-за покупки бонуса
@@ -247,7 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         money -= _money;
         contentValues.put(COLUMN_MONEY, money);
 
-        db.update(TABLE_USERS, contentValues,COLUMN_USERS_ID + "= ?", new String[]{Integer.toString(id)});
+        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     public static int getSession() {
@@ -272,328 +277,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static int getRecord() {
         return record;
-    }
-
-    public static void insertRowAchievements() {
-
-        /*ContentValues contentValues = new ContentValues();
-
-        contentValues.put(COLUMN_TITTLE, "Новичёк"); // 1
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 5 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, "false");
-        contentValues.put(COLUMN_COUNT_LEVELS, 0);
-        contentValues.put(COLUMN_COUNT_MONEY, 0);
-        contentValues.put(COLUMN_COUNT_EATING, 0);
-        contentValues.put(COLUMN_COUNT_WINS, 0);
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();*/
-
-        String query = String.format("INSERT INTO \"%s\" VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", " +
-                "\"%s\", \"%s\", \"%s\")", TABLE_ACHIEVEMENTS, null, "Новичёк", "Пройдите 5 уровней подряд", 5, "false", null, null, null, null, id);
-        cursor = db.rawQuery(query, null);
-
-        /*contentValues.put(COLUMN_TITTLE, "Знаток"); // 2
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 15 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 15);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Профи"); // 3
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 30 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 30);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Мастер"); // 4
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 60 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 60);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Гений"); // 5
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 120 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 120);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Высший разум"); // 6
-        contentValues.put(COLUMN_DESCRIPTION, "Пройдите 250 уровней подряд");
-        contentValues.put(COLUMN_REWARD, 250);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Начало положено!"); // 7
-        contentValues.put(COLUMN_DESCRIPTION, "Сыграйте в свой первый уровень");
-        contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, 1);
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Тернистый путь"); // 8
-        contentValues.put(COLUMN_DESCRIPTION, "Сыграйте в 50 уровней");
-        contentValues.put(COLUMN_REWARD, 25);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, 50);
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Длинная тропа"); // 9
-        contentValues.put(COLUMN_DESCRIPTION, "Сыграйте в 200 уровней");
-        contentValues.put(COLUMN_REWARD, 100);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, 200);
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Без преград"); // 10
-        contentValues.put(COLUMN_DESCRIPTION, "Сыграйте в 500 уровней");
-        contentValues.put(COLUMN_REWARD, 250);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, 500);
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Дегустатор"); // 11
-        contentValues.put(COLUMN_DESCRIPTION, "Поглотите 1 круг");
-        contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, 1);
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Вкуснятина"); // 12
-        contentValues.put(COLUMN_DESCRIPTION, "Поглотите 50 кругов");
-        contentValues.put(COLUMN_REWARD, 25);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, 50);
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Обжора"); // 13
-        contentValues.put(COLUMN_DESCRIPTION, "Поглотите 300 кругов");
-        contentValues.put(COLUMN_REWARD, 150);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, 300);
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Чёрная дыра"); // 14
-        contentValues.put(COLUMN_DESCRIPTION, "Поглотите 700 кругов");
-        contentValues.put(COLUMN_REWARD, 350);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, 700);
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Хоть что-то..."); // 15
-        contentValues.put(COLUMN_DESCRIPTION, "Заработайте 20 баксов за всю игру");
-        contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, 20);
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Хорошие деньги"); // 16
-        contentValues.put(COLUMN_DESCRIPTION, "Заработайте 200 баксов за всю игру");
-        contentValues.put(COLUMN_REWARD, 50);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, 200);
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Бабосики"); // 17
-        contentValues.put(COLUMN_DESCRIPTION, "Заработайте 600 баксов за всю игру");
-        contentValues.put(COLUMN_REWARD, 150);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, 150);
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Жаль, что не реал..."); // 18
-        contentValues.put(COLUMN_DESCRIPTION, "Заработайте 3000 баксов за всю игру");
-        contentValues.put(COLUMN_REWARD, 750);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, 3000);
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Бережливый"); // 19
-        contentValues.put(COLUMN_DESCRIPTION, "Накопите 200 баксов");
-        contentValues.put(COLUMN_REWARD, 50);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Экономный"); // 20
-        contentValues.put(COLUMN_DESCRIPTION, "Накопите 1000 баксов");
-        contentValues.put(COLUMN_REWARD, 250);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Еврейская душа"); // 21
-        contentValues.put(COLUMN_DESCRIPTION, "Накопите 3000 баксов");
-        contentValues.put(COLUMN_REWARD, 750);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Победитель"); // 22
-        contentValues.put(COLUMN_DESCRIPTION, "Победите в первом уровне");
-        contentValues.put(COLUMN_REWARD, 5);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, 1);
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Звезда"); // 23
-        contentValues.put(COLUMN_DESCRIPTION, "Победите в 50 уровнях");
-        contentValues.put(COLUMN_REWARD, 20);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, 50);
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Гладиатор"); // 24
-        contentValues.put(COLUMN_DESCRIPTION, "Победите в 200 уровнях");
-        contentValues.put(COLUMN_REWARD, 50);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, 200);
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Чемпион"); // 25
-        contentValues.put(COLUMN_DESCRIPTION, "Победите в 700 уровнях");
-        contentValues.put(COLUMN_REWARD, 175);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, 700);
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();
-
-        contentValues.put(COLUMN_TITTLE, "Бог"); // 26
-        contentValues.put(COLUMN_DESCRIPTION, "Получите все достижения");
-        contentValues.put(COLUMN_REWARD, 5000);
-        contentValues.put(COLUMN_STATUS, false);
-        contentValues.put(COLUMN_COUNT_LEVELS, "null");
-        contentValues.put(COLUMN_COUNT_MONEY, "null");
-        contentValues.put(COLUMN_COUNT_EATING, "null");
-        contentValues.put(COLUMN_COUNT_WINS, "null");
-        contentValues.put(COLUMN_ID_USER, id);
-        db.insert(DatabaseHelper.TABLE_ACHIEVEMENTS, null, contentValues);
-        contentValues.clear();*/
-
-        db.close();
     }
 }
