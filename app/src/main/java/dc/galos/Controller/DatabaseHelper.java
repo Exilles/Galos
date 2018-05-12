@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dc.galos.R;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static Toast toast;
     private static DatabaseHelper databaseHelper;
@@ -213,9 +215,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             hashMap = new HashMap<>();
             hashMap.put(TITLE, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TITTLE))); // Название
             hashMap.put(DESCRIPTION, cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION))); // Описание
-            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)).equals("true")) hashMap.put(STATUS, "Получено"); // Статус
-            else hashMap.put(STATUS, "Не получено"); // Статус
-            hashMap.put(REWARD, "Награда: " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REWARD)) + "$"); // Вознаграждение
+            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION)).equals("true")) hashMap.put(STATUS, myContext.getResources().getString(R.string.received)); // Статус
+            else hashMap.put(STATUS, myContext.getResources().getString(R.string.not_received)); // Статус
+            hashMap.put(REWARD, myContext.getResources().getString(R.string.reward) + " " + cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_REWARD)) + "$"); // Вознаграждение
             achievementsList.add(hashMap);
         }
         cursor.close();

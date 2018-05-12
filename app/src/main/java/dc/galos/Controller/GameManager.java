@@ -13,6 +13,7 @@ public class GameManager {
     private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
     private static ArrayList<VanishingCircle> vanishing_circles; // массив исчезающих кругов
     private static CanvasView canvasView;
+    private static Game game;
     public static int mode = 1;
     private static int width;
     private static int height;

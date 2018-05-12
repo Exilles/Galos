@@ -111,11 +111,11 @@ public class Game extends AppCompatActivity {
                             DatabaseHelper.buyBonus(PRICE_LIFE);
                             GameManager.useLifeBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation("Бонус активирован");
+                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
                         }
-                        else DatabaseHelper.showInformation("Недостаточно денег");
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
                     }
-                    else DatabaseHelper.showInformation("Бонус уже активирован");
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used));
                     break;
                 case R.id.decelerationBonusImageButton:
                     if (!GameManager.deceleration){
@@ -123,20 +123,20 @@ public class Game extends AppCompatActivity {
                             DatabaseHelper.buyBonus(PRICE_DECELERATION);
                             GameManager.useDecelerationBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                            DatabaseHelper.showInformation("Бонус активирован");
+                            DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
                         }
-                        else DatabaseHelper.showInformation("Недостаточно денег");
+                        else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
                     }
-                    else DatabaseHelper.showInformation("Бонус уже активирован");
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used));
                     break;
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
                         DatabaseHelper.buyBonus(PRICE_GROWTH);
                         GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
-                        DatabaseHelper.showInformation("Бонус активирован");
+                        DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used));
                     }
-                    else DatabaseHelper.showInformation("Недостаточно денег");
+                    else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money));
                     break;
                 case R.id.continueButton:
                     dialog = false;

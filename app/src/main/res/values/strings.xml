@@ -39,4 +39,66 @@
     <string name="registration_text_view">Создать новый аккаунт</string>
     <string name="create_account_text_view">Создать аккаунт</string>
     <string name="exit_main_menu_text_view">Вернуться в главное меню</string>
+    <string name="not_received">Не получено</string>
+    <string name="received">Получено</string>
+    <string name="reward">Награда:</string>
+    <string name="bonus_used">Бонус активирован</string>
+    <string name="bonus_alredy_used">Бонус уже активирован</string>
+    <string name="not_enough_money">Недостаточно денег</string>
+    <string-array name="title_achievements">
+        <item>Новичёк</item>
+        <item>Знаток</item>
+        <item>Профи</item>
+        <item>Мастер</item>
+        <item>Гений</item>
+        <item>Высший разум</item>
+        <item>Начало положено!</item>
+        <item>Тернистый путь</item>
+        <item>Длинная тропа</item>
+        <item>Без преград</item>
+        <item>Дегустатор</item>
+        <item>Вкуснятина</item>
+        <item>Обжора</item>
+        <item>Чёрная дыра</item>
+        <item>Хоть что-то…</item>
+        <item>Хорошие деньги</item>
+        <item>Бабосики</item>
+        <item>Жаль, что не реал…</item>
+        <item>Бережливый</item>
+        <item>Экономный</item>
+        <item>Еврейская душа</item>
+        <item>Победитель</item>
+        <item>Звезда</item>
+        <item>Гладиатор</item>
+        <item>Чемпион</item>
+        <item>Бог</item>
+    </string-array>
+    <string-array name="description_achievements">
+        <item>Пройдите 5 уровней подряд</item>
+        <item>Пройдите 15 уровней подряд</item>
+        <item>Пройдите 30 уровней подряд</item>
+        <item>Пройдите 60 уровней подряд</item>
+        <item>Пройдите 120 уровней подряд</item>
+        <item>Пройдите 250 уровней подряд</item>
+        <item>Сыграйте в свой первый уровень</item>
+        <item>Сыграйте в 50 уровней</item>
+        <item>Сыграйте в 200 уровней</item>
+        <item>Сыграйте в 500 уровней</item>
+        <item>Поглотите 1 круг</item>
+        <item>Поглотите 50 кругов</item>
+        <item>Поглотите 300 кругов</item>
+        <item>Поглотите 700 кругов</item>
+        <item>Заработайте 20 баксов за всю игру</item>
+        <item>Заработайте 200 баксов за всю игру</item>
+        <item>Заработайте 600 баксов за всю игру</item>
+        <item>Заработайте 3000 баксов за всю игру</item>
+        <item>Накопите 200 баксов</item>
+        <item>Накопите 1000 баксов</item>
+        <item>Накопите 3000 баксов</item>
+        <item>Победите в первом уровне</item>
+        <item>Победите в 50 уровнях</item>
+        <item>Победите в 200 уровнях</item>
+        <item>Победите в 700 уровнях</item>
+        <item>Получите все достижения</item>
+    </string-array>
 </resources>

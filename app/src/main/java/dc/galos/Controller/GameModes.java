@@ -8,7 +8,7 @@ public class GameModes {
     private final int FROM_ENEMY_CIRCLES = 5;
     private final int TO_ENEMY_CIRCLES = 8;
     private final int MAX_FOOD_CIRCLES = 2;
-    private final int GROWTH_ENEMY_CIRCLE_RADIUS = 19;
+    private final int MAX_ENEMY_CIRCLES = 7;
     private final int INITIAL_ENEMY_CIRCLE_RADIUS = 40;
     private final int SMALL_ENEMY_CIRCLE_RADIUS = 20;
 
@@ -85,13 +85,14 @@ public class GameModes {
                 break;
             case 2:
                 int radius = INITIAL_ENEMY_CIRCLE_RADIUS;
-                for (int i = 0; i < count_circles; i++) {
+                for (int i = 0; i < MAX_ENEMY_CIRCLES; i++) {
                     EnemyCircle circle;
                     do {
                         circle = EnemyCircle.getRandomCircle(radius);
                     } while (circle.isIntersect(mainCircleArea));
                     enemy_circles.add(circle);
-                    radius += GROWTH_ENEMY_CIRCLE_RADIUS;
+                    if (i < 4 ) radius += 20;
+                    else radius += 45;
                 }
                 break;
             case 3:
