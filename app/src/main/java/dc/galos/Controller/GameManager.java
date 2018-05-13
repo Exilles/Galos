@@ -13,23 +13,25 @@ public class GameManager {
     private static ArrayList<ImmortalCircle> immortal_circles; // массив неуязвимых кругов
     private static ArrayList<VanishingCircle> vanishing_circles; // массив исчезающих кругов
     private static CanvasView canvasView;
-    private static Game game;
-    public static int mode = 1;
+    private static Timer timer;
     private static int width;
     private static int height;
-    private Timer timer;
     private boolean vanish = true;
-    private int winning = 0; // выигрыш за победу в уровнях
-    private int score = 0; // количество пройденных подряд уровней в этот раз
-    private int sum = 0; // сумма всех вознаграждений за победы
+    private int reward; // выигрыш за победу в уровнях
+    private static int mode;
+    private static int score; // количество пройденных подряд уровней в этот раз
+    private static int all_rewards; // сумма всех вознаграждений за победы
     private float rate; // коэффициент, на который умножается награда
-    public static boolean life = false;
-    public static boolean deceleration = false;
+    private static boolean life = false;
+    private static boolean deceleration = false;
 
-    public GameManager(CanvasView canvasView, int w, int h) {
-        this.canvasView = canvasView;
+    GameManager(CanvasView canvasView, int w, int h) {
+        GameManager.canvasView = canvasView;
         width = w;
         height = h;
+        mode = DatabaseHelper.getMode();
+        score = DatabaseHelper.getScore();
+        all_rewards = DatabaseHelper.getAll_rewards();
         initMainCircle();
         initGameMode();
         startTimer();
@@ -163,7 +165,7 @@ public class GameManager {
             life = false;
             deceleration = false;
             setReward(); // прибавляем к деньгам вознаграждение и обновляем рекорд (если нужно)
-            Game.showDialog(score, winning, sum, 1); // вызывает диалог
+            Game.showDialog(score, reward, all_rewards, 1); // вызывает диалог
         }
     }
 
@@ -171,15 +173,17 @@ public class GameManager {
     private void lifeLoser(){
         setVanishingCirclesColor();
         if (life) {
-            Game.showDialog(score, winning, sum, 3); // вызывает диалог
+            Game.showDialog(score, reward, all_rewards, 3); // вызывает диалог
             life = false;
             deceleration = false;
         }
         else {
             life = false;
             deceleration = false;
-            Game.showDialog(score, winning, sum, 2); // вызывает диалог
-            zeroReward(); // обнуляем счет и вознаграждение
+            int _score = score;
+            int _all_rewards = all_rewards;
+            zeroScoreAndRewards(); // обнуляем счет и вознаграждение
+            Game.showDialog(_score, reward, _all_rewards, 2); // вызывает диалог
         }
     }
 
@@ -204,42 +208,26 @@ public class GameManager {
     private void setReward() {
         score += 1;
         switchRate(score);
-        winning = Math.round((score * rate) + rate); // вознаграждение за победу
-        sum += winning; // подсчёт суммы всех вознаграждений за победу
-        DatabaseHelper.updateMoneyAndRecord(winning, score);
-        DatabaseHelper.updateAllMoneyAndWins(winning);
+        reward = Math.round((score * rate) + rate); // вознаграждение за победу
+        all_rewards += reward; // подсчёт суммы всех вознаграждений за победу
+        DatabaseHelper.updateMoneyAndRecord(reward, score);
+        DatabaseHelper.updateAllMoneyAndWins(reward);
     }
 
-    private void zeroReward() {
+    private void zeroScoreAndRewards() {
         score = 0;
-        winning = 0;
-        sum = 0;
+        reward = 0;
+        all_rewards = 0;
     }
 
     private void switchRate(int _score) {
-        switch (_score) {
-            case 1:
-                rate = 1.0f;
-                break;
-            case 11:
-                rate = 1.5f;
-                break;
-            case 21:
-                rate = 2.0f;
-                break;
-            case 36:
-                rate = 2.5f;
-                break;
-            case 51:
-                rate = 3.0f;
-                break;
-            case 76:
-                rate = 3.5f;
-                break;
-            case 101:
-                rate = 4.0f;
-                break;
-        }
+        if (_score >= 1 && _score <= 10) rate = 1.0f;
+        if (_score >= 11 && _score <= 20) rate = 1.5f;
+        if (_score >= 21 && _score <= 35) rate = 2.0f;
+        if (_score >= 36 && _score <= 50) rate = 2.5f;
+        if (_score >= 51 && _score <= 75) rate = 3.0f;
+        if (_score >= 76 && _score <= 100) rate = 3.5f;
+        if (_score >= 101) rate = 4.0f;
     }
 
     public static void useLifeBonus() {
@@ -264,5 +252,45 @@ public class GameManager {
         setEnemyCirclesColor();
         setVanishingCirclesColor();
         canvasView.redraw();
+    }
+
+    public static int getMode() {
+        return mode;
+    }
+
+    public static void setMode(int _mode) {
+        mode = _mode;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static int getAll_rewards() {
+        return all_rewards;
+    }
+
+    public static boolean isLife() {
+        return life;
+    }
+
+    public static boolean isDeceleration() {
+        return deceleration;
+    }
+
+    public static void setLife(boolean life) {
+        GameManager.life = life;
+    }
+
+    public static void setDeceleration(boolean deceleration) {
+        GameManager.deceleration = deceleration;
+    }
+
+    public static void setTimer(Timer timer) {
+        GameManager.timer = timer;
+    }
+
+    public static Timer getTimer() {
+        return timer;
     }
 }

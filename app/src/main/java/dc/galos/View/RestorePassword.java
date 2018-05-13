@@ -33,12 +33,12 @@ public class RestorePassword extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.acceptButton:
                     intent = new Intent(RestorePassword.this, Menu.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.backButton:
                     intent = new Intent(RestorePassword.this, Authorization.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
             }

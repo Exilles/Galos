@@ -54,6 +54,7 @@ public class Authorization extends AppCompatActivity {
 
         if (DatabaseHelper.searchRememberUser()) {
             intent = new Intent(Authorization.this, Menu.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
@@ -66,14 +67,17 @@ public class Authorization extends AppCompatActivity {
                     DatabaseHelper.searchRowUsers("Гость", "1111", null, 1);
                     DatabaseHelper.rememberOrForgetUser(true);
                     intent = new Intent(Authorization.this, Menu.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.registrationButton:
                     intent = new Intent(Authorization.this, Registration.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.restorePasswordButton:
                     intent = new Intent(Authorization.this, RestorePassword.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.loginButton:
@@ -84,6 +88,7 @@ public class Authorization extends AppCompatActivity {
                         if (id == 1) {
                             DatabaseHelper.rememberOrForgetUser(remember);
                             intent = new Intent(Authorization.this, Menu.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                         else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_login_or_password));

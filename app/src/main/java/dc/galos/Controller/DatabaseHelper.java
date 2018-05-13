@@ -32,26 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static Cursor cursor;
     private static Context myContext;
 
-    // данные из strings.xml о названии, описании и награде за достижения
-    private static String[] titleAchievements;
-    private static String[] descriptionAchievements;
-    private static String[] rewardAchievements;
-
-    // данные о аккаунте авторизированного пользователя
-    private static int id;
-    private static String login;
-    private static String password;
-    private static String email;
-    private static int money;
-    private static int record;
-
-    // данные о достижениях авторизированного пользователя
-    private static String status;
-    private static int all_levels;
-    private static int all_money;
-    private static int all_eating;
-    private static int all_wins;
-
     // данные о БД
     private static String DB_PATH; // полный путь к базе данных
     private static String DB_NAME = "galos.db";
@@ -77,6 +57,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ALL_EATING = "all_eating";
     private static final String COLUMN_ALL_WINS = "all_wins";
     private static final String COLUMN_ID_USER = "id_user";
+
+    // названия столбцов таблицы resume
+    private static final String TABLE_RESUME = "resume"; // название таблицы в бд
+    private static final String COLUMN_MODE = "mode";
+    private static final String COLUMN_SCORE = "score";
+    private static final String COLUMN_ALL_REWARDS = "all_rewards";
+
+    // данные из strings.xml о названии, описании и награде за достижения
+    private static String[] titleAchievements;
+    private static String[] descriptionAchievements;
+    private static String[] rewardAchievements;
+
+    // данные о аккаунте авторизированного пользователя
+    private static int id;
+    private static String login;
+    private static String password;
+    private static String email;
+    private static int money;
+    private static int record;
+
+    // данные о достижениях авторизированного пользователя
+    private static String status;
+    private static int all_levels;
+    private static int all_money;
+    private static int all_eating;
+    private static int all_wins;
+
+    // данные о последней игре авторизированного пользователя
+    private static int mode;
+    private static int score;
+    private static int all_rewards;
 
     // заголовки для списка достижений
     private static String TITLE = "achievement"; // Название достижения
@@ -235,6 +246,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
             cursor.close();
             getAchievementsData(); // получение данных о его достижениях
+            getResumeData();
             return true;
         }
         else return false;
@@ -261,6 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
                     cursor.close();
                     getAchievementsData(); // получение данных о его достижениях
+                    getResumeData(); // получение данных о его последней игре
                     return 1;
                 }
                 else return 0;
@@ -312,6 +325,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return achievementsList;
+    }
+
+    private static void getResumeData(){
+        String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
+                COLUMN_MODE, COLUMN_SCORE, COLUMN_ALL_REWARDS, TABLE_RESUME, COLUMN_ID_USER, id);
+        cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        mode = cursor.getInt(cursor.getColumnIndex(COLUMN_MODE));
+        score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
+        all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
+        cursor.close();
     }
 
     private static void getAchievementsData(){
@@ -502,8 +527,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
-    public static int getSession() {
-        return id;
+    public static void updateResume(int _mode, int _score, int _all_rewards){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_MODE, _mode);
+        contentValues.put(COLUMN_SCORE, _score);
+        contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
+
+        db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     public static String getLogin() {
@@ -524,5 +555,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static int getRecord() {
         return record;
+    }
+
+    public static int getMode() {
+        return mode;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static int getAll_rewards() {
+        return all_rewards;
     }
 }

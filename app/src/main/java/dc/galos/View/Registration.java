@@ -57,7 +57,7 @@ public class Registration extends AppCompatActivity {
                                             passwordEditText.getText().toString(), emailEditText.getText().toString());
 
                                     intent = new Intent(Registration.this, Authorization.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                 }
                                 else DatabaseHelper.showInformation(getResources().getString(R.string.exists_email));
@@ -70,7 +70,7 @@ public class Registration extends AppCompatActivity {
                     break;
                 case R.id.backButton:
                     intent = new Intent(Registration.this, Authorization.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
             }

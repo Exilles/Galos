@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Timer;
+
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
 import dc.galos.R;
@@ -19,6 +21,7 @@ public class Game extends AppCompatActivity {
 
     public static boolean PAUSE = false;
     private Intent intent;
+    private Timer timer;
     private static boolean dialog = false;
 
     private final int PRICE_LIFE = 100;
@@ -87,15 +90,19 @@ public class Game extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.exitButton:
-                    GameManager.life = false;
-                    GameManager.deceleration = false;
+                    timer = GameManager.getTimer();
+                    timer.cancel();
+                    timer.purge();
+                    GameManager.setTimer(timer);
+                    GameManager.setLife(false);
+                    GameManager.setDeceleration(false);
                     intent = new Intent(Game.this, Menu.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.pauseImageButton:
                     if (!dialog) {
-                        if (PAUSE == false) {
+                        if (!PAUSE) {
                             PAUSE = true;
                             pauseImageButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
@@ -109,7 +116,7 @@ public class Game extends AppCompatActivity {
                     }
                     break;
                 case R.id.lifeBonusImageButton:
-                    if (!GameManager.life){
+                    if (!GameManager.isLife()){
                         if (DatabaseHelper.getMoney() >= PRICE_LIFE){
                             lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
                             DatabaseHelper.buyBonus(PRICE_LIFE);
@@ -122,7 +129,7 @@ public class Game extends AppCompatActivity {
                     else DatabaseHelper.showInformation(getResources().getString(R.string.bonus_alredy_used), 130);
                     break;
                 case R.id.decelerationBonusImageButton:
-                    if (!GameManager.deceleration){
+                    if (!GameManager.isDeceleration()){
                         if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
                             decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
                             DatabaseHelper.buyBonus(PRICE_DECELERATION);
@@ -156,9 +163,12 @@ public class Game extends AppCompatActivity {
                 case R.id.menuButton:
                     dialog = false;
                     PAUSE = false;
-                    GameManager.mode = 1;
+                    timer = GameManager.getTimer();
+                    timer.cancel();
+                    timer.purge();
+                    GameManager.setTimer(timer);
                     intent = new Intent(Game.this, Menu.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 default:
@@ -175,26 +185,29 @@ public class Game extends AppCompatActivity {
         dialogConstraintLayout.setVisibility(View.VISIBLE);
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {
-            case 1:
-                if (GameManager.mode != 4) GameManager.mode ++;
-                else GameManager.mode = 1;
+            case 1: // победа
+                if (GameManager.getMode() != 4) GameManager.setMode(GameManager.getMode() + 1);
+                else GameManager.setMode(1);
                 continueButton.setText("Следующий уровень");
                 titleTextView.setText("Победа");
                 rewardTextView.setText("Награда:");
                 countRewardTextView.setText(Integer.toString(_reward) + "$");
+                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
                 break;
-            case 2:
-                GameManager.mode = 1;
+            case 2: // поражение
+                GameManager.setMode(1);
                 continueButton.setText("Начать новую игру");
                 titleTextView.setText("Поражение");
                 rewardTextView.setText("Все награды:");
                 countRewardTextView.setText(Integer.toString(_sum) + "$");
+                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
                 break;
-            case 3:
+            case 3: // переигровка
                 continueButton.setText("Переиграть уровень");
                 titleTextView.setText("Ни победа, ни поражение");
                 rewardTextView.setText("Награда:");
                 countRewardTextView.setText("0$");
+                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
                 break;
         }
     }

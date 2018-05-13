@@ -70,7 +70,9 @@ public class Menu extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.playImageButton:
+                    Game.PAUSE = false;
                     intent = new Intent(Menu.this, Game.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.volumeImageButton:
@@ -89,23 +91,27 @@ public class Menu extends AppCompatActivity {
                     DatabaseHelper.rememberOrForgetUser(false);
                     sound.mediaStop();
                     intent = new Intent(Menu.this, Authorization.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.settingsImageButton:
                     intent = new Intent(Menu.this, EditAccInf.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.ratingImageButton:
                     intent = new Intent(Menu.this, Rating.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.achievementsImageButton:
                     intent = new Intent(Menu.this, Achievements.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
                 case R.id.helpImageButton:
                     intent = new Intent(Menu.this, Help.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
             }
