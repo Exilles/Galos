@@ -56,6 +56,10 @@
     <string name="bonus_alredy_used">Бонус уже активирован</string>
     <string name="not_enough_money">Недостаточно денег</string>
     <string name="remember_user">Запомнить</string>
+    <string name="progress_achievements">Достижений:</string>
+    <string name="help_title_text_view">Помощь</string>
+    <string name="contact_text_view">Для связи с разработчиком:</string>
+    <string name="mail_text_view">vk.com/exilles</string>
     <string-array name="title_achievements">
         <item>Новичёк</item>
         <item>Знаток</item>

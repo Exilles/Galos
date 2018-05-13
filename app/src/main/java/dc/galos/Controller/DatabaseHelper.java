@@ -568,4 +568,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static int getAll_rewards() {
         return all_rewards;
     }
+
+    public static String getStatus() {
+        return status;
+    }
 }
