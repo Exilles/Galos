@@ -29,9 +29,6 @@ public class GameManager {
         GameManager.canvasView = canvasView;
         width = w;
         height = h;
-        mode = DatabaseHelper.getMode();
-        score = DatabaseHelper.getScore();
-        all_rewards = DatabaseHelper.getAll_rewards();
         initMainCircle();
         initGameMode();
         startTimer();
@@ -264,6 +261,14 @@ public class GameManager {
 
     public static int getScore() {
         return score;
+    }
+
+    public static void setScore(int score) {
+        GameManager.score = score;
+    }
+
+    public static void setAll_rewards(int all_rewards) {
+        GameManager.all_rewards = all_rewards;
     }
 
     public static int getAll_rewards() {

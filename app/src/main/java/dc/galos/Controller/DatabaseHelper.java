@@ -327,7 +327,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return achievementsList;
     }
 
-    private static void getResumeData(){
+    public static void getResumeData(){
         String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
                 COLUMN_MODE, COLUMN_SCORE, COLUMN_ALL_REWARDS, TABLE_RESUME, COLUMN_ID_USER, id);
         cursor = db.rawQuery(query, null);

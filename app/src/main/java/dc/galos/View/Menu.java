@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import dc.galos.Controller.DatabaseHelper;
+import dc.galos.Controller.GameManager;
 import dc.galos.Controller.Sound;
 import dc.galos.R;
 
@@ -71,6 +73,10 @@ public class Menu extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.playImageButton:
                     Game.PAUSE = false;
+                    DatabaseHelper.getResumeData();
+                    GameManager.setMode(DatabaseHelper.getMode());
+                    GameManager.setScore(DatabaseHelper.getScore());
+                    GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
                     intent = new Intent(Menu.this, Game.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
