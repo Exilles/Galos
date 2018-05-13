@@ -1,6 +1,7 @@
 package dc.galos.View;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,6 +49,8 @@ public class Authorization extends AppCompatActivity {
         restorePasswordButton.setOnClickListener(onClickListener);
         loginButton.setOnClickListener(onClickListener);
         rememberCheckBox.setOnClickListener(onClickListener);
+
+        rememberCheckBox.setTypeface(Typeface.createFromAsset(getApplicationContext().getResources().getAssets(), "a_futurica_extrabold.ttf"));
 
         if (DatabaseHelper.searchRememberUser()) {
             intent = new Intent(Authorization.this, Menu.class);

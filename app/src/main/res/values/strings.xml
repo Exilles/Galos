@@ -55,6 +55,7 @@
     <string name="bonus_used">Бонус активирован</string>
     <string name="bonus_alredy_used">Бонус уже активирован</string>
     <string name="not_enough_money">Недостаточно денег</string>
+    <string name="remember_user">Запомнить</string>
     <string-array name="title_achievements">
         <item>Новичёк</item>
         <item>Знаток</item>
