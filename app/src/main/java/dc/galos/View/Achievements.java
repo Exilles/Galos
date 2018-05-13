@@ -45,7 +45,7 @@ public class Achievements extends AppCompatActivity {
         achievementsList = DatabaseHelper.getAchievements();
 
         adapter = new SimpleAdapter(this, achievementsList,
-                R.layout.list_item, new String[]{TITLE, DESCRIPTION, STATUS, REWARD},
+                R.layout.list_item_achievements, new String[]{TITLE, DESCRIPTION, STATUS, REWARD},
                 new int[]{R.id.titleTextView, R.id.descriptionTextView, R.id.statusTextView, R.id.rewardTextView});
 
 

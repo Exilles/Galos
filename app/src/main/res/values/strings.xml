@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Galos</string>
-
     <string name="exists_login">Логин уже используется</string>
     <string name="exists_email">Почта уже используется</string>
     <string name="match_passwords">Пароли не совпадают</string>
@@ -60,6 +59,10 @@
     <string name="help_title_text_view">Помощь</string>
     <string name="contact_text_view">Для связи с разработчиком:</string>
     <string name="mail_text_view">vk.com/exilles</string>
+    <string name="rating_bar_text_view">РЕЙТИНГ</string>
+    <string name="number_bar_text_view">№</string>
+    <string name="login_bar_text_view">ИМЯ</string>
+    <string name="record_bar_text_view">РЕКОРД</string>
     <string-array name="title_achievements">
         <item>Новичёк</item>
         <item>Знаток</item>
@@ -143,5 +146,61 @@
         <item>50</item>
         <item>175</item>
         <item>5000</item>
+    </string-array>
+    <string-array name="names">
+        <item>Дмитрий</item>
+        <item>Евгений</item>
+        <item>Екатерина</item>
+        <item>Валера</item>
+        <item>Таня</item>
+        <item>Колян</item>
+        <item>Оленька</item>
+        <item>Олег</item>
+        <item>Кирилл</item>
+        <item>Петька</item>
+        <item>Алексей</item>
+        <item>Вадимка</item>
+        <item>Дарья</item>
+        <item>Евкакий</item>
+        <item>Евлампий</item>
+        <item>Петрозаводск</item>
+        <item>Творожок</item>
+        <item>Смешинка</item>
+        <item>Паровозик</item>
+        <item>Стикероч</item>
+        <item>Вьетнамка</item>
+        <item>Папирун</item>
+        <item>Осьминог</item>
+        <item>Валла</item>
+        <item>Балерина</item>
+        <item>Васёк</item>
+    </string-array>
+    <string-array name="records">
+        <item>1204</item>
+        <item>1105</item>
+        <item>1040</item>
+        <item>1030</item>
+        <item>790</item>
+        <item>690</item>
+        <item>585</item>
+        <item>584</item>
+        <item>541</item>
+        <item>521</item>
+        <item>488</item>
+        <item>476</item>
+        <item>432</item>
+        <item>411</item>
+        <item>367</item>
+        <item>341</item>
+        <item>310</item>
+        <item>215</item>
+        <item>211</item>
+        <item>200</item>
+        <item>179</item>
+        <item>176</item>
+        <item>175</item>
+        <item>175</item>
+        <item>173</item>
+        <item>171</item>
     </string-array>
 </resources>
