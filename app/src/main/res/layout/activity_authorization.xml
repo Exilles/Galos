@@ -44,7 +44,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.357"
+        app:layout_constraintVertical_bias="0.363"
         tools:ignore="LabelFor" />
 
     <EditText
@@ -64,7 +64,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.521"
+        app:layout_constraintVertical_bias="0.517"
         tools:ignore="LabelFor" />
 
     <TextView
@@ -83,7 +83,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintVertical_bias="0.321" />
 
     <TextView
         android:id="@+id/passwordTextView"
@@ -100,12 +100,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.464" />
+        app:layout_constraintVertical_bias="0.463" />
 
     <Button
         android:id="@+id/loginButton"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="92dp"
+        android:layout_width="120dp"
         android:layout_height="41dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -115,42 +115,44 @@
         android:text="@string/login_text_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.727"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612" />
+        app:layout_constraintVertical_bias="0.606" />
 
     <Button
         android:id="@+id/restorePasswordButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="256dp"
         android:layout_height="41dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/a_futurica_extrabold"
         android:text="@string/restore_password"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/loginAsGuestButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.873" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/registrationButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="256dp"
         android:layout_height="41dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/a_futurica_extrabold"
         android:text="@string/registration_text_view"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/restorePasswordButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.785" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/loginAsGuestButton"
@@ -165,5 +167,24 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.961" />
+        app:layout_constraintVertical_bias="0.973" />
+
+    <CheckBox
+        android:id="@+id/rememberCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/a_futurica_extrabold"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:text="Запомнить"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/registrationButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.262"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintVertical_bias="0.024" />
 </android.support.constraint.ConstraintLayout>

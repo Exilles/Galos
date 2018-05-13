@@ -67,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_MONEY = "money";
     private static final String COLUMN_RECORD = "record";
+    private static final String COLUMN_REMEMBER = "remember";
 
     // названия столбцов таблицы achievements
     private static final String TABLE_ACHIEVEMENTS = "achievements"; // название таблицы в бд
@@ -205,12 +206,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_EMAIL, _email);
         contentValues.put(COLUMN_MONEY, 0);
         contentValues.put(COLUMN_RECORD, 0);
+        contentValues.put(COLUMN_REMEMBER, "false");
 
         db.insert(TABLE_USERS, null, contentValues); // создаем аккаунт
 
         searchRowUsers(_login, _password, null, 1); // получаем информацию об аккаунте
+    }
 
-        //insertRowAchievements(); // создаем новый список достижений для аккаунта
+    public static void rememberOrForgetUser(boolean _remember){
+        ContentValues contentValues = new ContentValues();
+        if (_remember) contentValues.put(COLUMN_REMEMBER, "true");
+        else contentValues.put(COLUMN_REMEMBER, "false");
+        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    public static boolean searchRememberUser(){
+        String query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE " +
+                        "\"%s\" = 'true'", COLUMN_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL, COLUMN_MONEY,
+                COLUMN_RECORD, TABLE_USERS, COLUMN_REMEMBER);
+        cursor = db.rawQuery(query, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+            login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
+            password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+            email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
+            money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
+            record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
+            cursor.close();
+            getAchievementsData(); // получение данных о его достижениях
+            return true;
+        }
+        else return false;
     }
 
     // поиск введенных данных на наличие в БД

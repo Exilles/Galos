@@ -58,6 +58,7 @@
             android:text="Награда: 3000$"
             android:textColor="@android:color/darker_gray"
             android:textSize="12.5sp" />
+
     </LinearLayout>
 
 </LinearLayout>
