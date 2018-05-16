@@ -2,12 +2,20 @@ package dc.galos.View;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import com.github.kevinsawicki.http.HttpRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.Sound;
@@ -19,8 +27,8 @@ public class Authorization extends AppCompatActivity {
     private Button registrationButton;
     private Button restorePasswordButton;
     private Button loginButton;
-    private EditText loginEditText;
-    private EditText passwordEditText;
+    private static EditText loginEditText;
+    private static EditText passwordEditText;
     private CheckBox rememberCheckBox;
 
     private Sound sound = new Sound();
@@ -91,7 +99,9 @@ public class Authorization extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
-                        else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_login_or_password));
+                        else {
+                            new ParseTask().execute();
+                        }
                     }
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
@@ -101,4 +111,44 @@ public class Authorization extends AppCompatActivity {
             }
         }
     };
+
+    private class ParseTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            return HttpRequest.get("https://galos.000webhostapp.com/get_user.php",
+                    true, "login", loginEditText.getText().toString(), "password", passwordEditText.getText().toString()).body();
+
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            super.onPostExecute(strJson);
+            try {
+                JSONObject dataJsonObj = new JSONObject(strJson);
+                int success = dataJsonObj.getInt("success");
+                if (success == 1){
+                    JSONArray users = dataJsonObj.getJSONArray("user");
+                    JSONObject user = users.getJSONObject(0);
+
+                    DatabaseHelper.setId(Integer.parseInt(user.getString("_id")));
+                    DatabaseHelper.setLogin(user.getString("login"));
+                    DatabaseHelper.setPassword(user.getString("password"));
+                    DatabaseHelper.setEmail(user.getString("email"));
+                    DatabaseHelper.setMoney(Integer.parseInt(user.getString("money")));
+                    DatabaseHelper.setRecord(Integer.parseInt(user.getString("record")));
+
+                    intent = new Intent(Authorization.this, Menu.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+                else DatabaseHelper.showInformation("Неверно введены логин или пароль");
+
+            } catch (JSONException e) {
+                Log.d("my log", "Не вышло получить данные :(");
+                e.printStackTrace();
+            }
+        }
+    }
 }

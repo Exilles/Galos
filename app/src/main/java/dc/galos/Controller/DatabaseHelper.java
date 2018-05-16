@@ -508,10 +508,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         money += _money;
         contentValues.put(COLUMN_MONEY, money);
+        JSONParser.updateUserMoney(Integer.toString(money));
 
         if (record < _record) {
             record = _record;
             contentValues.put(COLUMN_RECORD, _record);
+            JSONParser.updateUserRecord(Integer.toString(record));
         }
 
         db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
@@ -523,6 +525,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         money -= _money;
         contentValues.put(COLUMN_MONEY, money);
+        JSONParser.updateUserMoney(Integer.toString(money));
 
         db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
@@ -535,6 +538,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
 
         db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    public static int getId() {
+        return id;
     }
 
     public static String getLogin() {
@@ -571,5 +578,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static String getStatus() {
         return status;
+    }
+
+    public static void setId(int id) {
+        DatabaseHelper.id = id;
+    }
+
+    public static void setLogin(String login) {
+        DatabaseHelper.login = login;
+    }
+
+    public static void setPassword(String password) {
+        DatabaseHelper.password = password;
+    }
+
+    public static void setEmail(String email) {
+        DatabaseHelper.email = email;
+    }
+
+    public static void setMoney(int money) {
+        DatabaseHelper.money = money;
+    }
+
+    public static void setRecord(int record) {
+        DatabaseHelper.record = record;
     }
 }

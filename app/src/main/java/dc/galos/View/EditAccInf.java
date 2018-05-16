@@ -51,6 +51,7 @@ public class EditAccInf extends AppCompatActivity {
                             if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
                                 if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
                                 {
+
                                     DatabaseHelper.updateRowUsers(newPasswordEditText.getText().toString(),
                                             newEmailEditText.getText().toString());
                                     DatabaseHelper.showInformation(getResources().getString(R.string.information_update));
