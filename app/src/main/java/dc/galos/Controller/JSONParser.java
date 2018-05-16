@@ -5,6 +5,10 @@ import android.util.Log;
 
 import com.github.kevinsawicki.http.HttpRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,27 +19,75 @@ import java.net.URL;
 
 public class JSONParser {
 
-    private static BufferedReader reader = null;
-    private static String resultJSON = "";
-    private static String LOG_TAG = "my_log";
-    private static HttpURLConnection urlConnection = null;
     private static String url = "";
     private static int flag;
-    private static String param_1, param_2, value_1, value_2;
+    private static String param_1, value_1, param_2, value_2, param_3, value_3;
 
-    public static void getUser() {
+    public static void createUser(String _login, String _password, String _email) {
+        url = "https://galos.000webhostapp.com/create_user.php";
+        flag = 3;
+        param_1 = "login";
+        value_1 = _login;
+        param_2 = "password";
+        value_2 = _password;
+        param_3 = "email";
+        value_3 = _email;
+        new ParseTask().execute();
+    }
+
+    public static void getUser(String _login, String _password) {
         url = "https://galos.000webhostapp.com/get_user.php";
         flag = 2;
         param_1 = "login";
-        value_1 = "test";
+        value_1 = _login;
         param_2 = "password";
-        value_2 = "1234";
+        value_2 = _password;
         new ParseTask().execute();
     }
 
     public static void getRecords() {
         url = "https://galos.000webhostapp.com/get_records.php";
         flag = 1;
+        new ParseTask().execute();
+    }
+
+    public static void updateUserPassword(String _id, String _password){
+        url = "https://galos.000webhostapp.com/update_user.php";
+        flag = 4;
+        param_1 = "_id";
+        value_1 = _id;
+        param_2 = "password";
+        value_2 = _password;
+        new ParseTask().execute();
+    }
+
+    public static void updateUserEmail(String _id, String _email){
+        url = "https://galos.000webhostapp.com/update_user.php";
+        flag = 4;
+        param_1 = "_id";
+        value_1 = _id;
+        param_2 = "email";
+        value_2 = _email;
+        new ParseTask().execute();
+    }
+
+    public static void updateUserMoney(String _id, String _money){
+        url = "https://galos.000webhostapp.com/update_user.php";
+        flag = 4;
+        param_1 = "_id";
+        value_1 = _id;
+        param_2 = "money";
+        value_2 = _money;
+        new ParseTask().execute();
+    }
+
+    public static void updateUserRecord(String _id, String _record){
+        url = "https://galos.000webhostapp.com/update_user.php";
+        flag = 4;
+        param_1 = "_id";
+        value_1 = _id;
+        param_2 = "record";
+        value_2 = _record;
         new ParseTask().execute();
     }
 
@@ -49,6 +101,10 @@ public class JSONParser {
                     return HttpRequest.get(url).body();
                 case 2:
                     return HttpRequest.get(url, true, param_1, value_1, param_2, value_2).body();
+                case 3:
+                    return HttpRequest.get(url, true, param_1, value_1, param_2, value_2, param_3, value_3).body();
+                case 4:
+                    return HttpRequest.get(url, true, param_1, value_1, param_2, value_2).body();
                 default:
                     return "my_log: Нет такого значения 'flag'";
             }
@@ -57,48 +113,48 @@ public class JSONParser {
         @Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
-            // выводим целиком полученную json-строку
-            Log.d(LOG_TAG, strJson);
+            switch (flag) {
+                case 1:
+                    try {
+                        JSONObject dataJsonObj = new JSONObject(strJson);
+                        JSONArray records = dataJsonObj.getJSONArray("records");
 
+                        for (int i = 0; i < records.length(); i++) {
+                            JSONObject user = records.getJSONObject(i);
+
+                            String login = user.getString("login");
+                            String record = user.getString("record");
+
+                        }
+
+                    } catch (JSONException e) {
+                        Log.d("my log", "Не вышло получить данные :(");
+                        e.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    try {
+                        JSONObject dataJsonObj = new JSONObject(strJson);
+                        JSONArray users = dataJsonObj.getJSONArray("user");
+                        JSONObject user = users.getJSONObject(0);
+
+                        String id = user.getString("_id");
+                        String login = user.getString("login");
+                        String password = user.getString("password");
+                        String email = user.getString("email");
+                        String money = user.getString("money");
+                        String record = user.getString("record");
+
+                    } catch (JSONException e) {
+                        Log.d("my log", "Не вышло получить данные :(");
+                        e.printStackTrace();
+                    }
+                    break;
+            }
         }
     }
 
-    /*private static class ParseTask extends AsyncTask<Void, Void, String> {
-
-        BufferedReader reader = null;
-        String resultJson = "";
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // получаем данные с внешнего ресурса
-            try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoOutput(true);
-                urlConnection.setUseCaches(false);
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                resultJson = buffer.toString();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return resultJson;
-        }
-
-        @Override
+    /*@Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
             // выводим целиком полученную json-строку
