@@ -37,8 +37,8 @@ public class Help extends AppCompatActivity {
 
         backButton.setOnClickListener(onClickListener);
 
-        //JSONParser.getUser();
-        JSONParser.getRecords();
+        JSONParser.getUser();
+        //JSONParser.getRecords();
 
     }
 
