@@ -73,7 +73,7 @@ public class JSONParser {
                 case 2:
                     return HttpRequest.get(url, true, param_1, value_1, param_2, value_2).body();
                 default:
-                    return "my_log: Нет такого значения 'flag'";
+                    return null;
             }
         }
 

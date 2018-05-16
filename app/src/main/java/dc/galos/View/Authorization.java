@@ -27,13 +27,13 @@ public class Authorization extends AppCompatActivity {
     private Button registrationButton;
     private Button restorePasswordButton;
     private Button loginButton;
-    private static EditText loginEditText;
-    private static EditText passwordEditText;
+    private EditText loginEditText;
+    private EditText passwordEditText;
     private CheckBox rememberCheckBox;
 
     private Sound sound = new Sound();
     private Intent intent;
-    private boolean remember = false;
+    private String remember = "false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class Authorization extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
                     DatabaseHelper.searchRowUsers("Гость", "1111", null, 1);
-                    DatabaseHelper.rememberOrForgetUser(true);
+                    DatabaseHelper.rememberOrForgetUser("true");
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -106,7 +106,8 @@ public class Authorization extends AppCompatActivity {
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
                 case R.id.rememberCheckBox:
-                    remember = rememberCheckBox.isChecked();
+                    if (rememberCheckBox.isChecked()) remember = "true";
+                    else remember = "false";
                     break;
             }
         }
@@ -129,15 +130,25 @@ public class Authorization extends AppCompatActivity {
                 JSONObject dataJsonObj = new JSONObject(strJson);
                 int success = dataJsonObj.getInt("success");
                 if (success == 1){
-                    JSONArray users = dataJsonObj.getJSONArray("user");
-                    JSONObject user = users.getJSONObject(0);
+                    JSONArray data_user = dataJsonObj.getJSONArray("user");
+                    JSONObject user = data_user.getJSONObject(0);
 
-                    DatabaseHelper.setId(Integer.parseInt(user.getString("_id")));
-                    DatabaseHelper.setLogin(user.getString("login"));
-                    DatabaseHelper.setPassword(user.getString("password"));
-                    DatabaseHelper.setEmail(user.getString("email"));
-                    DatabaseHelper.setMoney(Integer.parseInt(user.getString("money")));
-                    DatabaseHelper.setRecord(Integer.parseInt(user.getString("record")));
+                    DatabaseHelper.insertRowUsers(user.getString("login"), user.getString("password"),
+                            user.getString("email"), user.getInt("money"), user.getInt("record"), remember);
+                    DatabaseHelper.getUserData(user.getString("login"), user.getString("password"));
+
+                    JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
+                    JSONObject achievements = achievements_user.getJSONObject(0);
+
+                    DatabaseHelper.insertRowAchievements(achievements.getString("status"), achievements.getInt("all_levels"),
+                            achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
+                    DatabaseHelper.getAchievementsData();
+
+                    JSONArray resume_user = dataJsonObj.getJSONArray("resume");
+                    JSONObject resume = resume_user.getJSONObject(0);
+
+                    DatabaseHelper.insertRowResume(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
+                    DatabaseHelper.getResumeData();
 
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

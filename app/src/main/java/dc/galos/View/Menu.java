@@ -94,7 +94,7 @@ public class Menu extends AppCompatActivity {
                     }
                     break;
                 case R.id.logoutImageButton:
-                    DatabaseHelper.rememberOrForgetUser(false);
+                    DatabaseHelper.rememberOrForgetUser("false");
                     sound.mediaStop();
                     intent = new Intent(Menu.this, Authorization.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

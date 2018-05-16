@@ -208,8 +208,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         toast.show();
     }
 
-    // вставка новой записи при регистрации
-    public static void insertRowUsers (String _login, String _password, String _email) {
+    // добавление нового пользователя
+    public static void insertRowUsers (String _login, String _password, String _email, int _money, int _record, String _remember) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(COLUMN_LOGIN, _login);
@@ -217,36 +217,111 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_EMAIL, _email);
         contentValues.put(COLUMN_MONEY, 0);
         contentValues.put(COLUMN_RECORD, 0);
-        contentValues.put(COLUMN_REMEMBER, "false");
+        contentValues.put(COLUMN_REMEMBER, _remember);
 
         db.insert(TABLE_USERS, null, contentValues); // создаем аккаунт
-
-        searchRowUsers(_login, _password, null, 1); // получаем информацию об аккаунте
     }
 
-    public static void rememberOrForgetUser(boolean _remember){
+    // создаем запись с достижениями
+    public static void insertRowAchievements(String _status, int _all_levels, int _all_money, int _all_eating, int _all_win){
         ContentValues contentValues = new ContentValues();
-        if (_remember) contentValues.put(COLUMN_REMEMBER, "true");
+
+        contentValues.put(COLUMN_STATUS, _status);
+        contentValues.put(COLUMN_ALL_LEVELS, _all_levels);
+        contentValues.put(COLUMN_ALL_MONEY, _all_money);
+        contentValues.put(COLUMN_ALL_EATING, _all_eating);
+        contentValues.put(COLUMN_ALL_WINS, _all_win);
+        contentValues.put(COLUMN_ID_USER, id);
+
+        db.insert(TABLE_ACHIEVEMENTS, null, contentValues);
+    }
+
+    // создаем запись с возобновлением
+    public static void insertRowResume(int _mode, int _score, int _all_rewards){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_MODE, _mode);
+        contentValues.put(COLUMN_SCORE, _score);
+        contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
+        contentValues.put(COLUMN_ID_USER, id);
+
+        db.insert(TABLE_RESUME, null, contentValues);
+    }
+
+    // получаем данные об аккаунте
+    public static void getUserData(String _login, String _password){
+        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", TABLE_USERS, COLUMN_LOGIN,
+                _login, COLUMN_PASSWORD, _password);
+
+        cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+        login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
+        password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
+        email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
+        money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
+        record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
+
+        cursor.close();
+    }
+
+    // получаем данные о достижениях аккаунта
+    public static void getAchievementsData(){
+        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_ACHIEVEMENTS, COLUMN_ID_USER, id);
+
+        cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        status = cursor.getString(cursor.getColumnIndex(COLUMN_STATUS));
+        all_levels = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_LEVELS));
+        all_money = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_MONEY));
+        all_eating = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_EATING));
+        all_wins = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_WINS));
+
+        cursor.close();
+    }
+
+    // получаем данные о достижениях аккаунта
+    public static void getResumeData(){
+        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_RESUME, COLUMN_ID_USER, id);
+
+        cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        mode = cursor.getInt(cursor.getColumnIndex(COLUMN_MODE));
+        score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
+        all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
+
+        cursor.close();
+    }
+
+    public static void rememberOrForgetUser(String _remember){
+        ContentValues contentValues = new ContentValues();
+        if (_remember.equals("true")) contentValues.put(COLUMN_REMEMBER, "true");
         else contentValues.put(COLUMN_REMEMBER, "false");
         db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
     }
 
     public static boolean searchRememberUser(){
-        String query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE " +
-                        "\"%s\" = 'true'", COLUMN_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL, COLUMN_MONEY,
-                COLUMN_RECORD, TABLE_USERS, COLUMN_REMEMBER);
+        String query = String.format("SELECT * FROM \"%s\" WHERE " +
+                        "\"%s\" = 'true'", TABLE_USERS, COLUMN_REMEMBER);
         cursor = db.rawQuery(query, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
+
             id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
             login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
             password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
             email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
             money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
             record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
+
             cursor.close();
+
             getAchievementsData(); // получение данных о его достижениях
             getResumeData();
+
             return true;
         }
         else return false;
@@ -325,34 +400,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return achievementsList;
-    }
-
-    public static void getResumeData(){
-        String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
-                COLUMN_MODE, COLUMN_SCORE, COLUMN_ALL_REWARDS, TABLE_RESUME, COLUMN_ID_USER, id);
-        cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-
-        mode = cursor.getInt(cursor.getColumnIndex(COLUMN_MODE));
-        score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
-        all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
-        cursor.close();
-    }
-
-    private static void getAchievementsData(){
-        String query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
-                COLUMN_STATUS, COLUMN_ALL_LEVELS, COLUMN_ALL_MONEY, COLUMN_ALL_EATING, COLUMN_ALL_WINS, TABLE_ACHIEVEMENTS,
-                COLUMN_ID_USER, id);
-        cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-
-        status = cursor.getString(cursor.getColumnIndex(COLUMN_STATUS));
-        all_levels = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_LEVELS));
-        all_money = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_MONEY));
-        all_eating = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_EATING));
-        all_wins = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_WINS));
-
-        cursor.close();
     }
 
     // увеличиваем общее количество уровней в таблице achievements
@@ -603,4 +650,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static void setRecord(int record) {
         DatabaseHelper.record = record;
     }
+
+
 }

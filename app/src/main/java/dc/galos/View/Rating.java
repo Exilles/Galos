@@ -124,7 +124,7 @@ public class Rating extends AppCompatActivity {
                     }
                 }
 
-                String user_record = "Не найден";
+                String user_record = "Не найдено";
 
                 for (int i = 0; i < names.length; i++) {
                     hashMap = new HashMap<>();
@@ -135,12 +135,18 @@ public class Rating extends AppCompatActivity {
                     if (names[i].equals(DatabaseHelper.getLogin()))  user_record = Integer.toString(i + 1);
                 }
 
-                HashMap<String, Object> hashMap2 = recordsList.get(0);
+                HashMap<String, Object> hashMap2  = recordsList.get(0);
                 goldUserTextView.setText((String)hashMap2.get(NAME));
-                hashMap2 = recordsList.get(1);
-                silverUserTextView.setText((String)hashMap2.get(NAME));
-                hashMap2 = recordsList.get(2);
-                bronzeUserTextView.setText((String)hashMap2.get(NAME));
+
+                if (recordsList.size() > 1) {
+                    hashMap2 = recordsList.get(1);
+                    silverUserTextView.setText((String)hashMap2.get(NAME));
+                }
+                if (recordsList.size() > 2) {
+                    hashMap2 = recordsList.get(2);
+                    bronzeUserTextView.setText((String)hashMap2.get(NAME));
+                }
+
                 positionTextView.setText("Ваше место: " + user_record);
 
                 adapter = new SimpleAdapter(mycontext, recordsList,
