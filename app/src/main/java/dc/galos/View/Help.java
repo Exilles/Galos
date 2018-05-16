@@ -1,17 +1,32 @@
 package dc.galos.View;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class Help extends AppCompatActivity {
 
     private Intent intent;
     private Button backButton;
+    public static String LOG_TAG = "my_log";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +36,10 @@ public class Help extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(onClickListener);
+
+        //JSONParser.getUser();
+        JSONParser.getRecords();
+
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -35,4 +54,5 @@ public class Help extends AppCompatActivity {
             }
         }
     };
+
 }
