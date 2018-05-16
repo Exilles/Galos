@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import dc.galos.Controller.DatabaseHelper;
+import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class Registration extends AppCompatActivity {
@@ -47,14 +48,14 @@ public class Registration extends AppCompatActivity {
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
 
-                            count = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(), null,
-                                    null, 2);
+
+                            count = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(), null,null, 2);
                             if (count == 0){
                                 count = DatabaseHelper.searchRowUsers(null, null,
                                         emailEditText.getText().toString(), 3);
                                 if (count == 0) {
-                                    DatabaseHelper.insertRowUsers(loginEditText.getText().toString(),
-                                            passwordEditText.getText().toString(), emailEditText.getText().toString());
+                                    JSONParser.createUser(loginEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
+                                    DatabaseHelper.insertRowUsers(loginEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
 
                                     intent = new Intent(Registration.this, Authorization.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

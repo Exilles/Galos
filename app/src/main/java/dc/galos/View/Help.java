@@ -26,7 +26,6 @@ public class Help extends AppCompatActivity {
 
     private Intent intent;
     private Button backButton;
-    public static String LOG_TAG = "my_log";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +35,6 @@ public class Help extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(onClickListener);
-
-        //JSONParser.createUser();
-        JSONParser.getUser("test", "1234");
-        //JSONParser.getRecords();
-
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

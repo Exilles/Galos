@@ -327,27 +327,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return achievementsList;
     }
 
-    public static ArrayList<HashMap<String, Object>> getRecords() {
-        ArrayList<HashMap<String, Object>> recordsList = new ArrayList<>();
-        HashMap<String, Object> hashMap;
-
-        String NUMBER = "number";
-        String NAME = "name";
-        String RECORD = "record";
-        String[] names = myContext.getResources().getStringArray(R.array.names);
-        String[] records = myContext.getResources().getStringArray(R.array.records);
-
-        for (int i = 1; i < 27; i++) {
-            hashMap = new HashMap<>();
-            hashMap.put(NUMBER, i);
-            hashMap.put(NAME, names[i-1]);
-            hashMap.put(RECORD, records[i-1]);
-            recordsList.add(hashMap);
-        }
-
-        return recordsList;
-    }
-
     public static void getResumeData(){
         String query = String.format("SELECT \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"",
                 COLUMN_MODE, COLUMN_SCORE, COLUMN_ALL_REWARDS, TABLE_RESUME, COLUMN_ID_USER, id);
