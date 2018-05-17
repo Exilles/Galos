@@ -60,11 +60,11 @@ public class Authorization extends AppCompatActivity {
 
         rememberCheckBox.setTypeface(Typeface.createFromAsset(getApplicationContext().getResources().getAssets(), "a_futurica_extrabold.ttf"));
 
-        if (DatabaseHelper.searchRememberUser()) {
+        /*if (DatabaseHelper.searchRememberUser()) {
             intent = new Intent(Authorization.this, Menu.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }
+        }*/
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -72,8 +72,10 @@ public class Authorization extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
-                    DatabaseHelper.searchRowUsers("Гость", "1111", null, 1);
-                    DatabaseHelper.rememberOrForgetUser("true");
+                    DatabaseHelper.getGuestData("Гость", "1111");
+                    DatabaseHelper.getAchievementsGuest();
+                    DatabaseHelper.getResumeGuest();
+                    //DatabaseHelper.rememberOrForgetUser("true");
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -90,18 +92,7 @@ public class Authorization extends AppCompatActivity {
                     break;
                 case R.id.loginButton:
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
-                        // в id вернется 1, если пользователь найден или 0, если такой пользователь не найден
-                        int id = DatabaseHelper.searchRowUsers(loginEditText.getText().toString(),
-                                passwordEditText.getText().toString(), null, 1);
-                        if (id == 1) {
-                            DatabaseHelper.rememberOrForgetUser(remember);
-                            intent = new Intent(Authorization.this, Menu.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                        else {
-                            new ParseTask().execute();
-                        }
+                        new ParseTask().execute();
                     }
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
@@ -118,7 +109,7 @@ public class Authorization extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            return HttpRequest.get("https://galos.000webhostapp.com/get_user.php",
+            return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php",
                     true, "login", loginEditText.getText().toString(), "password", passwordEditText.getText().toString()).body();
 
         }
@@ -132,23 +123,17 @@ public class Authorization extends AppCompatActivity {
                 if (success == 1){
                     JSONArray data_user = dataJsonObj.getJSONArray("user");
                     JSONObject user = data_user.getJSONObject(0);
-
-                    DatabaseHelper.insertRowUsers(user.getString("login"), user.getString("password"),
-                            user.getString("email"), user.getInt("money"), user.getInt("record"), remember);
-                    DatabaseHelper.getUserData(user.getString("login"), user.getString("password"));
+                    DatabaseHelper.getUserData(user.getInt("_id"), user.getString("login"), user.getString("password"),
+                            user.getString("email"), user.getInt("money"), user.getInt("record"));
 
                     JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
                     JSONObject achievements = achievements_user.getJSONObject(0);
-
-                    DatabaseHelper.insertRowAchievements(achievements.getString("status"), achievements.getInt("all_levels"),
+                    DatabaseHelper.getAchievementsGuest(achievements.getString("status"), achievements.getInt("all_levels"),
                             achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
-                    DatabaseHelper.getAchievementsData();
 
                     JSONArray resume_user = dataJsonObj.getJSONArray("resume");
                     JSONObject resume = resume_user.getJSONObject(0);
-
-                    DatabaseHelper.insertRowResume(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
-                    DatabaseHelper.getResumeData();
+                    DatabaseHelper.getResumeGuest(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
 
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

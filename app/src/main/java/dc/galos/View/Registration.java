@@ -53,7 +53,6 @@ public class Registration extends AppCompatActivity {
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("") &&
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-
                             new ParseTask().execute();
                         }
                         else  DatabaseHelper.showInformation(getResources().getString(R.string.match_passwords));
@@ -84,13 +83,7 @@ public class Registration extends AppCompatActivity {
             try {
                 JSONObject dataJsonObj = new JSONObject(strJson);
                 int success = dataJsonObj.getInt("success");
-                if (success == 1) {
-
-                    DatabaseHelper.insertRowUsers(loginEditText.getText().toString(), passwordEditText.getText().toString(),
-                            emailEditText.getText().toString(), 0, 0, "false");
-
-                    DatabaseHelper.showInformation("Аккаунт успешно создан");
-                }
+                if (success == 1) DatabaseHelper.showInformation("Аккаунт успешно создан");
                 else {
                     String message = dataJsonObj.getString("message");
                     DatabaseHelper.showInformation(message);

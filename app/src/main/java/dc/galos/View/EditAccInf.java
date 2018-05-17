@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import dc.galos.Controller.DatabaseHelper;
+import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class EditAccInf extends AppCompatActivity {
@@ -51,9 +52,17 @@ public class EditAccInf extends AppCompatActivity {
                             if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
                                 if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
                                 {
-
-                                    DatabaseHelper.updateRowUsers(newPasswordEditText.getText().toString(),
-                                            newEmailEditText.getText().toString());
+                                    if (!newPasswordEditText.getText().toString().equals("")) {
+                                        DatabaseHelper.setPassword(newPasswordEditText.getText().toString());
+                                        DatabaseHelper.showInformation(DatabaseHelper.getPassword());
+                                        JSONParser.updateUserPassword(newPasswordEditText.getText().toString());
+                                    }
+                                    if (!newEmailEditText.getText().toString().equals("")) {
+                                        DatabaseHelper.setEmail(newEmailEditText.getText().toString());
+                                        DatabaseHelper.showInformation(getResources().getString(R.string.information_update));
+                                        DatabaseHelper.showInformation(DatabaseHelper.getEmail());
+                                        JSONParser.updateUserEmail(newEmailEditText.getText().toString());
+                                    }
                                     DatabaseHelper.showInformation(getResources().getString(R.string.information_update));
                                 }
                                 else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_current_password));

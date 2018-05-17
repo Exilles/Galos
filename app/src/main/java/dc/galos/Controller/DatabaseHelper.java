@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -208,48 +207,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         toast.show();
     }
 
-    // добавление нового пользователя
-    public static void insertRowUsers (String _login, String _password, String _email, int _money, int _record, String _remember) {
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(COLUMN_LOGIN, _login);
-        contentValues.put(COLUMN_PASSWORD, _password);
-        contentValues.put(COLUMN_EMAIL, _email);
-        contentValues.put(COLUMN_MONEY, 0);
-        contentValues.put(COLUMN_RECORD, 0);
-        contentValues.put(COLUMN_REMEMBER, _remember);
-
-        db.insert(TABLE_USERS, null, contentValues); // создаем аккаунт
-    }
-
-    // создаем запись с достижениями
-    public static void insertRowAchievements(String _status, int _all_levels, int _all_money, int _all_eating, int _all_win){
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(COLUMN_STATUS, _status);
-        contentValues.put(COLUMN_ALL_LEVELS, _all_levels);
-        contentValues.put(COLUMN_ALL_MONEY, _all_money);
-        contentValues.put(COLUMN_ALL_EATING, _all_eating);
-        contentValues.put(COLUMN_ALL_WINS, _all_win);
-        contentValues.put(COLUMN_ID_USER, id);
-
-        db.insert(TABLE_ACHIEVEMENTS, null, contentValues);
-    }
-
-    // создаем запись с возобновлением
-    public static void insertRowResume(int _mode, int _score, int _all_rewards){
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(COLUMN_MODE, _mode);
-        contentValues.put(COLUMN_SCORE, _score);
-        contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
-        contentValues.put(COLUMN_ID_USER, id);
-
-        db.insert(TABLE_RESUME, null, contentValues);
-    }
-
     // получаем данные об аккаунте
-    public static void getUserData(String _login, String _password){
+    public static void getGuestData(String _login, String _password){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", TABLE_USERS, COLUMN_LOGIN,
                 _login, COLUMN_PASSWORD, _password);
 
@@ -267,7 +226,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getAchievementsData(){
+    public static void getAchievementsGuest(){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_ACHIEVEMENTS, COLUMN_ID_USER, id);
 
         cursor = db.rawQuery(query, null);
@@ -283,7 +242,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getResumeData(){
+    public static void getResumeGuest(){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_RESUME, COLUMN_ID_USER, id);
 
         cursor = db.rawQuery(query, null);
@@ -294,6 +253,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
 
         cursor.close();
+    }
+
+    // получаем данные об аккаунте
+    public static void getUserData(int _id, String _login, String _pasword, String _email, int _money, int _record){
+        id = _id;
+        login = _login;
+        password = _pasword;
+        email = _email;
+        money = _money;
+        record = _record;
+    }
+
+    // получаем данные о достижениях аккаунта
+    public static void getAchievementsGuest(String _status, int _all_levels, int _all_money, int _all_eating, int _all_wins){
+        status = _status;
+        all_levels = _all_levels;
+        all_money = _all_money;
+        all_eating = _all_eating;
+        all_wins = _all_wins;
+    }
+
+    // получаем данные о достижениях аккаунта
+    public static void getResumeGuest(int _mode, int _score, int _all_rewards){
+        mode = _mode;
+        score = _score;
+        all_rewards = _all_rewards;
     }
 
     public static void rememberOrForgetUser(String _remember){
@@ -319,8 +304,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             cursor.close();
 
-            getAchievementsData(); // получение данных о его достижениях
-            getResumeData();
+            getAchievementsGuest(); // получение данных о его достижениях
+            getResumeGuest();
 
             return true;
         }
@@ -334,9 +319,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         switch (index) {
             case 1: // поиск по логину и паролю
-                query = String.format("SELECT \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" FROM \"%s\" WHERE " +
-                        "\"%s\" = \"%s\" AND \"%s\" = \"%s\"", COLUMN_ID, COLUMN_LOGIN, COLUMN_PASSWORD, COLUMN_EMAIL,
-                        COLUMN_MONEY, COLUMN_RECORD, TABLE_USERS, COLUMN_LOGIN, _login, COLUMN_PASSWORD, _password);
+                query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", TABLE_USERS,
+                        COLUMN_LOGIN, _login, COLUMN_PASSWORD, _password);
                 cursor = db.rawQuery(query, null);
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
@@ -347,8 +331,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
                     record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
                     cursor.close();
-                    getAchievementsData(); // получение данных о его достижениях
-                    getResumeData(); // получение данных о его последней игре
+                    getAchievementsGuest(); // получение данных о его достижениях
+                    getResumeGuest(); // получение данных о его последней игре
                     return 1;
                 }
                 else return 0;
@@ -367,27 +351,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // изменение информации об аккаунте
-    public static void updateRowUsers(String _password, String _email) {
-        ContentValues contentValues = new ContentValues();
-
-        if (!_password.equals("")) {
-            password = _password;
-            contentValues.put(COLUMN_PASSWORD, _password);
-        }
-        if (!_email.equals("")) {
-            email = _email;
-            contentValues.put(COLUMN_EMAIL, _email);
-        }
-
-        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
-    }
-
     public static ArrayList<HashMap<String, Object>> getAchievements() {
         ArrayList<HashMap<String, Object>> achievementsList = new ArrayList<>();
         HashMap<String, Object> hashMap;
-
-        getAchievementsData();
 
         for (int i = 0; i < 26; i++) {
             hashMap = new HashMap<>();
@@ -404,22 +370,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // увеличиваем общее количество уровней в таблице achievements
     public static void updateAllLevels(){
-        ContentValues contentValues = new ContentValues();
         all_levels ++;
-        contentValues.put(COLUMN_ALL_LEVELS, all_levels);
-        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_ALL_LEVELS, all_levels);
+            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        }
+        else JSONParser.updateAchievementsAllLevels(Integer.toString(all_levels));
+
         checkAllLevels();
         checkGod();
     }
 
     // увеличиваем общее количество денег и побед в таблице achievements
     public static void updateAllMoneyAndWins(int _reward){
-        ContentValues contentValues = new ContentValues();
         all_money += _reward;
         all_wins ++;
-        contentValues.put(COLUMN_ALL_MONEY, all_money);
-        contentValues.put(COLUMN_ALL_WINS, all_wins);
-        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_ALL_MONEY, all_money);
+            contentValues.put(COLUMN_ALL_WINS, all_wins);
+            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        }
+        else {
+            JSONParser.updateAchievementsAllMoney(Integer.toString(all_money));
+            JSONParser.updateAchievementsAllWins(Integer.toString(all_wins));
+        }
+
         checkRecord();
         checkAllWins();
         checkAllMoney();
@@ -429,10 +407,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // увеличиваем общее количество съеденных в таблице achievements
     public static void updateAllEating(){
-        ContentValues contentValues = new ContentValues();
         all_eating ++;
-        contentValues.put(COLUMN_ALL_EATING, all_eating);
-        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_ALL_EATING, all_eating);
+            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
+        }
+        else JSONParser.updateAchievementsAllEating(Integer.toString(all_eating));
+
         checkAllEating();
         checkGod();
     }
@@ -440,12 +423,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // обновляет status в таблице achievements
     private static void updateStatus(int position){
         if (status.charAt(position) != '1') {
-            ContentValues contentValues = new ContentValues();
+
             StringBuilder newStatus = new StringBuilder(status);
             newStatus.setCharAt(position, '1');
             status = String.valueOf(newStatus);
-            contentValues.put(COLUMN_STATUS, status);
-            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)}); // обновление статуса достижения
+
+            if (login.equals("Гость")) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_STATUS, status);
+                db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)}); // обновление статуса достижения
+            }
+            else JSONParser.updateAchievementsStatus(status);
+
             updateMoneyAndRecord(Integer.parseInt(rewardAchievements[position]), 0); // прибавка награды
             showAchievement("Получено достижение: " + titleAchievements[position]); // отображение сообщения о получении достижения
         }
@@ -551,40 +540,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // изменение количества денег и рекорда пользователя
     public static void updateMoneyAndRecord(int _money, int _record) {
-        ContentValues contentValues = new ContentValues();
-
         money += _money;
-        contentValues.put(COLUMN_MONEY, money);
-        JSONParser.updateUserMoney(Integer.toString(money));
 
-        if (record < _record) {
-            record = _record;
-            contentValues.put(COLUMN_RECORD, _record);
-            JSONParser.updateUserRecord(Integer.toString(record));
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_MONEY, money);
+            if (record < _record) {
+                record = _record;
+                contentValues.put(COLUMN_RECORD, record);
+            }
+            db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
         }
-
-        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        else {
+            JSONParser.updateUserMoney(Integer.toString(money));
+            if (record < _record) {
+                record = _record;
+                JSONParser.updateUserRecord(Integer.toString(record));
+            }
+        }
     }
 
     // изменение количества денег из-за покупки бонуса
     public static void buyBonus(int _money) {
-        ContentValues contentValues = new ContentValues();
-
         money -= _money;
-        contentValues.put(COLUMN_MONEY, money);
-        JSONParser.updateUserMoney(Integer.toString(money));
 
-        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_MONEY, money);
+            db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        }
+        else JSONParser.updateUserMoney(Integer.toString(money));
     }
 
     public static void updateResume(int _mode, int _score, int _all_rewards){
-        ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COLUMN_MODE, _mode);
-        contentValues.put(COLUMN_SCORE, _score);
-        contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
-
-        db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        if (login.equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_MODE, _mode);
+            contentValues.put(COLUMN_SCORE, _score);
+            contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
+            db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        }
+        else {
+            JSONParser.updateResumeMode(Integer.toString(_mode));
+            JSONParser.updateResumeScore(Integer.toString(_score));
+            JSONParser.updateResumeAllRewards(Integer.toString(_all_rewards));
+        }
     }
 
     public static int getId() {

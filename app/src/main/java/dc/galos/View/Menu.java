@@ -4,12 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.provider.ContactsContract;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.github.kevinsawicki.http.HttpRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
@@ -73,7 +80,8 @@ public class Menu extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.playImageButton:
                     Game.PAUSE = false;
-                    DatabaseHelper.getResumeData();
+                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.getResumeGuest();
+                    else new ParseTask().execute();
                     GameManager.setMode(DatabaseHelper.getMode());
                     GameManager.setScore(DatabaseHelper.getScore());
                     GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
@@ -101,14 +109,20 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.settingsImageButton:
-                    intent = new Intent(Menu.this, EditAccInf.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.showInformation("Недоступно неавторизированному пользователю");
+                    else {
+                        intent = new Intent(Menu.this, EditAccInf.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.ratingImageButton:
-                    intent = new Intent(Menu.this, Rating.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.showInformation("Недоступно неавторизированному пользователю");
+                    else {
+                        intent = new Intent(Menu.this, Rating.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.achievementsImageButton:
                     intent = new Intent(Menu.this, Achievements.class);
@@ -123,4 +137,27 @@ public class Menu extends AppCompatActivity {
             }
         }
     };
+
+    private class ParseTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return HttpRequest.get("https://galos.000webhostapp.com/get_resume_data.php",
+                    true, "_id", DatabaseHelper.getId()).body();
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            super.onPostExecute(strJson);
+            try {
+                JSONObject dataJsonObj = new JSONObject(strJson);
+                JSONArray resume_user = dataJsonObj.getJSONArray("resume");
+                JSONObject resume = resume_user.getJSONObject(0);
+                DatabaseHelper.getResumeGuest(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
+            } catch (JSONException e) {
+                Log.d("my log", "Не вышло получить данные :(");
+                e.printStackTrace();
+            }
+        }
+    }
 }
