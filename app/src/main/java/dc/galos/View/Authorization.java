@@ -72,7 +72,7 @@ public class Authorization extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
-                    DatabaseHelper.getGuestData("Гость", "1111");
+                    DatabaseHelper.getGuestData();
                     DatabaseHelper.getAchievementsGuest();
                     DatabaseHelper.getResumeGuest();
                     //DatabaseHelper.rememberOrForgetUser("true");
@@ -128,12 +128,12 @@ public class Authorization extends AppCompatActivity {
 
                     JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
                     JSONObject achievements = achievements_user.getJSONObject(0);
-                    DatabaseHelper.getAchievementsGuest(achievements.getString("status"), achievements.getInt("all_levels"),
+                    DatabaseHelper.getAchievementsUser(achievements.getString("status"), achievements.getInt("all_levels"),
                             achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
 
                     JSONArray resume_user = dataJsonObj.getJSONArray("resume");
                     JSONObject resume = resume_user.getJSONObject(0);
-                    DatabaseHelper.getResumeGuest(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
+                    DatabaseHelper.getResumeUser(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
 
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -101,7 +101,7 @@ public class Achievements extends AppCompatActivity {
                 JSONObject dataJsonObj = new JSONObject(strJson);
                 JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
                 JSONObject achievements = achievements_user.getJSONObject(0);
-                DatabaseHelper.getAchievementsGuest(achievements.getString("status"), achievements.getInt("all_levels"),
+                DatabaseHelper.getAchievementsUser(achievements.getString("status"), achievements.getInt("all_levels"),
                         achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
 
                 achievementsList = DatabaseHelper.getAchievements();

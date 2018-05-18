@@ -80,8 +80,6 @@ public class Menu extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.playImageButton:
                     Game.PAUSE = false;
-                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.getResumeGuest();
-                    else new ParseTask().execute();
                     GameManager.setMode(DatabaseHelper.getMode());
                     GameManager.setScore(DatabaseHelper.getScore());
                     GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
@@ -137,27 +135,4 @@ public class Menu extends AppCompatActivity {
             }
         }
     };
-
-    private class ParseTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-            return HttpRequest.get("https://galos.000webhostapp.com/get_resume_data.php",
-                    true, "_id", DatabaseHelper.getId()).body();
-        }
-
-        @Override
-        protected void onPostExecute(String strJson) {
-            super.onPostExecute(strJson);
-            try {
-                JSONObject dataJsonObj = new JSONObject(strJson);
-                JSONArray resume_user = dataJsonObj.getJSONArray("resume");
-                JSONObject resume = resume_user.getJSONObject(0);
-                DatabaseHelper.getResumeGuest(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
-            } catch (JSONException e) {
-                Log.d("my log", "Не вышло получить данные :(");
-                e.printStackTrace();
-            }
-        }
-    }
 }

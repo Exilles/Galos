@@ -15,6 +15,7 @@ import java.util.Timer;
 
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
+import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class Game extends AppCompatActivity {

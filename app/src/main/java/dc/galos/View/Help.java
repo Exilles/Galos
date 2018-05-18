@@ -2,6 +2,7 @@ package dc.galos.View;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
@@ -35,6 +37,9 @@ public class Help extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(onClickListener);
+
+        DatabaseHelper.updateAllLevels();
+        //DatabaseHelper.updateMoneyAndRecord(100, 20);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

@@ -208,17 +208,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные об аккаунте
-    public static void getGuestData(String _login, String _password){
-        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", TABLE_USERS, COLUMN_LOGIN,
-                _login, COLUMN_PASSWORD, _password);
+    public static void getGuestData(){
+        String query = String.format("SELECT \"%s\", \"%s\" FROM \"%s\"", COLUMN_MONEY, COLUMN_RECORD, TABLE_USERS);
 
         cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
 
-        id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
-        login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
-        password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
-        email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
+        id = 1;
+        login = "Гость";
         money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
         record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
 
@@ -256,17 +253,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные об аккаунте
-    public static void getUserData(int _id, String _login, String _pasword, String _email, int _money, int _record){
+    public static void getUserData(int _id, String _login, String _password, String _email, int _money, int _record){
         id = _id;
         login = _login;
-        password = _pasword;
+        password = _password;
         email = _email;
         money = _money;
         record = _record;
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getAchievementsGuest(String _status, int _all_levels, int _all_money, int _all_eating, int _all_wins){
+    public static void getAchievementsUser(String _status, int _all_levels, int _all_money, int _all_eating, int _all_wins){
         status = _status;
         all_levels = _all_levels;
         all_money = _all_money;
@@ -275,7 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getResumeGuest(int _mode, int _score, int _all_rewards){
+    public static void getResumeUser( int _mode, int _score, int _all_rewards){
         mode = _mode;
         score = _score;
         all_rewards = _all_rewards;
@@ -310,45 +307,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
         else return false;
-    }
-
-    // поиск введенных данных на наличие в БД
-    public static int searchRowUsers(String _login, String _password, String _email, int index) {
-        String query;
-        int count;
-
-        switch (index) {
-            case 1: // поиск по логину и паролю
-                query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\" AND \"%s\" = \"%s\"", TABLE_USERS,
-                        COLUMN_LOGIN, _login, COLUMN_PASSWORD, _password);
-                cursor = db.rawQuery(query, null);
-                if (cursor.getCount() > 0) {
-                    cursor.moveToFirst();
-                    id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
-                    login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
-                    password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
-                    email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
-                    money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
-                    record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
-                    cursor.close();
-                    getAchievementsGuest(); // получение данных о его достижениях
-                    getResumeGuest(); // получение данных о его последней игре
-                    return 1;
-                }
-                else return 0;
-            case 2: //  поиск по логину
-                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE_USERS, COLUMN_LOGIN, _login);
-                cursor = db.rawQuery(query, null);
-                count = cursor.getCount();
-                return count;
-            case 3: // поиск по майлу
-                query = String.format("SELECT \"%s\" FROM \"%s\" WHERE \"%s\" = \"%s\"", COLUMN_ID, TABLE_USERS, COLUMN_EMAIL, _email);
-                cursor = db.rawQuery(query, null);
-                count = cursor.getCount();
-                return count;
-            default:
-                return 0;
-        }
     }
 
     public static ArrayList<HashMap<String, Object>> getAchievements() {
@@ -555,6 +513,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             JSONParser.updateUserMoney(Integer.toString(money));
             if (record < _record) {
                 record = _record;
+                Log.d("my log", "Обновили рекорд локально");
                 JSONParser.updateUserRecord(Integer.toString(record));
             }
         }
@@ -574,6 +533,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static void updateResume(int _mode, int _score, int _all_rewards){
 
+        mode =_mode;
+        score = _score;
+        all_rewards =_all_rewards;
+
         if (login.equals("Гость")) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_MODE, _mode);
@@ -581,11 +544,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
             db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
         }
-        else {
-            JSONParser.updateResumeMode(Integer.toString(_mode));
-            JSONParser.updateResumeScore(Integer.toString(_score));
-            JSONParser.updateResumeAllRewards(Integer.toString(_all_rewards));
-        }
+        else JSONParser.updateResume(Integer.toString(_mode), Integer.toString(_score), Integer.toString(_all_rewards));
     }
 
     public static int getId() {
