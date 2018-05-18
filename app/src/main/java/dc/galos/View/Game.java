@@ -15,7 +15,6 @@ import java.util.Timer;
 
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
-import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class Game extends AppCompatActivity {
@@ -46,6 +45,14 @@ public class Game extends AppCompatActivity {
     private TextView priceLifeBonusTextView;
     private TextView priceDecelerationBonusTextView;
     private TextView priceGrowthBonusTextView;
+
+    private static int money;
+    private static int record;
+    private static String status;
+    private static int all_levels;
+    private static int all_money;
+    private static int all_eating;
+    private static int all_wins;
 
     @SuppressLint({"SetTextI18n"})
     @Override
@@ -120,7 +127,9 @@ public class Game extends AppCompatActivity {
                     if (!GameManager.isLife()){
                         if (DatabaseHelper.getMoney() >= PRICE_LIFE){
                             lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
-                            DatabaseHelper.buyBonus(PRICE_LIFE);
+                            getData();
+                            DatabaseHelper.updateData(money - PRICE_LIFE, record, all_levels, all_money, all_eating, all_wins);
+                            //DatabaseHelper.buyBonus(PRICE_LIFE);
                             GameManager.useLifeBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 130);
@@ -133,7 +142,9 @@ public class Game extends AppCompatActivity {
                     if (!GameManager.isDeceleration()){
                         if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
                             decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
-                            DatabaseHelper.buyBonus(PRICE_DECELERATION);
+                            getData();
+                            DatabaseHelper.updateData(money - PRICE_DECELERATION, record, all_levels, all_money, all_eating, all_wins);
+                            //DatabaseHelper.buyBonus(PRICE_DECELERATION);
                             GameManager.useDecelerationBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 385);
@@ -145,7 +156,9 @@ public class Game extends AppCompatActivity {
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
                         growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
-                        DatabaseHelper.buyBonus(PRICE_GROWTH);
+                        getData();
+                        DatabaseHelper.updateData(money - PRICE_GROWTH, record, all_levels, all_money, all_eating, all_wins);
+                        //DatabaseHelper.buyBonus(PRICE_GROWTH);
                         GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 635);
@@ -182,7 +195,9 @@ public class Game extends AppCompatActivity {
     public static void showDialog(int _score, int _reward, int _sum, int _flag) {
         dialog = true;
         PAUSE = true;
-        DatabaseHelper.updateAllLevels();
+        getData();
+        DatabaseHelper.updateData(money, record, all_levels + 1, all_money, all_eating, all_wins);
+        //DatabaseHelper.updateAllLevels();
         dialogConstraintLayout.setVisibility(View.VISIBLE);
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {
@@ -211,5 +226,15 @@ public class Game extends AppCompatActivity {
                 DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
                 break;
         }
+    }
+
+    private static void getData(){
+        money = DatabaseHelper.getMoney();
+        record = DatabaseHelper.getRecord();
+        status = DatabaseHelper.getStatus();
+        all_levels = DatabaseHelper.getAll_levels();
+        all_money = DatabaseHelper.getAll_money();
+        all_eating = DatabaseHelper.getAll_eating();
+        all_wins = DatabaseHelper.getAll_wins();
     }
 }

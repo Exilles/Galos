@@ -25,6 +25,15 @@ public class GameManager {
     private static boolean life = false;
     private static boolean deceleration = false;
 
+    private static int money;
+    private static int record;
+    private static String status;
+    private static int all_levels;
+    private static int all_money;
+    private static int all_eating;
+    private static int all_wins;
+
+
     GameManager(CanvasView canvasView, int w, int h) {
         GameManager.canvasView = canvasView;
         width = w;
@@ -118,7 +127,9 @@ public class GameManager {
         for (EnemyCircle circle : enemy_circles) {
             if (mainCircle.isIntersect(circle)) {
                 if (circle.isSmallerThan(mainCircle)) {
-                    DatabaseHelper.updateAllEating();
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating + 1, all_wins);
+                    //DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -145,7 +156,9 @@ public class GameManager {
         for (VanishingCircle circle : vanishing_circles) {
             if (mainCircle.isIntersect(circle)) {
                 if (circle.isSmallerThan(mainCircle)) {
-                    DatabaseHelper.updateAllEating();
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating + 1, all_wins);
+                    //DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -207,8 +220,10 @@ public class GameManager {
         switchRate(score);
         reward = Math.round((score * rate) + rate); // вознаграждение за победу
         all_rewards += reward; // подсчёт суммы всех вознаграждений за победу
-        DatabaseHelper.updateMoneyAndRecord(reward, score);
-        DatabaseHelper.updateAllMoneyAndWins(reward);
+        getData();
+        DatabaseHelper.updateData(money + reward, score, all_levels, all_money + reward, all_eating, all_wins + 1);
+        //DatabaseHelper.updateMoneyAndRecord(reward, score);
+        //DatabaseHelper.updateAllMoneyAndWins(reward);
     }
 
     private void zeroScoreAndRewards() {
@@ -249,6 +264,16 @@ public class GameManager {
         setEnemyCirclesColor();
         setVanishingCirclesColor();
         canvasView.redraw();
+    }
+
+    private static void getData(){
+        money = DatabaseHelper.getMoney();
+        record = DatabaseHelper.getRecord();
+        status = DatabaseHelper.getStatus();
+        all_levels = DatabaseHelper.getAll_levels();
+        all_money = DatabaseHelper.getAll_money();
+        all_eating = DatabaseHelper.getAll_eating();
+        all_wins = DatabaseHelper.getAll_wins();
     }
 
     public static int getMode() {

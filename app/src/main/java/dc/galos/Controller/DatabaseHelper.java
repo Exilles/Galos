@@ -326,58 +326,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return achievementsList;
     }
 
-    // увеличиваем общее количество уровней в таблице achievements
-    public static void updateAllLevels(){
-        all_levels ++;
-
-        if (login.equals("Гость")) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_ALL_LEVELS, all_levels);
-            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
-        }
-        else JSONParser.updateAchievementsAllLevels(Integer.toString(all_levels));
-
-        checkAllLevels();
-        checkGod();
-    }
-
-    // увеличиваем общее количество денег и побед в таблице achievements
-    public static void updateAllMoneyAndWins(int _reward){
-        all_money += _reward;
-        all_wins ++;
-        if (login.equals("Гость")) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_ALL_MONEY, all_money);
-            contentValues.put(COLUMN_ALL_WINS, all_wins);
-            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
-        }
-        else {
-            JSONParser.updateAchievementsAllMoney(Integer.toString(all_money));
-            JSONParser.updateAchievementsAllWins(Integer.toString(all_wins));
-        }
-
-        checkRecord();
-        checkAllWins();
-        checkAllMoney();
-        checkMoney();
-        checkGod();
-    }
-
-    // увеличиваем общее количество съеденных в таблице achievements
-    public static void updateAllEating(){
-        all_eating ++;
-
-        if (login.equals("Гость")) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_ALL_EATING, all_eating);
-            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
-        }
-        else JSONParser.updateAchievementsAllEating(Integer.toString(all_eating));
-
-        checkAllEating();
-        checkGod();
-    }
-
     // обновляет status в таблице achievements
     private static void updateStatus(int position){
         if (status.charAt(position) != '1') {
@@ -386,14 +334,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             newStatus.setCharAt(position, '1');
             status = String.valueOf(newStatus);
 
-            if (login.equals("Гость")) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(COLUMN_STATUS, status);
-                db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)}); // обновление статуса достижения
-            }
-            else JSONParser.updateAchievementsStatus(status);
-
-            updateMoneyAndRecord(Integer.parseInt(rewardAchievements[position]), 0); // прибавка награды
+            money += Integer.parseInt(rewardAchievements[position]);
             showAchievement("Получено достижение: " + titleAchievements[position]); // отображение сообщения о получении достижения
         }
     }
@@ -496,39 +437,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (status.equals("11111111111111111111111111")) updateStatus(25);
     }
 
-    // изменение количества денег и рекорда пользователя
-    public static void updateMoneyAndRecord(int _money, int _record) {
-        money += _money;
-
-        if (login.equals("Гость")) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_MONEY, money);
-            if (record < _record) {
-                record = _record;
-                contentValues.put(COLUMN_RECORD, record);
-            }
-            db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
-        }
-        else {
-            JSONParser.updateUserMoney(Integer.toString(money));
-            if (record < _record) {
-                record = _record;
-                Log.d("my log", "Обновили рекорд локально");
-                JSONParser.updateUserRecord(Integer.toString(record));
-            }
-        }
+    private static void checkAchievements(){
+        checkRecord();
+        checkMoney();
+        checkAllLevels();
+        checkAllEating();
+        checkAllMoney();
+        checkAllWins();
+        checkGod();
     }
 
-    // изменение количества денег из-за покупки бонуса
-    public static void buyBonus(int _money) {
-        money -= _money;
+    // обновление информации
+    public static void updateData(int _money, int _record, int _all_levels, int _all_money, int _all_eating, int _all_wins) {
+        money = _money;
+        if (record < _record) record = _record;
+
+        getAchievementsUser(status, _all_levels, _all_money, _all_eating, _all_wins); // обновление user
+        checkAchievements(); // обновление status
 
         if (login.equals("Гость")) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_MONEY, money);
+            contentValues.put(COLUMN_RECORD, record);
             db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+            contentValues.clear();
+            contentValues.put(COLUMN_STATUS, status);
+            contentValues.put(COLUMN_ALL_LEVELS, all_levels);
+            contentValues.put(COLUMN_ALL_MONEY, all_money);
+            contentValues.put(COLUMN_ALL_EATING, all_eating);
+            contentValues.put(COLUMN_ALL_WINS, all_wins);
+            db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID_USER + "= ?", new String[]{Integer.toString(id)});
         }
-        else JSONParser.updateUserMoney(Integer.toString(money));
+        else JSONParser.updateData(Integer.toString(money), Integer.toString(record), status, Integer.toString(all_levels),
+                Integer.toString(all_money), Integer.toString(all_eating), Integer.toString(all_wins));
+
     }
 
     public static void updateResume(int _mode, int _score, int _all_rewards){
@@ -603,13 +545,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper.email = email;
     }
 
-    public static void setMoney(int money) {
-        DatabaseHelper.money = money;
+    public static int getAll_levels() {
+        return all_levels;
     }
 
-    public static void setRecord(int record) {
-        DatabaseHelper.record = record;
+    public static int getAll_money() {
+        return all_money;
     }
 
+    public static int getAll_eating() {
+        return all_eating;
+    }
 
+    public static int getAll_wins() {
+        return all_wins;
+    }
 }
