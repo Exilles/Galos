@@ -8,17 +8,16 @@ public class GameModes {
     private final int FROM_ENEMY_CIRCLES = 5;
     private final int TO_ENEMY_CIRCLES = 8;
     private final int MAX_FOOD_CIRCLES = 2;
-    private final int MAX_ENEMY_CIRCLES = 7;
     private final int INITIAL_ENEMY_CIRCLE_RADIUS = 40;
     private final int SMALL_ENEMY_CIRCLE_RADIUS = 20;
 
     private final int FROM_IMMORTAL_CIRCLES = 20;
     private final int TO_IMMORTAL_CIRCLES = 25;
-    private final int MAX_IMMORTAL_CIRCLES = 4;
+    private final int MAX_IMMORTAL_CIRCLES = 5;
 
     private final int FROM_VANISHING_CIRCLES = 5;
     private final int TO_VANISHING_CIRCLES = 10;
-    private final int MAX_VANISHING_CIRCLES = 4;
+    private final int MAX_VANISHING_CIRCLES = 5;
 
     private final int FOOD_CIRCLE_RADIUS_1 = 40;
     private final int FOOD_CIRCLE_RADIUS_2 = 70;
@@ -85,7 +84,8 @@ public class GameModes {
                 break;
             case 2:
                 int radius = INITIAL_ENEMY_CIRCLE_RADIUS;
-                for (int i = 0; i < MAX_ENEMY_CIRCLES; i++) {
+                count_circles = 5 + random.nextInt(2);
+                for (int i = 0; i < count_circles; i++) {
                     EnemyCircle circle;
                     do {
                         circle = EnemyCircle.getRandomCircle(radius);

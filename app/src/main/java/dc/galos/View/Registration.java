@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.github.kevinsawicki.http.HttpRequest;
 
@@ -25,6 +26,7 @@ public class Registration extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
     private EditText emailEditText;
+    private LinearLayout progress;
 
     private Intent intent;
 
@@ -39,6 +41,7 @@ public class Registration extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         emailEditText = findViewById(R.id.emailEditText);
+        progress = findViewById(R.id.progress);
 
         acceptButton.setOnClickListener(onClickListener);
         backButton.setOnClickListener(onClickListener);
@@ -71,6 +74,12 @@ public class Registration extends AppCompatActivity {
     private class ParseTask extends AsyncTask<Void, Void, String> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected String doInBackground(Void... params) {
             return HttpRequest.get("https://galos.000webhostapp.com/create_user.php",
                     true, "login", loginEditText.getText().toString(), "password",
@@ -90,9 +99,17 @@ public class Registration extends AppCompatActivity {
                 }
 
             } catch (JSONException e) {
+                progress.setVisibility(View.INVISIBLE);
                 Log.d("my log", "Не вышло получить данные :(");
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        intent = new Intent(Registration.this, Authorization.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

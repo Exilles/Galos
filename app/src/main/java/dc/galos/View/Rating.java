@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -19,24 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import dc.galos.Controller.DatabaseHelper;
-import dc.galos.Controller.JSONParser;
 import dc.galos.R;
 
 public class Rating extends AppCompatActivity {
 
     private Intent intent;
 
-    private String NUMBER = "number"; // Номер
-    private String NAME = "name"; // Имя
-    private String RECORD = "record"; // Рекорд
-
-    private ArrayList<HashMap<String, Object>> recordsList;
     private static SimpleAdapter adapter;
-    private static Context mycontext;
+    private static Context context;
 
     private Button backButton;
     private static ListView listView;
@@ -44,6 +38,7 @@ public class Rating extends AppCompatActivity {
     private static TextView silverUserTextView;
     private static TextView bronzeUserTextView;
     private static TextView positionTextView;
+    private static LinearLayout progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +51,9 @@ public class Rating extends AppCompatActivity {
         silverUserTextView = findViewById(R.id.silverUserTextView);
         bronzeUserTextView = findViewById(R.id.bronzeUserTextView);
         positionTextView = findViewById(R.id.positionTextView);
+        progress = findViewById(R.id.progress);
 
-        mycontext = getApplicationContext();
+        context = getApplicationContext();
 
         new ParseTask().execute();
 
@@ -79,6 +75,12 @@ public class Rating extends AppCompatActivity {
     };
 
     private static class ParseTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -149,7 +151,7 @@ public class Rating extends AppCompatActivity {
 
                 positionTextView.setText("Ваше место: " + user_record);
 
-                adapter = new SimpleAdapter(mycontext, recordsList,
+                adapter = new SimpleAdapter(context, recordsList,
                         R.layout.list_item_records, new String[]{NUMBER, NAME, RECORD},
                         new int[]{R.id.numberTextView, R.id.nameTextView, R.id.recordTextView});
 
@@ -158,6 +160,14 @@ public class Rating extends AppCompatActivity {
                 Log.d("my log", "Не вышло получить данные :(");
                 e.printStackTrace();
             }
+            progress.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        intent = new Intent(Rating.this, Menu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

@@ -40,22 +40,11 @@ public class Menu extends AppCompatActivity {
     private Sound sound = new Sound();
     private Intent intent;
 
-    private static int money;
-    private static int record;
-    private static String status;
-    private static int all_levels;
-    private static int all_money;
-    private static int all_eating;
-    private static int all_wins;
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
-        //getData();
-        //DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
 
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         volumeImageButton = findViewById(R.id.volumeImageButton);
@@ -147,13 +136,12 @@ public class Menu extends AppCompatActivity {
         }
     };
 
-    private static void getData(){
-        money = DatabaseHelper.getMoney();
-        record = DatabaseHelper.getRecord();
-        status = DatabaseHelper.getStatus();
-        all_levels = DatabaseHelper.getAll_levels();
-        all_money = DatabaseHelper.getAll_money();
-        all_eating = DatabaseHelper.getAll_eating();
-        all_wins = DatabaseHelper.getAll_wins();
+    @Override
+    public void onBackPressed() {
+        DatabaseHelper.rememberOrForgetUser("false");
+        sound.mediaStop();
+        intent = new Intent(Menu.this, Authorization.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

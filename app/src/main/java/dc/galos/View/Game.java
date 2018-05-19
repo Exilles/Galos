@@ -245,4 +245,19 @@ public class Game extends AppCompatActivity {
         all_eating = DatabaseHelper.getAll_eating();
         all_wins = DatabaseHelper.getAll_wins();
     }
+
+    @Override
+    public void onBackPressed() {
+        getData();
+        DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
+        dialog = false;
+        PAUSE = false;
+        timer = GameManager.getTimer();
+        timer.cancel();
+        timer.purge();
+        GameManager.setTimer(timer);
+        intent = new Intent(Game.this, Menu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.github.kevinsawicki.http.HttpRequest;
 
@@ -30,6 +31,7 @@ public class Authorization extends AppCompatActivity {
     private EditText loginEditText;
     private EditText passwordEditText;
     private CheckBox rememberCheckBox;
+    private LinearLayout progress;
 
     private Sound sound = new Sound();
     private Intent intent;
@@ -49,6 +51,7 @@ public class Authorization extends AppCompatActivity {
         loginEditText = findViewById(R.id.loginEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         rememberCheckBox = findViewById(R.id.rememberCheckBox);
+        progress = findViewById(R.id.progress);
 
         sound.initialization(this, R.raw.background_music);
 
@@ -105,6 +108,12 @@ public class Authorization extends AppCompatActivity {
     };
 
     private class ParseTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(Void... params) {
