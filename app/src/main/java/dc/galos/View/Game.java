@@ -98,6 +98,8 @@ public class Game extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.exitButton:
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
                     timer = GameManager.getTimer();
                     timer.cancel();
                     timer.purge();
@@ -109,6 +111,8 @@ public class Game extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.pauseImageButton:
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
                     if (!dialog) {
                         if (!PAUSE) {
                             PAUSE = true;
@@ -166,6 +170,8 @@ public class Game extends AppCompatActivity {
                     else DatabaseHelper.showInformation(getResources().getString(R.string.not_enough_money), 635);
                     break;
                 case R.id.continueButton:
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
                     dialog = false;
                     PAUSE = false;
                     lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
@@ -175,6 +181,8 @@ public class Game extends AppCompatActivity {
                     GameManager.gameEnd();
                     break;
                 case R.id.menuButton:
+                    getData();
+                    DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
                     dialog = false;
                     PAUSE = false;
                     timer = GameManager.getTimer();

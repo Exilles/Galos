@@ -54,8 +54,8 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        getData();
-        DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
+        //getData();
+        //DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating, all_wins);
 
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         volumeImageButton = findViewById(R.id.volumeImageButton);
