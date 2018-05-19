@@ -278,16 +278,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_rewards = _all_rewards;
     }
 
-    public static void rememberOrForgetUser(String _remember){
-        ContentValues contentValues = new ContentValues();
-        if (_remember.equals("true")) contentValues.put(COLUMN_REMEMBER, "true");
-        else contentValues.put(COLUMN_REMEMBER, "false");
-        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+    public static void rememberOrForgetUser(int _remember){
+
+        if (DatabaseHelper.getLogin().equals("Гость")) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_REMEMBER, _remember);
+            db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        }
+        else JSONParser.updateRemember(login, password, Integer.toString(_remember));
+
     }
 
     public static boolean searchRememberUser(){
-        String query = String.format("SELECT * FROM \"%s\" WHERE " +
-                        "\"%s\" = 'true'", TABLE_USERS, COLUMN_REMEMBER);
+        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = 1", TABLE_USERS, COLUMN_REMEMBER);
         cursor = db.rawQuery(query, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -302,7 +305,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
 
             getAchievementsGuest(); // получение данных о его достижениях
-            getResumeGuest();
+            getResumeGuest(); // получение данных о его возобновлении
 
             return true;
         }

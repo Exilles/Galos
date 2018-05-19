@@ -1,5 +1,6 @@
 package dc.galos.View;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -35,7 +36,8 @@ public class Authorization extends AppCompatActivity {
 
     private Sound sound = new Sound();
     private Intent intent;
-    private String remember = "false";
+    private int remember = 0;
+    private int flag = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +65,19 @@ public class Authorization extends AppCompatActivity {
 
         rememberCheckBox.setTypeface(Typeface.createFromAsset(getApplicationContext().getResources().getAssets(), "a_futurica_extrabold.ttf"));
 
-        /*if (DatabaseHelper.searchRememberUser()) {
-            intent = new Intent(Authorization.this, Menu.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }*/
+        Intent intent = getIntent();
+
+        if(intent.getBooleanExtra("back", true)){
+            if (DatabaseHelper.searchRememberUser()) {
+                intent = new Intent(Authorization.this, Menu.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+            else {
+                flag = 1;
+                new ParseTask().execute();
+            }
+        }
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -78,7 +88,7 @@ public class Authorization extends AppCompatActivity {
                     DatabaseHelper.getGuestData();
                     DatabaseHelper.getAchievementsGuest();
                     DatabaseHelper.getResumeGuest();
-                    //DatabaseHelper.rememberOrForgetUser("true");
+                    DatabaseHelper.rememberOrForgetUser(1);
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -95,18 +105,20 @@ public class Authorization extends AppCompatActivity {
                     break;
                 case R.id.loginButton:
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
+                        flag = 2;
                         new ParseTask().execute();
                     }
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
                 case R.id.rememberCheckBox:
-                    if (rememberCheckBox.isChecked()) remember = "true";
-                    else remember = "false";
+                    if (rememberCheckBox.isChecked()) remember = 1;
+                    else remember = 0;
                     break;
             }
         }
     };
 
+    @SuppressLint("StaticFieldLeak")
     private class ParseTask extends AsyncTask<Void, Void, String> {
 
         @Override
@@ -118,41 +130,62 @@ public class Authorization extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
 
-            return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php",
-                    true, "login", loginEditText.getText().toString(), "password", passwordEditText.getText().toString()).body();
+            if (flag == 1 ) return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php").body();
+            else return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php",
+                    true, "login", loginEditText.getText().toString(), "password",
+                    passwordEditText.getText().toString(), "remember", remember).body();
 
         }
 
         @Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
-            try {
-                JSONObject dataJsonObj = new JSONObject(strJson);
-                int success = dataJsonObj.getInt("success");
-                if (success == 1){
-                    JSONArray data_user = dataJsonObj.getJSONArray("user");
-                    JSONObject user = data_user.getJSONObject(0);
-                    DatabaseHelper.getUserData(user.getInt("_id"), user.getString("login"), user.getString("password"),
-                            user.getString("email"), user.getInt("money"), user.getInt("record"));
+            if (flag == 2){
+                try {
+                    JSONObject dataJsonObj = new JSONObject(strJson);
+                    int success = dataJsonObj.getInt("success");
+                    if (success == 1){
+                        JSONArray data_user = dataJsonObj.getJSONArray("user");
+                        JSONObject user = data_user.getJSONObject(0);
+                        DatabaseHelper.getUserData(user.getInt("_id"), user.getString("login"), user.getString("password"),
+                                user.getString("email"), user.getInt("money"), user.getInt("record"));
 
-                    JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
-                    JSONObject achievements = achievements_user.getJSONObject(0);
-                    DatabaseHelper.getAchievementsUser(achievements.getString("status"), achievements.getInt("all_levels"),
-                            achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
+                        JSONArray achievements_user = dataJsonObj.getJSONArray("achievements");
+                        JSONObject achievements = achievements_user.getJSONObject(0);
+                        DatabaseHelper.getAchievementsUser(achievements.getString("status"), achievements.getInt("all_levels"),
+                                achievements.getInt("all_money"), achievements.getInt("all_eating"), achievements.getInt("all_wins"));
 
-                    JSONArray resume_user = dataJsonObj.getJSONArray("resume");
-                    JSONObject resume = resume_user.getJSONObject(0);
-                    DatabaseHelper.getResumeUser(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
+                        JSONArray resume_user = dataJsonObj.getJSONArray("resume");
+                        JSONObject resume = resume_user.getJSONObject(0);
+                        DatabaseHelper.getResumeUser(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
 
-                    intent = new Intent(Authorization.this, Menu.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                        intent = new Intent(Authorization.this, Menu.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                    else DatabaseHelper.showInformation("Неверно введены логин или пароль");
+                } catch (JSONException e) {
+                    Log.d("my log", "Не вышло получить данные :(");
+                    e.printStackTrace();
                 }
-                else DatabaseHelper.showInformation("Неверно введены логин или пароль");
-
-            } catch (JSONException e) {
-                Log.d("my log", "Не вышло получить данные :(");
-                e.printStackTrace();
+                progress.setVisibility(View.INVISIBLE);
+            }
+            else {
+                try {
+                    JSONObject dataJsonObj = new JSONObject(strJson);
+                    int success = dataJsonObj.getInt("success");
+                    if (success == 1){
+                        loginEditText.setText(dataJsonObj.getString("login"));
+                        passwordEditText.setText(dataJsonObj.getString("password"));
+                        Log.d("my log", dataJsonObj.getString("login") + " " + dataJsonObj.getString("password"));
+                        flag = 2;
+                        new ParseTask().execute();
+                    }
+                    else progress.setVisibility(View.INVISIBLE);
+                } catch (JSONException e) {
+                    Log.d("my log", "Не вышло получить данные :(");
+                    e.printStackTrace();
+                }
             }
         }
     }

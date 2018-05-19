@@ -100,9 +100,10 @@ public class Menu extends AppCompatActivity {
                     }
                     break;
                 case R.id.logoutImageButton:
-                    DatabaseHelper.rememberOrForgetUser("false");
+                    DatabaseHelper.rememberOrForgetUser(0);
                     sound.mediaStop();
                     intent = new Intent(Menu.this, Authorization.class);
+                    intent.putExtra("back", false);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
@@ -138,9 +139,10 @@ public class Menu extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        DatabaseHelper.rememberOrForgetUser("false");
+        DatabaseHelper.rememberOrForgetUser(0);
         sound.mediaStop();
         intent = new Intent(Menu.this, Authorization.class);
+        intent.putExtra("back", false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

@@ -32,6 +32,14 @@ public class JSONParser {
         new UpdateResumeThread().execute();
     }
 
+    public static void updateRemember(String _login, String _password, String _remember){
+        url = "https://galos.000webhostapp.com/update_resume.php";
+        param_2 = "login"; value_2 = _login;
+        param_3 = "password"; value_3 = _password;
+        param_4 = "remember"; value_4 = _remember;
+        new UpdateRememberThread().execute();
+    }
+
     private static class UpdateDataThread extends AsyncTask<Void, Void, String> {
 
         @Override
@@ -51,6 +59,20 @@ public class JSONParser {
         @Override
         protected String doInBackground(Void... params) {
             return HttpRequest.get(url, true, param_1, value_1, param_2, value_2, param_3, value_3, param_4, value_4).body();
+        }
+
+        @Override
+        protected void onPostExecute(String strJson) {
+            super.onPostExecute(strJson);
+        }
+    }
+
+    private static class UpdateRememberThread extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php", true,
+                    param_2, value_2, param_3, value_3, param_4, value_4).body();
         }
 
         @Override

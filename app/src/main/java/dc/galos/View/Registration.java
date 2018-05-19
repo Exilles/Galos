@@ -63,6 +63,7 @@ public class Registration extends AppCompatActivity {
                     break;
                 case R.id.backButton:
                     intent = new Intent(Registration.this, Authorization.class);
+                    intent.putExtra("back", false);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     break;
@@ -108,6 +109,7 @@ public class Registration extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         intent = new Intent(Registration.this, Authorization.class);
+        intent.putExtra("back", false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
