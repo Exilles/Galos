@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import dc.galos.Controller.DatabaseHelper;
 import dc.galos.R;
 
 public class Help extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class Help extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         backButton.setOnClickListener(onClickListener);
+
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {

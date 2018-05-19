@@ -220,6 +220,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
 
         cursor.close();
+
+        getAchievementsGuest();
+        getResumeGuest();
     }
 
     // получаем данные о достижениях аккаунта
@@ -238,7 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    // получаем данные о достижениях аккаунта
+    // получаем данные о возобновлении аккаунта
     public static void getResumeGuest(){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_RESUME, COLUMN_ID_USER, id);
 
@@ -250,6 +253,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
 
         cursor.close();
+    }
+
+    public static void zeroGuest() {
+        zeroData();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_MONEY, 0);
+        contentValues.put(COLUMN_RECORD, 0);
+        contentValues.put(COLUMN_REMEMBER, 0);
+        db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        contentValues.clear();
+        contentValues.put(COLUMN_STATUS, "00000000000000000000000000");
+        contentValues.put(COLUMN_ALL_LEVELS, 0);
+        contentValues.put(COLUMN_ALL_MONEY, 0);
+        contentValues.put(COLUMN_ALL_EATING, 0);
+        contentValues.put(COLUMN_ALL_WINS, 0);
+        db.update(TABLE_ACHIEVEMENTS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+        contentValues.clear();
+        contentValues.put(COLUMN_MODE, 1);
+        contentValues.put(COLUMN_SCORE, 0);
+        contentValues.put(COLUMN_ALL_REWARDS, 0);
+        db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+    }
+
+    private static void zeroData() {
+        money = 0; record = 0;
+        status = "00000000000000000000000000"; all_levels = 0; all_money = 0; all_eating = 0; all_wins = 0;
+        mode = 1; score = 0; all_rewards = 0;
     }
 
     // получаем данные об аккаунте
@@ -563,4 +593,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static int getAll_wins() {
         return all_wins;
     }
+
 }

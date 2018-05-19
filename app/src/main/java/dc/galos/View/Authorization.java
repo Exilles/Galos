@@ -86,8 +86,6 @@ public class Authorization extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.loginAsGuestButton:
                     DatabaseHelper.getGuestData();
-                    DatabaseHelper.getAchievementsGuest();
-                    DatabaseHelper.getResumeGuest();
                     DatabaseHelper.rememberOrForgetUser(1);
                     intent = new Intent(Authorization.this, Menu.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

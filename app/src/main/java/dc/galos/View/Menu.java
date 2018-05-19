@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.kevinsawicki.http.HttpRequest;
@@ -36,6 +38,9 @@ public class Menu extends AppCompatActivity {
     private TextView loginTextView;
     private TextView countMoneyTextView;
     private TextView countRecordTextView;
+    private Button registrationButton;
+    private Button laterButton;
+    private LinearLayout registration;
 
     private Sound sound = new Sound();
     private Intent intent;
@@ -57,6 +62,9 @@ public class Menu extends AppCompatActivity {
         loginTextView = findViewById(R.id.loginTextView);
         countMoneyTextView = findViewById(R.id.countMoneyTextView);
         countRecordTextView = findViewById(R.id.countRecordTextView);
+        registrationButton = findViewById(R.id.registrationButton);
+        laterButton = findViewById(R.id.laterButton);
+        registration = findViewById(R.id.registration);
 
         loginTextView.setText(DatabaseHelper.getLogin());
         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
@@ -72,6 +80,8 @@ public class Menu extends AppCompatActivity {
         ratingImageButton.setOnClickListener(onClickListener);
         achievementsImageButton.setOnClickListener(onClickListener);
         helpImageButton.setOnClickListener(onClickListener);
+        laterButton.setOnClickListener(onClickListener);
+        registrationButton.setOnClickListener(onClickListener);
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -108,7 +118,9 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.settingsImageButton:
-                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.showInformation("Недоступно неавторизированному пользователю");
+                    if (DatabaseHelper.getLogin().equals("Гость")) {
+                        registration.setVisibility(View.VISIBLE);
+                    }
                     else {
                         intent = new Intent(Menu.this, EditAccInf.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -116,7 +128,9 @@ public class Menu extends AppCompatActivity {
                     }
                     break;
                 case R.id.ratingImageButton:
-                    if (DatabaseHelper.getLogin().equals("Гость")) DatabaseHelper.showInformation("Недоступно неавторизированному пользователю");
+                    if (DatabaseHelper.getLogin().equals("Гость")) {
+                        registration.setVisibility(View.VISIBLE);
+                    }
                     else {
                         intent = new Intent(Menu.this, Rating.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -132,6 +146,15 @@ public class Menu extends AppCompatActivity {
                     intent = new Intent(Menu.this, Help.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    break;
+                case R.id.registrationButton:
+                    intent = new Intent(Menu.this, Registration.class);
+                    intent.putExtra("registration", false);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case R.id.laterButton:
+                    registration.setVisibility(View.INVISIBLE);
                     break;
             }
         }

@@ -29,6 +29,7 @@ public class Registration extends AppCompatActivity {
     private LinearLayout progress;
 
     private Intent intent;
+    private Boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class Registration extends AppCompatActivity {
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         emailEditText = findViewById(R.id.emailEditText);
         progress = findViewById(R.id.progress);
+
+        intent = getIntent();
+        flag = intent.getBooleanExtra("registration", true);
 
         acceptButton.setOnClickListener(onClickListener);
         backButton.setOnClickListener(onClickListener);
@@ -81,9 +85,19 @@ public class Registration extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            return HttpRequest.get("https://galos.000webhostapp.com/create_user.php",
+            if (flag) return HttpRequest.get("https://galos.000webhostapp.com/create_user.php",
                     true, "login", loginEditText.getText().toString(), "password",
-                    passwordEditText.getText().toString(), "email", emailEditText.getText().toString()).body();
+                    passwordEditText.getText().toString(), "email", emailEditText.getText().toString(), "money", 0, "record", 0,
+                    "status", "00000000000000000000000000", "all_levels", 0, "all_money", 0, "all_eating", 0, "all_wins", 0,
+                    "mode", 0, "score", 0, "all_rewards", 0).body();
+            else return HttpRequest.get("https://galos.000webhostapp.com/create_user.php",
+                    true, "login", loginEditText.getText().toString(), "password",
+                    passwordEditText.getText().toString(), "email", emailEditText.getText().toString(), "money",
+                    DatabaseHelper.getMoney(), "record", DatabaseHelper.getRecord(), "status", DatabaseHelper.getStatus(),
+                    "all_levels", DatabaseHelper.getAll_levels(), "all_money", DatabaseHelper.getAll_money(),
+                    "all_eating", DatabaseHelper.getAll_eating(), "all_wins", DatabaseHelper.getAll_wins(),
+                    "mode", DatabaseHelper.getMode(), "score", DatabaseHelper.getScore(), "all_rewards",
+                    DatabaseHelper.getAll_rewards()).body();
         }
 
         @Override
@@ -92,7 +106,10 @@ public class Registration extends AppCompatActivity {
             try {
                 JSONObject dataJsonObj = new JSONObject(strJson);
                 int success = dataJsonObj.getInt("success");
-                if (success == 1) DatabaseHelper.showInformation("Аккаунт успешно создан");
+                if (success == 1) {
+                    DatabaseHelper.zeroGuest();
+                    DatabaseHelper.showInformation("Аккаунт успешно создан");
+                }
                 else {
                     String message = dataJsonObj.getString("message");
                     DatabaseHelper.showInformation(message);
