@@ -52,7 +52,6 @@ public class Registration extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.acceptButton:
-
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("") &&
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
@@ -99,10 +98,10 @@ public class Registration extends AppCompatActivity {
                 }
 
             } catch (JSONException e) {
-                progress.setVisibility(View.INVISIBLE);
                 Log.d("my log", "Не вышло получить данные :(");
                 e.printStackTrace();
             }
+            progress.setVisibility(View.INVISIBLE);
         }
     }
 
