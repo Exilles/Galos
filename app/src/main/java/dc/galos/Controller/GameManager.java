@@ -129,7 +129,6 @@ public class GameManager {
                 if (circle.isSmallerThan(mainCircle)) {
                     getData();
                     DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating + 1, all_wins);
-                    //DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -158,7 +157,6 @@ public class GameManager {
                 if (circle.isSmallerThan(mainCircle)) {
                     getData();
                     DatabaseHelper.updateData(money, record, all_levels, all_money, all_eating + 1, all_wins);
-                    //DatabaseHelper.updateAllEating();
                     mainCircle.growRadius(circle);
                     circleForDel = circle;
                     setCirclesColor();
@@ -222,8 +220,6 @@ public class GameManager {
         all_rewards += reward; // подсчёт суммы всех вознаграждений за победу
         getData();
         DatabaseHelper.updateData(money + reward, score, all_levels, all_money + reward, all_eating, all_wins + 1);
-        //DatabaseHelper.updateMoneyAndRecord(reward, score);
-        //DatabaseHelper.updateAllMoneyAndWins(reward);
     }
 
     private void zeroScoreAndRewards() {

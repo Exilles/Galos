@@ -117,8 +117,8 @@ public class Menu extends AppCompatActivity {
                     break;
                 case R.id.settingsImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
+                        registration.setAnimation(upAnimation);
                         registration.setVisibility(View.VISIBLE);
-                        registration.startAnimation(upAnimation);
                     }
                     else {
                         intent = new Intent(Menu.this, EditAccInf.class);
@@ -128,8 +128,8 @@ public class Menu extends AppCompatActivity {
                     break;
                 case R.id.ratingImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
+                        registration.setAnimation(upAnimation);
                         registration.setVisibility(View.VISIBLE);
-                        registration.startAnimation(upAnimation);
                     }
                     else {
                         intent = new Intent(Menu.this, Rating.class);
@@ -154,7 +154,7 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.laterButton:
-                    registration.startAnimation(downAnimation);
+                    registration.setAnimation(downAnimation);
                     registration.setVisibility(View.INVISIBLE);
                     break;
             }
@@ -169,4 +169,5 @@ public class Menu extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
 }

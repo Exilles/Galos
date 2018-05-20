@@ -39,7 +39,6 @@ public class Achievements extends AppCompatActivity {
     private Button backButton;
     private ListView listView;
     private TextView progressTextView;
-    private LinearLayout progress;
 
     private ArrayList<HashMap<String, Object>> achievementsList;
     private SimpleAdapter adapter;
@@ -53,7 +52,6 @@ public class Achievements extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         listView = findViewById(R.id.listView);
         progressTextView = findViewById(R.id.progressTextView);
-        progress = findViewById(R.id.progress);
 
         achievementsList = DatabaseHelper.getAchievements();
         adapter = new SimpleAdapter(this, achievementsList,
