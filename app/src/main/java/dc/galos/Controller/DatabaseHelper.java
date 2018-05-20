@@ -46,7 +46,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_MONEY = "money";
     private static final String COLUMN_RECORD = "record";
-    private static final String COLUMN_REMEMBER = "remember";
 
     // названия столбцов таблицы achievements
     private static final String TABLE_ACHIEVEMENTS = "achievements"; // название таблицы в бд
@@ -62,6 +61,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_MODE = "mode";
     private static final String COLUMN_SCORE = "score";
     private static final String COLUMN_ALL_REWARDS = "all_rewards";
+
+    // название таблицы remember
+    private static final String TABLE_REMEMBER = "remember"; // название таблицы в бд
 
     // данные из strings.xml о названии, описании и награде за достижения
     private static String[] titleAchievements;
@@ -260,7 +262,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_MONEY, 0);
         contentValues.put(COLUMN_RECORD, 0);
-        contentValues.put(COLUMN_REMEMBER, 0);
         db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
         contentValues.clear();
         contentValues.put(COLUMN_STATUS, "00000000000000000000000000");
@@ -308,38 +309,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         all_rewards = _all_rewards;
     }
 
-    public static void rememberOrForgetUser(int _remember){
-
-        if (DatabaseHelper.getLogin().equals("Гость")) {
+    public static void rememberOrForgetUser(String _login, String _password){
             ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_REMEMBER, _remember);
-            db.update(TABLE_USERS, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
-        }
-        else JSONParser.updateRemember(login, password, Integer.toString(_remember));
-
+            contentValues.put(COLUMN_LOGIN, _login);
+            contentValues.put(COLUMN_PASSWORD, _password);
+            db.update(TABLE_REMEMBER, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(1)});
     }
 
-    public static boolean searchRememberUser(){
-        String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = 1", TABLE_USERS, COLUMN_REMEMBER);
+    public static boolean searchRemember(){
+        String query = String.format("SELECT * FROM \"%s\"", TABLE_REMEMBER);
         cursor = db.rawQuery(query, null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
-            id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+        cursor.moveToFirst();
+        if (cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN)) != null) {
             login = cursor.getString(cursor.getColumnIndex(COLUMN_LOGIN));
             password = cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD));
-            email = cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL));
-            money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
-            record = cursor.getInt(cursor.getColumnIndex(COLUMN_RECORD));
-
             cursor.close();
-
-            getAchievementsGuest(); // получение данных о его достижениях
-            getResumeGuest(); // получение данных о его возобновлении
-
             return true;
         }
-        else return false;
+        else {
+            cursor.close();
+            return false;
+        }
     }
 
     public static ArrayList<HashMap<String, Object>> getAchievements() {

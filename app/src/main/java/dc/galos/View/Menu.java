@@ -4,21 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.kevinsawicki.http.HttpRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
@@ -110,7 +102,6 @@ public class Menu extends AppCompatActivity {
                     }
                     break;
                 case R.id.logoutImageButton:
-                    DatabaseHelper.rememberOrForgetUser(0);
                     sound.mediaStop();
                     intent = new Intent(Menu.this, Authorization.class);
                     intent.putExtra("back", false);
@@ -162,7 +153,6 @@ public class Menu extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        DatabaseHelper.rememberOrForgetUser(0);
         sound.mediaStop();
         intent = new Intent(Menu.this, Authorization.class);
         intent.putExtra("back", false);
