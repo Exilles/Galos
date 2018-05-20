@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -36,6 +38,8 @@ public class Menu extends AppCompatActivity {
 
     private Sound sound = new Sound();
     private Intent intent;
+    private Animation upAnimation;
+    private Animation downAnimation;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -64,6 +68,9 @@ public class Menu extends AppCompatActivity {
 
         sound = new Sound();
         sound.mediaStart();
+
+        upAnimation = AnimationUtils.loadAnimation(this, R.anim.registration_up);
+        downAnimation = AnimationUtils.loadAnimation(this, R.anim.registration_down);
 
         volumeImageButton.setOnClickListener(onClickListener);
         playImageButton.setOnClickListener(onClickListener);
@@ -111,6 +118,7 @@ public class Menu extends AppCompatActivity {
                 case R.id.settingsImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
                         registration.setVisibility(View.VISIBLE);
+                        registration.startAnimation(upAnimation);
                     }
                     else {
                         intent = new Intent(Menu.this, EditAccInf.class);
@@ -121,6 +129,7 @@ public class Menu extends AppCompatActivity {
                 case R.id.ratingImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
                         registration.setVisibility(View.VISIBLE);
+                        registration.startAnimation(upAnimation);
                     }
                     else {
                         intent = new Intent(Menu.this, Rating.class);
@@ -145,6 +154,7 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.laterButton:
+                    registration.startAnimation(downAnimation);
                     registration.setVisibility(View.INVISIBLE);
                     break;
             }

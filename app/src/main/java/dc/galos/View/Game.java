@@ -130,7 +130,7 @@ public class Game extends AppCompatActivity {
                 case R.id.lifeBonusImageButton:
                     if (!GameManager.isLife()){
                         if (DatabaseHelper.getMoney() >= PRICE_LIFE){
-                            lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
+                            lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                             getData();
                             DatabaseHelper.updateData(money - PRICE_LIFE, record, all_levels, all_money, all_eating, all_wins);
                             //DatabaseHelper.buyBonus(PRICE_LIFE);
@@ -145,7 +145,7 @@ public class Game extends AppCompatActivity {
                 case R.id.decelerationBonusImageButton:
                     if (!GameManager.isDeceleration()){
                         if (DatabaseHelper.getMoney() >= PRICE_DECELERATION){
-                            decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
+                            decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                             getData();
                             DatabaseHelper.updateData(money - PRICE_DECELERATION, record, all_levels, all_money, all_eating, all_wins);
                             //DatabaseHelper.buyBonus(PRICE_DECELERATION);
@@ -159,7 +159,7 @@ public class Game extends AppCompatActivity {
                     break;
                 case R.id.growthBonusImageButton:
                     if (DatabaseHelper.getMoney() >= PRICE_GROWTH){
-                        growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_pink));
+                        growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                         getData();
                         DatabaseHelper.updateData(money - PRICE_GROWTH, record, all_levels, all_money, all_eating, all_wins);
                         //DatabaseHelper.buyBonus(PRICE_GROWTH);
