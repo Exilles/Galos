@@ -56,7 +56,8 @@ public class RestorePassword extends AppCompatActivity {
                         if (!enterLoginEditText.getText().toString().equals("") && !enterEmailEditText.getText().toString().equals("")) flag = 1;
                         else if (!enterLoginEditText.getText().toString().equals("")) flag = 2;
                         else flag = 3;
-                        new ParseTask().execute();
+                        if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                        else DatabaseHelper.showInformation("Нет подключения к интернету");
                     }
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
 

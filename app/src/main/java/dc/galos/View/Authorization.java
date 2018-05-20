@@ -112,10 +112,11 @@ public class Authorization extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.loginButton:
-                    if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
-                        new ParseTask().execute();
-                    }
-                    else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
+                        if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
+                            if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                            else DatabaseHelper.showInformation("Нет подключения к интернету");
+                        }
+                        else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
                 case R.id.rememberCheckBox:
 

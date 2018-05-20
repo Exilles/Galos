@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -510,6 +512,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
         }
         else JSONParser.updateResume(Integer.toString(_mode), Integer.toString(_score), Integer.toString(_all_rewards));
+    }
+
+    public static boolean isOnline()
+    {
+        ConnectivityManager cm = (ConnectivityManager) myContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public static int getId() {

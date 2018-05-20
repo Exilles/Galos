@@ -59,7 +59,8 @@ public class Registration extends AppCompatActivity {
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("") &&
                             !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
                         if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-                            new ParseTask().execute();
+                            if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                            else DatabaseHelper.showInformation("Нет подключения к интернету");
                         }
                         else  DatabaseHelper.showInformation(getResources().getString(R.string.match_passwords));
                     }
