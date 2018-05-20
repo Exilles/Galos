@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -156,6 +158,10 @@ public class Rating extends AppCompatActivity {
                         new int[]{R.id.numberTextView, R.id.nameTextView, R.id.recordTextView});
 
                 listView.setAdapter(adapter);
+
+                LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.list_layout_controller);
+                listView.setLayoutAnimation(controller);
+
             } catch (JSONException e) {
                 Log.d("my log", "Не вышло получить данные :(");
                 e.printStackTrace();

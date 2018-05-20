@@ -7,12 +7,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Timer;
 
+import dc.galos.Controller.CanvasView;
 import dc.galos.Controller.DatabaseHelper;
 import dc.galos.Controller.GameManager;
 import dc.galos.R;
@@ -45,14 +48,18 @@ public class Game extends AppCompatActivity {
     private TextView priceLifeBonusTextView;
     private TextView priceDecelerationBonusTextView;
     private TextView priceGrowthBonusTextView;
+    private CanvasView canvasView;
 
     private static int money;
     private static int record;
-    private static String status;
     private static int all_levels;
     private static int all_money;
     private static int all_eating;
     private static int all_wins;
+
+    private static Animation upAnimation;
+    private static Animation downAnimation;
+    private static Animation alphaAnimation;
 
     @SuppressLint({"SetTextI18n"})
     @Override
@@ -77,10 +84,17 @@ public class Game extends AppCompatActivity {
         priceLifeBonusTextView = findViewById(R.id.priceLifeBonusTextView);
         priceDecelerationBonusTextView = findViewById(R.id.priceDecelerationBonusTextView);
         priceGrowthBonusTextView = findViewById(R.id.priceGrowthBonusTextView);
+        canvasView = findViewById(R.id.canvasView);
 
         priceLifeBonusTextView.setText(PRICE_LIFE + "$");
         priceDecelerationBonusTextView.setText(PRICE_DECELERATION + "$");
         priceGrowthBonusTextView.setText(PRICE_GROWTH + "$");
+
+        upAnimation = AnimationUtils.loadAnimation(this, R.anim.up);
+        downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
+        alphaAnimation = AnimationUtils.loadAnimation(this, R.anim.alpha);
+
+        canvasView.startAnimation(alphaAnimation);
 
         exitButton.setOnClickListener(onClickListener);
         pauseImageButton.setOnClickListener(onClickListener);
@@ -89,7 +103,6 @@ public class Game extends AppCompatActivity {
         growthBonusImageButton.setOnClickListener(onClickListener);
         continueButton.setOnClickListener(onClickListener);
         menuButton.setOnClickListener(onClickListener);
-
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -119,11 +132,13 @@ public class Game extends AppCompatActivity {
                             pauseImageButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             pauseMenuConstraintLayout.setVisibility(View.VISIBLE);
+                            pauseMenuConstraintLayout.startAnimation(upAnimation);
                         }
                         else {
                             PAUSE = false;
                             pauseImageButton.setImageResource(R.drawable.ic_pause_white_24dp);
                             pauseMenuConstraintLayout.setVisibility(View.INVISIBLE);
+                            pauseMenuConstraintLayout.startAnimation(downAnimation);
                         }
                     }
                     break;
@@ -133,7 +148,6 @@ public class Game extends AppCompatActivity {
                             lifeBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                             getData();
                             DatabaseHelper.updateData(money - PRICE_LIFE, record, all_levels, all_money, all_eating, all_wins);
-                            //DatabaseHelper.buyBonus(PRICE_LIFE);
                             GameManager.useLifeBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 130);
@@ -148,7 +162,6 @@ public class Game extends AppCompatActivity {
                             decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                             getData();
                             DatabaseHelper.updateData(money - PRICE_DECELERATION, record, all_levels, all_money, all_eating, all_wins);
-                            //DatabaseHelper.buyBonus(PRICE_DECELERATION);
                             GameManager.useDecelerationBonus();
                             countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                             DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 385);
@@ -162,7 +175,6 @@ public class Game extends AppCompatActivity {
                         growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_bonus));
                         getData();
                         DatabaseHelper.updateData(money - PRICE_GROWTH, record, all_levels, all_money, all_eating, all_wins);
-                        //DatabaseHelper.buyBonus(PRICE_GROWTH);
                         GameManager.useGrowthBonus();
                         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
                         DatabaseHelper.showInformation(getResources().getString(R.string.bonus_used), 635);
@@ -178,7 +190,10 @@ public class Game extends AppCompatActivity {
                     decelerationBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
                     growthBonusImageButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.button_states_grey));
                     dialogConstraintLayout.setVisibility(View.INVISIBLE);
+                    dialogConstraintLayout.startAnimation(downAnimation);
+
                     GameManager.gameEnd();
+                    canvasView.startAnimation(alphaAnimation);
                     break;
                 case R.id.menuButton:
                     getData();
@@ -205,8 +220,8 @@ public class Game extends AppCompatActivity {
         PAUSE = true;
         getData();
         DatabaseHelper.updateData(money, record, all_levels + 1, all_money, all_eating, all_wins);
-        //DatabaseHelper.updateAllLevels();
         dialogConstraintLayout.setVisibility(View.VISIBLE);
+        dialogConstraintLayout.startAnimation(upAnimation);
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {
             case 1: // победа
@@ -239,7 +254,6 @@ public class Game extends AppCompatActivity {
     private static void getData(){
         money = DatabaseHelper.getMoney();
         record = DatabaseHelper.getRecord();
-        status = DatabaseHelper.getStatus();
         all_levels = DatabaseHelper.getAll_levels();
         all_money = DatabaseHelper.getAll_money();
         all_eating = DatabaseHelper.getAll_eating();

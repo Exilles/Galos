@@ -69,8 +69,8 @@ public class Menu extends AppCompatActivity {
         sound = new Sound();
         sound.mediaStart();
 
-        upAnimation = AnimationUtils.loadAnimation(this, R.anim.registration_up);
-        downAnimation = AnimationUtils.loadAnimation(this, R.anim.registration_down);
+        upAnimation = AnimationUtils.loadAnimation(this, R.anim.up);
+        downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
 
         volumeImageButton.setOnClickListener(onClickListener);
         playImageButton.setOnClickListener(onClickListener);
@@ -117,7 +117,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 case R.id.settingsImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
-                        registration.setAnimation(upAnimation);
+                        registration.startAnimation(upAnimation);
                         registration.setVisibility(View.VISIBLE);
                     }
                     else {
@@ -128,7 +128,7 @@ public class Menu extends AppCompatActivity {
                     break;
                 case R.id.ratingImageButton:
                     if (DatabaseHelper.getLogin().equals("Гость")) {
-                        registration.setAnimation(upAnimation);
+                        registration.startAnimation(upAnimation);
                         registration.setVisibility(View.VISIBLE);
                     }
                     else {
@@ -154,7 +154,7 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.laterButton:
-                    registration.setAnimation(downAnimation);
+                    registration.startAnimation(downAnimation);
                     registration.setVisibility(View.INVISIBLE);
                     break;
             }

@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -64,6 +66,9 @@ public class Achievements extends AppCompatActivity {
         progressTextView.setText(getResources().getString(R.string.progress_achievements) + " " + Integer.toString(progress) + "/26");
 
         listView.setAdapter(adapter);
+
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.list_layout_controller);
+        listView.setLayoutAnimation(controller);
 
         backButton.setOnClickListener(onClickListener);
     }
