@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -23,12 +25,16 @@ public class Menu extends AppCompatActivity {
 
     private AudioManager audioManager;
     private ImageButton volumeImageButton;
-    private ImageButton playImageButton;
+    private ImageButton blackImageButton;
     private ImageButton logoutImageButton;
     private ImageButton settingsImageButton;
     private ImageButton ratingImageButton;
     private ImageButton achievementsImageButton;
     private ImageButton helpImageButton;
+    private ImageButton darkGreyImageButton;
+    private ImageButton lightGreyImageButton;
+    private ImageButton redImageButton;
+    private ImageButton blueImageButton;
     private TextView loginTextView;
     private TextView countMoneyTextView;
     private TextView countRecordTextView;
@@ -44,15 +50,22 @@ public class Menu extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         volumeImageButton = findViewById(R.id.volumeImageButton);
-        playImageButton = findViewById(R.id.playImageButton);
+        blackImageButton = findViewById(R.id.blackImageButton);
         logoutImageButton = findViewById(R.id.logoutImageButton);
         settingsImageButton = findViewById(R.id.settingsImageButton);
         ratingImageButton = findViewById(R.id.ratingImageButton);
+        darkGreyImageButton = findViewById(R.id.darkGreyImageButton);
+        lightGreyImageButton = findViewById(R.id.lightGreyImageButton);
+        redImageButton = findViewById(R.id.redImageButton);
+        blueImageButton = findViewById(R.id.blueImageButton);
         achievementsImageButton = findViewById(R.id.achievementsImageButton);
         helpImageButton = findViewById(R.id.helpImageButton);
         loginTextView = findViewById(R.id.loginTextView);
@@ -73,7 +86,11 @@ public class Menu extends AppCompatActivity {
         downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
 
         volumeImageButton.setOnClickListener(onClickListener);
-        playImageButton.setOnClickListener(onClickListener);
+        blackImageButton.setOnClickListener(onClickListener);
+        darkGreyImageButton.setOnClickListener(onClickListener);
+        lightGreyImageButton.setOnClickListener(onClickListener);
+        redImageButton.setOnClickListener(onClickListener);
+        blueImageButton.setOnClickListener(onClickListener);
         logoutImageButton.setOnClickListener(onClickListener);
         settingsImageButton.setOnClickListener(onClickListener);
         ratingImageButton.setOnClickListener(onClickListener);
@@ -87,7 +104,43 @@ public class Menu extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.playImageButton:
+                case R.id.blackImageButton:
+                    Game.PAUSE = false;
+                    GameManager.setMode(DatabaseHelper.getMode());
+                    GameManager.setScore(DatabaseHelper.getScore());
+                    GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
+                    intent = new Intent(Menu.this, Game.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case R.id.darkGreyImageButton:
+                    Game.PAUSE = false;
+                    GameManager.setMode(DatabaseHelper.getMode());
+                    GameManager.setScore(DatabaseHelper.getScore());
+                    GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
+                    intent = new Intent(Menu.this, Game.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case R.id.lightGreyImageButton:
+                    Game.PAUSE = false;
+                    GameManager.setMode(DatabaseHelper.getMode());
+                    GameManager.setScore(DatabaseHelper.getScore());
+                    GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
+                    intent = new Intent(Menu.this, Game.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case R.id.redImageButton:
+                    Game.PAUSE = false;
+                    GameManager.setMode(DatabaseHelper.getMode());
+                    GameManager.setScore(DatabaseHelper.getScore());
+                    GameManager.setAll_rewards(DatabaseHelper.getAll_rewards());
+                    intent = new Intent(Menu.this, Game.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case R.id.blueImageButton:
                     Game.PAUSE = false;
                     GameManager.setMode(DatabaseHelper.getMode());
                     GameManager.setScore(DatabaseHelper.getScore());
