@@ -24,20 +24,36 @@ public class JSONParser {
         new UpdateDataThread().execute();
     }
 
-    public static void updateResume(String _mode, String _score, String _all_rewards){
+    public static void updateResume(String _score, String _all_rewards){
         url = "https://galos.000webhostapp.com/update_resume.php";
-        param_2 = "mode"; value_2 = _mode;
-        param_3 = "score"; value_3 = _score;
-        param_4 = "all_rewards"; value_4 = _all_rewards;
-        new UpdateResumeThread().execute();
-    }
-
-    public static void updateRemember(String _login, String _password, String _remember){
-        url = "https://galos.000webhostapp.com/update_resume.php";
-        param_2 = "login"; value_2 = _login;
-        param_3 = "password"; value_3 = _password;
-        param_4 = "remember"; value_4 = _remember;
-        new UpdateRememberThread().execute();
+        switch (GameManager.getGameMode()){
+            case 0:
+                param_2 = "mode"; value_2 = Integer.toString(DatabaseHelper.getMode());
+                param_3 = "score"; value_3 = _score;
+                param_4 = "all_rewards"; value_4 = _all_rewards;
+                new UpdateResumeRatingThread().execute();
+                break;
+            case 1:
+                param_2 = "score_1"; value_2 = _score;
+                param_3 = "all_rewards_1"; value_3 = _all_rewards;
+                new UpdateResumeThread().execute();
+                break;
+            case 2:
+                param_2 = "score_2"; value_2 = _score;
+                param_3 = "all_rewards_2"; value_3 = _all_rewards;
+                new UpdateResumeThread().execute();
+                break;
+            case 3:
+                param_2 = "score_3"; value_2 = _score;
+                param_3 = "all_rewards_3"; value_3 = _all_rewards;
+                new UpdateResumeThread().execute();
+                break;
+            case 4:
+                param_2 = "score_4"; value_2 = _score;
+                param_3 = "all_rewards_4"; value_3 = _all_rewards;
+                new UpdateResumeThread().execute();
+                break;
+        }
     }
 
     private static class UpdateDataThread extends AsyncTask<Void, Void, String> {
@@ -54,7 +70,7 @@ public class JSONParser {
         }
     }
 
-    private static class UpdateResumeThread extends AsyncTask<Void, Void, String> {
+    private static class UpdateResumeRatingThread extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -67,12 +83,11 @@ public class JSONParser {
         }
     }
 
-    private static class UpdateRememberThread extends AsyncTask<Void, Void, String> {
+    private static class UpdateResumeThread extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
-            return HttpRequest.get("https://galos.000webhostapp.com/get_user_data.php", true,
-                    param_2, value_2, param_3, value_3, param_4, value_4).body();
+            return HttpRequest.get(url, true, param_1, value_1, param_2, value_2, param_3, value_3).body();
         }
 
         @Override

@@ -167,7 +167,9 @@ public class Authorization extends AppCompatActivity {
 
                     JSONArray resume_user = dataJsonObj.getJSONArray("resume");
                     JSONObject resume = resume_user.getJSONObject(0);
-                    DatabaseHelper.getResumeUser(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"));
+                    DatabaseHelper.getResumeUser(resume.getInt("mode"), resume.getInt("score"), resume.getInt("all_rewards"),
+                            resume.getInt("score_1"), resume.getInt("all_rewards_1"),resume.getInt("score_2"), resume.getInt("all_rewards_2"),
+                            resume.getInt("score_3"), resume.getInt("all_rewards_3"),resume.getInt("score_4"), resume.getInt("all_rewards_4"));
 
                     if (rememberCheckBox.isChecked()) DatabaseHelper.rememberOrForgetUser(loginEditText.getText().toString(),
                             passwordEditText.getText().toString());

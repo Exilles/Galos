@@ -242,7 +242,7 @@ public class Game extends AppCompatActivity {
                 titleTextView.setText("Победа");
                 rewardTextView.setText("Награда:");
                 countRewardTextView.setText(Integer.toString(_reward) + "$");
-                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
+                DatabaseHelper.updateResume(GameManager.getScore(), GameManager.getAll_rewards());
                 break;
             case 2: // поражение
                 if (GameManager.getGameMode() == 0) GameManager.setMode(1);
@@ -251,14 +251,14 @@ public class Game extends AppCompatActivity {
                 titleTextView.setText("Поражение");
                 rewardTextView.setText("Все награды:");
                 countRewardTextView.setText(Integer.toString(_sum) + "$");
-                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
+                DatabaseHelper.updateResume(GameManager.getScore(), GameManager.getAll_rewards());
                 break;
             case 3: // переигровка
                 continueButton.setText("Переиграть уровень");
                 titleTextView.setText("Ни победа, ни поражение");
                 rewardTextView.setText("Награда:");
                 countRewardTextView.setText("0$");
-                DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
+                DatabaseHelper.updateResume(GameManager.getScore(), GameManager.getAll_rewards());
                 break;
         }
     }

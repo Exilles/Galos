@@ -330,10 +330,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getResumeUser( int _mode, int _score, int _all_rewards){
+    public static void getResumeUser( int _mode, int _score, int _all_rewards, int _score_1, int _all_rewards_1, int _score_2,
+                                      int _all_rewards_2, int _score_3, int _all_rewards_3, int _score_4, int _all_rewards_4){
         mode = _mode;
         score = _score;
         all_rewards = _all_rewards;
+        score_1 = _score_1;
+        all_rewards_1 = _all_rewards_1;
+        score_2 = _score_2;
+        all_rewards_2 = _all_rewards_2;
+        score_3 = _score_3;
+        all_rewards_3 = _all_rewards_3;
+        score_4 = _score_4;
+        all_rewards_4 = _all_rewards_4;
     }
 
     public static void rememberOrForgetUser(String _login, String _password){
@@ -523,16 +532,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public static void updateResume(int _mode, int _score, int _all_rewards){
+    public static void updateResume(int _score, int _all_rewards){
         ContentValues contentValues = new ContentValues();
 
         if (login.equals("Гость")) {
             switch (GameManager.getGameMode()){
                 case 0:
-                    mode =_mode;
+                    mode = GameManager.getMode();
                     score = _score;
                     all_rewards =_all_rewards;
-                    contentValues.put(COLUMN_MODE, _mode);
+                    contentValues.put(COLUMN_MODE, mode);
                     contentValues.put(COLUMN_SCORE, _score);
                     contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
                     db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
@@ -571,7 +580,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     break;
             }
         }
-        else JSONParser.updateResume(Integer.toString(_mode), Integer.toString(_score), Integer.toString(_all_rewards));
+        else JSONParser.updateResume(Integer.toString(_score), Integer.toString(_all_rewards));
     }
 
     public static boolean isOnline()

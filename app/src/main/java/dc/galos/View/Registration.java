@@ -95,7 +95,8 @@ public class Registration extends AppCompatActivity {
                     true, "login", loginEditText.getText().toString(), "password",
                     passwordEditText.getText().toString(), "email", emailEditText.getText().toString(), "money", 0, "record", 0,
                     "status", "00000000000000000000000000", "all_levels", 0, "all_money", 0, "all_eating", 0, "all_wins", 0,
-                    "mode", 0, "score", 0, "all_rewards", 0).body();
+                    "mode", 0, "score", 0, "all_rewards", 0, "score_1", 0, "all_rewards_1", 0, "score_2", 0, "all_rewards_2", 0,
+                    "score_3", 0, "all_rewards_3", 0, "score_4", 0, "all_rewards_4", 0).body();
             else return HttpRequest.get("https://galos.000webhostapp.com/create_user.php",
                     true, "login", loginEditText.getText().toString(), "password",
                     passwordEditText.getText().toString(), "email", emailEditText.getText().toString(), "money",
@@ -103,7 +104,11 @@ public class Registration extends AppCompatActivity {
                     "all_levels", DatabaseHelper.getAll_levels(), "all_money", DatabaseHelper.getAll_money(),
                     "all_eating", DatabaseHelper.getAll_eating(), "all_wins", DatabaseHelper.getAll_wins(),
                     "mode", DatabaseHelper.getMode(), "score", DatabaseHelper.getScore(), "all_rewards",
-                    DatabaseHelper.getAll_rewards()).body();
+                    DatabaseHelper.getAll_rewards(), "score_1", DatabaseHelper.getScore_1(), "all_rewards_1",
+                    DatabaseHelper.getAll_rewards_1(), "score_2", DatabaseHelper.getScore_2(), "all_rewards_2",
+                    DatabaseHelper.getAll_rewards_2(), "score_3", DatabaseHelper.getScore_3(), "all_rewards_3",
+                    DatabaseHelper.getAll_rewards_3(), "score_4", DatabaseHelper.getScore_4(), "all_rewards_4",
+                    DatabaseHelper.getAll_rewards_4()).body();
         }
 
         @Override
