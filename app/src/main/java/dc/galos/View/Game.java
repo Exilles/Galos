@@ -72,6 +72,9 @@ public class Game extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        Intent intent = getIntent();
+        GameManager.setGameMode(intent.getIntExtra("mode", 0));
+
         dialogConstraintLayout = findViewById(R.id.dialogConstraintLayout);
         titleTextView = findViewById(R.id.titleTextView);
         continueButton = findViewById(R.id.continueButton);
@@ -230,8 +233,11 @@ public class Game extends AppCompatActivity {
         countScoreTextView.setText(Integer.toString(_score));
         switch (_flag) {
             case 1: // победа
-                if (GameManager.getMode() != 4) GameManager.setMode(GameManager.getMode() + 1);
-                else GameManager.setMode(1);
+                if (GameManager.getGameMode() == 0){
+                    if (GameManager.getMode() != 4) GameManager.setMode(GameManager.getMode() + 1);
+                    else GameManager.setMode(1);
+                }
+                else GameManager.setMode(GameManager.getGameMode());
                 continueButton.setText("Следующий уровень");
                 titleTextView.setText("Победа");
                 rewardTextView.setText("Награда:");
@@ -239,7 +245,8 @@ public class Game extends AppCompatActivity {
                 DatabaseHelper.updateResume(GameManager.getMode(), GameManager.getScore(), GameManager.getAll_rewards());
                 break;
             case 2: // поражение
-                GameManager.setMode(1);
+                if (GameManager.getGameMode() == 0) GameManager.setMode(1);
+                else GameManager.setMode(GameManager.getGameMode());
                 continueButton.setText("Начать новую игру");
                 titleTextView.setText("Поражение");
                 rewardTextView.setText("Все награды:");

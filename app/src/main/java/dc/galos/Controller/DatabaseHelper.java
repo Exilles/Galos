@@ -63,6 +63,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_MODE = "mode";
     private static final String COLUMN_SCORE = "score";
     private static final String COLUMN_ALL_REWARDS = "all_rewards";
+    private static final String COLUMN_SCORE_1 = "score_1";
+    private static final String COLUMN_ALL_REWARDS_1 = "all_rewards_1";
+    private static final String COLUMN_SCORE_2 = "score_2";
+    private static final String COLUMN_ALL_REWARDS_2 = "all_rewards_2";
+    private static final String COLUMN_SCORE_3 = "score_3";
+    private static final String COLUMN_ALL_REWARDS_3 = "all_rewards_3";
+    private static final String COLUMN_SCORE_4 = "score_4";
+    private static final String COLUMN_ALL_REWARDS_4 = "all_rewards_4";
 
     // название таблицы remember
     private static final String TABLE_REMEMBER = "remember"; // название таблицы в бд
@@ -91,6 +99,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static int mode;
     private static int score;
     private static int all_rewards;
+    private static int score_1;
+    private static int all_rewards_1;
+    private static int score_2;
+    private static int all_rewards_2;
+    private static int score_3;
+    private static int all_rewards_3;
+    private static int score_4;
+    private static int all_rewards_4;
 
     // заголовки для списка достижений
     private static String TITLE = "achievement"; // Название достижения
@@ -230,7 +246,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о достижениях аккаунта
-    public static void getAchievementsGuest(){
+    private static void getAchievementsGuest(){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_ACHIEVEMENTS, COLUMN_ID_USER, id);
 
         cursor = db.rawQuery(query, null);
@@ -246,7 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // получаем данные о возобновлении аккаунта
-    public static void getResumeGuest(){
+    private static void getResumeGuest(){
         String query = String.format("SELECT * FROM \"%s\" WHERE \"%s\" = \"%s\"", TABLE_RESUME, COLUMN_ID_USER, id);
 
         cursor = db.rawQuery(query, null);
@@ -255,6 +271,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mode = cursor.getInt(cursor.getColumnIndex(COLUMN_MODE));
         score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
         all_rewards = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS));
+        score_1 = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE_1));
+        all_rewards_1 = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS_1));
+        score_2 = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE_2));
+        all_rewards_2 = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS_2));
+        score_3 = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE_3));
+        all_rewards_3 = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS_3));
+        score_4 = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE_4));
+        all_rewards_4 = cursor.getInt(cursor.getColumnIndex(COLUMN_ALL_REWARDS_4));
 
         cursor.close();
     }
@@ -282,7 +306,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static void zeroData() {
         money = 0; record = 0;
         status = "00000000000000000000000000"; all_levels = 0; all_money = 0; all_eating = 0; all_wins = 0;
-        mode = 1; score = 0; all_rewards = 0;
+        mode = 1; score = 0; all_rewards = 0; score_1 = 0; all_rewards_1 = 0; score_2 = 0; all_rewards_2 = 0;
+        score_3 = 0; all_rewards_3 = 0; score_4 = 0; all_rewards_4 = 0;
     }
 
     // получаем данные об аккаунте
@@ -475,7 +500,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // обновление информации
     public static void updateData(int _money, int _record, int _all_levels, int _all_money, int _all_eating, int _all_wins) {
         money = _money;
-        if (record < _record) record = _record;
+        if (GameManager.getGameMode() == 0 && record < _record) record = _record;
 
         getAchievementsUser(status, _all_levels, _all_money, _all_eating, _all_wins); // обновление user
         checkAchievements(); // обновление status
@@ -499,17 +524,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static void updateResume(int _mode, int _score, int _all_rewards){
-
-        mode =_mode;
-        score = _score;
-        all_rewards =_all_rewards;
+        ContentValues contentValues = new ContentValues();
 
         if (login.equals("Гость")) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_MODE, _mode);
-            contentValues.put(COLUMN_SCORE, _score);
-            contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
-            db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+            switch (GameManager.getGameMode()){
+                case 0:
+                    mode =_mode;
+                    score = _score;
+                    all_rewards =_all_rewards;
+                    contentValues.put(COLUMN_MODE, _mode);
+                    contentValues.put(COLUMN_SCORE, _score);
+                    contentValues.put(COLUMN_ALL_REWARDS, _all_rewards);
+                    db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+                    break;
+                case 1:
+                    score_1 = _score;
+                    all_rewards_1 =_all_rewards;
+                    contentValues = new ContentValues();
+                    contentValues.put(COLUMN_SCORE_1, _score);
+                    contentValues.put(COLUMN_ALL_REWARDS_1, _all_rewards);
+                    db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+                    break;
+                case 2:
+                    score_2 = _score;
+                    all_rewards_2 =_all_rewards;
+                    contentValues = new ContentValues();
+                    contentValues.put(COLUMN_SCORE_2, _score);
+                    contentValues.put(COLUMN_ALL_REWARDS_2, _all_rewards);
+                    db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+                    break;
+                case 3:
+                    score_3 = _score;
+                    all_rewards_3 =_all_rewards;
+                    contentValues = new ContentValues();
+                    contentValues.put(COLUMN_SCORE_3, _score);
+                    contentValues.put(COLUMN_ALL_REWARDS_3, _all_rewards);
+                    db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+                    break;
+                case 4:
+                    score_4 = _score;
+                    all_rewards_4 =_all_rewards;
+                    contentValues = new ContentValues();
+                    contentValues.put(COLUMN_SCORE_4, _score);
+                    contentValues.put(COLUMN_ALL_REWARDS_4, _all_rewards);
+                    db.update(TABLE_RESUME, contentValues,COLUMN_ID + "= ?", new String[]{Integer.toString(id)});
+                    break;
+            }
         }
         else JSONParser.updateResume(Integer.toString(_mode), Integer.toString(_score), Integer.toString(_all_rewards));
     }
@@ -593,4 +653,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return all_wins;
     }
 
+    public static int getScore_1() {
+        return score_1;
+    }
+
+    public static int getAll_rewards_1() {
+        return all_rewards_1;
+    }
+
+    public static int getScore_2() {
+        return score_2;
+    }
+
+    public static int getAll_rewards_2() {
+        return all_rewards_2;
+    }
+
+    public static int getScore_3() {
+        return score_3;
+    }
+
+    public static int getAll_rewards_3() {
+        return all_rewards_3;
+    }
+
+    public static int getScore_4() {
+        return score_4;
+    }
+
+    public static int getAll_rewards_4() {
+        return all_rewards_4;
+    }
 }

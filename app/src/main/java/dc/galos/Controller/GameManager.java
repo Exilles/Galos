@@ -18,6 +18,7 @@ public class GameManager {
     private static int height;
     private boolean vanish = true;
     private int reward; // выигрыш за победу в уровнях
+    private static int gameMode;
     private static int mode;
     private static int score; // количество пройденных подряд уровней в этот раз
     private static int all_rewards; // сумма всех вознаграждений за победы
@@ -27,12 +28,10 @@ public class GameManager {
 
     private static int money;
     private static int record;
-    private static String status;
     private static int all_levels;
     private static int all_money;
     private static int all_eating;
     private static int all_wins;
-
 
     GameManager(CanvasView canvasView, int w, int h) {
         GameManager.canvasView = canvasView;
@@ -265,7 +264,6 @@ public class GameManager {
     private static void getData(){
         money = DatabaseHelper.getMoney();
         record = DatabaseHelper.getRecord();
-        status = DatabaseHelper.getStatus();
         all_levels = DatabaseHelper.getAll_levels();
         all_money = DatabaseHelper.getAll_money();
         all_eating = DatabaseHelper.getAll_eating();
@@ -318,5 +316,13 @@ public class GameManager {
 
     public static Timer getTimer() {
         return timer;
+    }
+
+    public static int getGameMode() {
+        return gameMode;
+    }
+
+    public static void setGameMode(int gameMode) {
+        GameManager.gameMode = gameMode;
     }
 }
