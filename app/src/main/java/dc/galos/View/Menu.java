@@ -251,16 +251,4 @@ public class Menu extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopService(new Intent(this, Sound.class));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startService(new Intent(this, Sound.class));
-    }
 }
