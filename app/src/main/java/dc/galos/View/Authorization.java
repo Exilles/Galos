@@ -118,8 +118,11 @@ public class Authorization extends AppCompatActivity {
                     break;
                 case R.id.loginButton:
                         if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("")){
-                            if (DatabaseHelper.isOnline()) new ParseTask().execute();
-                            else DatabaseHelper.showInformation("Нет подключения к интернету");
+                            if (loginEditText.getText().toString().matches("^[a-zA-Z][a-zA-Z0-9-_.]{1,20}$") && !passwordEditText.getText().toString().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$")){
+                                if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                                else DatabaseHelper.showInformation("Нет подключения к интернету");
+                            }
+                            else DatabaseHelper.showInformation("Введены недопустимые символы");
                         }
                         else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;

@@ -62,13 +62,15 @@ public class Registration extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.acceptButton:
                     if (!loginEditText.getText().toString().equals("") && !passwordEditText.getText().toString().equals("") &&
-                            !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals("")) {
-                        if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())) {
-                            if (DatabaseHelper.isOnline()) new ParseTask().execute();
-                            else DatabaseHelper.showInformation("Нет подключения к интернету");
-                        }
-                        else  DatabaseHelper.showInformation(getResources().getString(R.string.match_passwords));
-                    }
+                            !confirmPasswordEditText.getText().toString().equals("") && !emailEditText.getText().toString().equals(""))
+                        if (loginEditText.getText().toString().matches("^[a-zA-Z][a-zA-Z0-9-_.]{1,20}$") &&
+                                passwordEditText.getText().toString().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$") &&
+                                emailEditText.getText().toString().matches("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$"))
+                            if (passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString()))
+                                if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                                else DatabaseHelper.showInformation("Нет подключения к интернету");
+                            else  DatabaseHelper.showInformation(getResources().getString(R.string.match_passwords));
+                        else DatabaseHelper.showInformation("Введены недопустимые символы");
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
                 case R.id.backButton:

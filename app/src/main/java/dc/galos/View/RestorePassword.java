@@ -57,11 +57,14 @@ public class RestorePassword extends AppCompatActivity {
                 case R.id.acceptButton:
 
                     if (!enterLoginEditText.getText().toString().equals("") || !enterEmailEditText.getText().toString().equals("")) {
-                        if (!enterLoginEditText.getText().toString().equals("") && !enterEmailEditText.getText().toString().equals("")) flag = 1;
-                        else if (!enterLoginEditText.getText().toString().equals("")) flag = 2;
-                        else flag = 3;
-                        if (DatabaseHelper.isOnline()) new ParseTask().execute();
-                        else DatabaseHelper.showInformation("Нет подключения к интернету");
+                        if (enterLoginEditText.getText().toString().matches("^[a-zA-Z][a-zA-Z0-9-_.]{1,20}$") || enterEmailEditText.getText().toString().matches("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$")){
+                            if (!enterLoginEditText.getText().toString().equals("") && !enterEmailEditText.getText().toString().equals("")) flag = 1;
+                            else if (!enterLoginEditText.getText().toString().equals("")) flag = 2;
+                            else flag = 3;
+                            if (DatabaseHelper.isOnline()) new ParseTask().execute();
+                            else DatabaseHelper.showInformation("Нет подключения к интернету");
+                        }
+                        else DatabaseHelper.showInformation("Введены недопустимые символы");
                     }
                     else  DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
 

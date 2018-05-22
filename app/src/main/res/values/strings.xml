@@ -23,7 +23,7 @@
     <string name="title_record_text_view">Рекорд:</string>
     <string name="title_money_text_view">Деньги:</string>
     <string name="help_image_button_text_view">Помощь</string>
-    <string name="sound_image_button_text_view">Звук вкл/выкл</string>
+    <string name="sound_image_button_text_view">Звук\nвкл/выкл</string>
     <string name="rating_image_button_text_view">Рейтинг игроков</string>
     <string name="achievements_image_button_text_view">Достижения</string>
     <string name="exit_image_button_text_view">Вернуться к авторизации</string>

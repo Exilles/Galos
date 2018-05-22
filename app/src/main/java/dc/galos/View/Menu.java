@@ -85,6 +85,24 @@ public class Menu extends AppCompatActivity {
         upAnimation = AnimationUtils.loadAnimation(this, R.anim.up);
         downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
 
+        Animation scalePlayBlackAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_play_black);
+        Animation scalePlayDarkGreyAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_play);
+        Animation scalePlayLightGreyAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_play);
+        Animation scalePlayRedAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_play);
+        Animation scalePlayBlueAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_play);
+
+        final long currAnimTime = AnimationUtils.currentAnimationTimeMillis();
+        scalePlayDarkGreyAnimation.setStartTime(currAnimTime + 500);
+        scalePlayLightGreyAnimation.setStartTime(currAnimTime + 1000);
+        scalePlayRedAnimation.setStartTime(currAnimTime + 1500);
+        scalePlayBlueAnimation.setStartTime(currAnimTime + 2000);
+
+        blackImageButton.setAnimation(scalePlayBlackAnimation);
+        darkGreyImageButton.setAnimation(scalePlayDarkGreyAnimation);
+        lightGreyImageButton.setAnimation(scalePlayLightGreyAnimation);
+        redImageButton.setAnimation(scalePlayRedAnimation);
+        blueImageButton.setAnimation(scalePlayBlueAnimation);
+
         if (Sound.isVolume()) {
             volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_48dp);
             audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);

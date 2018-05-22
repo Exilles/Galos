@@ -89,7 +89,6 @@ public class GameManager {
 
     public void onTouchEvent(int x, int y) {
         mainCircle.moveMainCircleWhenTouchAt(x, y);
-        checkEmptyCircles();
         checkEnemyCirclesCollision(); // проверка коллизии вражеских кругов
         checkImmortalCirclesCollision(); // проверка коллизии неуязвимых кругов
         checkVanishingCirclesCollision(); // проверка коллизии исчезающих кругов
@@ -122,6 +121,7 @@ public class GameManager {
 
     // проверка коллизии с вражеским кругом
     private void checkEnemyCirclesCollision() {
+        checkEmptyCircles();
         SimpleCircle circleForDel = null;
         for (EnemyCircle circle : enemy_circles) {
             if (mainCircle.isIntersect(circle)) {
@@ -150,6 +150,7 @@ public class GameManager {
 
     // проверка коллизии с исчезающим кругом
     private void checkVanishingCirclesCollision() {
+        checkEmptyCircles();
         SimpleCircle circleForDel = null;
         for (VanishingCircle circle : vanishing_circles) {
             if (mainCircle.isIntersect(circle)) {

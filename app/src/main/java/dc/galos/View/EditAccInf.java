@@ -65,17 +65,20 @@ public class EditAccInf extends AppCompatActivity {
                     break;
                 case R.id.acceptButton:
                     if (!currentPasswordEditText.getText().toString().equals("") || !newPasswordEditText.getText().toString().equals("") || !newEmailEditText.getText().toString().equals(""))
-                        if (!currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString()))
-                            if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
-                                if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
-                                {
-                                    if (!newPasswordEditText.getText().toString().equals("")) DatabaseHelper.setPassword(newPasswordEditText.getText().toString());
-                                    if (!newEmailEditText.getText().toString().equals("")) DatabaseHelper.setEmail(newEmailEditText.getText().toString());
-                                    new ParseTask().execute();
-                                }
-                                else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_current_password));
-                            else DatabaseHelper.showInformation(getResources().getString(R.string.match_mail));
-                        else DatabaseHelper.showInformation(getResources().getString(R.string.match_password));
+                        if (newPasswordEditText.getText().toString().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$") ||
+                                newEmailEditText.getText().toString().matches("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$"))
+                            if (!currentPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString()))
+                                if (!DatabaseHelper.getEmail().equals(newEmailEditText.getText().toString()))
+                                    if (DatabaseHelper.getPassword().equals(currentPasswordEditText.getText().toString()))
+                                    {
+                                        if (!newPasswordEditText.getText().toString().equals("")) DatabaseHelper.setPassword(newPasswordEditText.getText().toString());
+                                        if (!newEmailEditText.getText().toString().equals("")) DatabaseHelper.setEmail(newEmailEditText.getText().toString());
+                                        new ParseTask().execute();
+                                    }
+                                    else DatabaseHelper.showInformation(getResources().getString(R.string.incorrect_current_password));
+                                else DatabaseHelper.showInformation(getResources().getString(R.string.match_mail));
+                            else DatabaseHelper.showInformation(getResources().getString(R.string.match_password));
+                        else DatabaseHelper.showInformation("Введены недопустимые символы");
                     else DatabaseHelper.showInformation(getResources().getString(R.string.wrong_data));
                     break;
             }
