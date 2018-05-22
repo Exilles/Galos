@@ -85,6 +85,15 @@ public class Menu extends AppCompatActivity {
         upAnimation = AnimationUtils.loadAnimation(this, R.anim.up);
         downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
 
+        if (Sound.isVolume()) {
+            volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_48dp);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+        }
+        else {
+            volumeImageButton.setImageResource(R.drawable.ic_volume_off_white_48dp);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+        }
+
         volumeImageButton.setOnClickListener(onClickListener);
         blackImageButton.setOnClickListener(onClickListener);
         darkGreyImageButton.setOnClickListener(onClickListener);
