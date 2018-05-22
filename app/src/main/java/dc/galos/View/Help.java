@@ -7,14 +7,21 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.SimpleExpandableListAdapter;
 
-import dc.galos.Controller.DatabaseHelper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import dc.galos.R;
 
 public class Help extends AppCompatActivity {
 
     private Intent intent;
     private Button backButton;
+
+    //private String[] titlesArray = new String[] { "ОБ ИГРЕ", "ЦЕЛЬ ИГРЫ", "УПРАВЛЕНИЕ", "РЕКОРД", "СМЕШАННЫЙ", "ОЧЕРЕДЬ", "ДОГОНЯЛКИ", "НЕВИДИМКИ", "БОНУСЫ"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +30,42 @@ public class Help extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+
+        String[] titlesArray = getResources().getStringArray(R.array.titles_help);
+        String[] descriptionArray = getResources().getStringArray(R.array.descriptions_help);
+        Map<String, String> map; // коллекция для групп
+        ArrayList<Map<String, String>> groupDataList = new ArrayList<>(); // заполняем коллекцию групп из массива с названиями групп
+
+        for (String group : titlesArray) {
+            // заполняем список атрибутов для каждой группы
+            map = new HashMap<>();
+            map.put("title", group); // заголовок
+            groupDataList.add(map);
+        }
+
+        String groupFrom[] = new String[] { "title" }; // список атрибутов групп для чтения
+        int groupTo[] = new int[] { android.R.id.text1 }; // список ID view-элементов, в которые будет помещены атрибуты групп
+        ArrayList<ArrayList<Map<String, String>>> сhildDataList = new ArrayList<>(); // создаем общую коллекцию для коллекций элементов
+
+        for (int i = 0; i < 9; i++) {
+            map = new HashMap<>();
+            map.put("description", descriptionArray[i]); // описание
+            ArrayList<Map<String, String>> сhildDataItemList = new ArrayList<>();
+            сhildDataItemList.add(map);
+            сhildDataList.add(сhildDataItemList);
+        }
+
+        String childFrom[] = new String[] { "description" }; // список атрибутов элементов для чтения
+        int childTo[] = new int[] { android.R.id.text1 }; // список ID view-элементов, в которые будет помещены атрибуты элементов
+
+        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
+                this, groupDataList,
+                R.layout.exp_list_title_help, groupFrom,
+                groupTo, сhildDataList, R.layout.exp_list_item_help,
+                childFrom, childTo);
+
+        ExpandableListView expandableListView = findViewById(R.id.expListView);
+        expandableListView.setAdapter(adapter);
 
         backButton = findViewById(R.id.backButton);
 

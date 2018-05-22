@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:fontFamily="@font/a_futurica_extrabold"
+    android:gravity="center_vertical"
+    android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
+    android:textAlignment="viewStart"
+    android:textAppearance="?android:attr/textAppearanceListItem"
+    android:textSize="20sp"
+    tools:ignore="RtlCompat" />
