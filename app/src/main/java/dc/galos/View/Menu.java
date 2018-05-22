@@ -79,9 +79,6 @@ public class Menu extends AppCompatActivity {
         countMoneyTextView.setText(Integer.toString(DatabaseHelper.getMoney()) + "$");
         countRecordTextView.setText(Integer.toString(DatabaseHelper.getRecord()));
 
-        sound = new Sound();
-        sound.mediaStart();
-
         upAnimation = AnimationUtils.loadAnimation(this, R.anim.up);
         downAnimation = AnimationUtils.loadAnimation(this, R.anim.down);
 
@@ -105,11 +102,11 @@ public class Menu extends AppCompatActivity {
 
         if (Sound.isVolume()) {
             volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_48dp);
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            startService(new Intent(this, Sound.class));
         }
         else {
             volumeImageButton.setImageResource(R.drawable.ic_volume_off_white_48dp);
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            stopService(new Intent(this, Sound.class));
         }
 
         volumeImageButton.setOnClickListener(onClickListener);
@@ -185,16 +182,16 @@ public class Menu extends AppCompatActivity {
                     if (Sound.isVolume())  {
                         Sound.setVolume(false);
                         volumeImageButton.setImageResource(R.drawable.ic_volume_off_white_48dp);
-                        audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+                        stopService(new Intent(getApplicationContext(), Sound.class));
                     }
                     else {
                         Sound.setVolume(true);
                         volumeImageButton.setImageResource(R.drawable.ic_volume_up_white_48dp);
-                        audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+                        startService(new Intent(getApplicationContext(), Sound.class));
                     }
                     break;
                 case R.id.logoutImageButton:
-                    sound.mediaStop();
+                    stopService(new Intent(getApplicationContext(), Sound.class));
                     intent = new Intent(Menu.this, Authorization.class);
                     intent.putExtra("back", false);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -248,11 +245,22 @@ public class Menu extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        sound.mediaStop();
         intent = new Intent(Menu.this, Authorization.class);
+        stopService(new Intent(this, Sound.class));
         intent.putExtra("back", false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(this, Sound.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(this, Sound.class));
+    }
 }

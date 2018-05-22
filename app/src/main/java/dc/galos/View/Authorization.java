@@ -58,8 +58,6 @@ public class Authorization extends AppCompatActivity {
         rememberCheckBox = findViewById(R.id.rememberCheckBox);
         progress = findViewById(R.id.progress);
 
-        sound.initialization(this, R.raw.background_music);
-
         loginAsGuestButton.setOnClickListener(onClickListener);
         registrationButton.setOnClickListener(onClickListener);
         restorePasswordButton.setOnClickListener(onClickListener);

@@ -26,10 +26,9 @@
         <activity android:name=".View.Help" android:screenOrientation="portrait"/>
         <activity android:name=".View.Rating" android:screenOrientation="portrait"/>
         <activity android:name=".View.EditAccInf" android:screenOrientation="portrait"/>
-
+        <service android:enabled="true" android:name=".Controller.Sound" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 </manifest>

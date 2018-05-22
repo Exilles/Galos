@@ -1,27 +1,35 @@
 package dc.galos.Controller;
 
-import android.content.Context;
-import android.media.AudioManager;
+import android.app.Service;
+import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.IBinder;
 
-public class Sound {
+import dc.galos.R;
 
-    private static MediaPlayer mediaPlayer;
+public class Sound extends Service {
+    MediaPlayer player;
+    static boolean volume = true;
 
-    private static boolean volume = true;
-
-    public void initialization(Context context, int res_id) {
-        mediaPlayer = MediaPlayer.create(context, res_id);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setLooping(true);
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
-    public void mediaStart() {
-        mediaPlayer.start();
+    @Override
+    public void onCreate() {
+        player = MediaPlayer.create(this, R.raw.background_music);
+        player.setLooping(true); // зацикливаем
     }
 
-    public void mediaStop() {
-        mediaPlayer.stop();
+    @Override
+    public void onDestroy() {
+        player.stop();
+    }
+
+    @Override
+    public void onStart(Intent intent, int startid) {
+        player.start();
     }
 
     public static boolean isVolume() {
