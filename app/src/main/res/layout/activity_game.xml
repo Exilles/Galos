@@ -7,9 +7,9 @@
     android:layout_height="fill_parent"
     android:background="#FFF"
     android:orientation="vertical"
-    tools:context=".View.Game">
+    tools:context=".controller.Game">
 
-    <dc.galos.Controller.CanvasView
+    <dc.galos.model.CanvasView
         android:id="@+id/canvasView"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -12,20 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.Authorization" android:screenOrientation="portrait">
+        <activity android:name=".controller.Authorization" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.Menu" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Game" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Registration" android:screenOrientation="portrait"/>
-        <activity android:name=".View.RestorePassword" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Achievements" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Help" android:screenOrientation="portrait"/>
-        <activity android:name=".View.Rating" android:screenOrientation="portrait"/>
-        <activity android:name=".View.EditAccInf" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Menu" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Game" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Registration" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.RestorePassword" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Achievements" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Help" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.Rating" android:screenOrientation="portrait"/>
+        <activity android:name=".controller.EditAccInf" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="preloaded_fonts"
