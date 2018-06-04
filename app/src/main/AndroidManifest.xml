@@ -27,6 +27,9 @@
         <activity android:name=".controller.Rating" android:screenOrientation="portrait"/>
         <activity android:name=".controller.EditAccInf" android:screenOrientation="portrait"/>
 
+        <service
+            android:enabled="true"
+            android:name=".model.Sound" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
